@@ -16,7 +16,7 @@ vec3 adjustHue(vec3 color,float hueDeg){float hueRad=hueDeg*3.14159265/180.0;vec
 vec3 hash33(vec3 p3){p3=fract(p3*vec3(0.1031,0.11369,0.13787));p3+=dot(p3,p3.yxz+19.19);return -1.0+2.0*fract(vec3(p3.x+p3.y,p3.x+p3.z,p3.y+p3.z)*p3.zyx);}
 float snoise3(vec3 p){const float K1=0.333333333;const float K2=0.166666667;vec3 i=floor(p+(p.x+p.y+p.z)*K1);vec3 d0=p-(i-(i.x+i.y+i.z)*K2);vec3 e=step(vec3(0.0),d0-d0.yzx);vec3 i1=e*(1.0-e.zxy);vec3 i2=1.0-e.zxy*(1.0-e);vec3 d1=d0-(i1-K2);vec3 d2=d0-(i2-K1);vec3 d3=d0-0.5;vec4 h=max(0.6-vec4(dot(d0,d0),dot(d1,d1),dot(d2,d2),dot(d3,d3)),0.0);vec4 n=h*h*h*h*vec4(dot(d0,hash33(i)),dot(d1,hash33(i+i1)),dot(d2,hash33(i+i2)),dot(d3,hash33(i+1.0)));return dot(vec4(31.316),n);}
 vec4 extractAlpha(vec3 colorIn){float a=max(max(colorIn.r,colorIn.g),colorIn.b);return vec4(colorIn.rgb/(a+1e-5),a);}
-const vec3 baseColor1=vec3(0.611765,0.262745,0.996078);const vec3 baseColor2=vec3(0.298039,0.760784,0.913725);const vec3 baseColor3=vec3(0.062745,0.078431,0.600000);
+const vec3 baseColor1=vec3(0.357,0.549,0.937);const vec3 baseColor2=vec3(0.498,0.722,0.902);const vec3 baseColor3=vec3(0.165,0.357,0.843);
 const float innerRadius=0.6;const float noiseScale=0.65;
 float light1(float intensity,float attenuation,float dist){return intensity/(1.0+dist*attenuation);}
 float light2(float intensity,float attenuation,float dist){return intensity/(1.0+dist*dist*attenuation);}
@@ -32,7 +32,9 @@ vec4 mainImage(vec2 fragCoord){vec2 center=iResolution.xy*0.5;float size=min(iRe
 uv.x+=hover*hoverIntensity*0.1*sin(uv.y*10.0+iTime);uv.y+=hover*hoverIntensity*0.1*sin(uv.x*10.0+iTime);return draw(uv);}
 void main(){vec2 fragCoord=vUv*iResolution.xy;vec4 col=mainImage(fragCoord);gl_FragColor=vec4(col.rgb*col.a,col.a);}`;
 
-const TARGET = { normal: { speed: 0, hue: 0, hover: 0 }, listening: { speed: 1, hue: 0, hover: .12 }, thinking: { speed: 2.4, hue: 28, hover: 1 }, speaking: { speed: 1.5, hue: -18, hover: .5 } };
+const TARGET = { normal: { speed: 0, hue: 0, hover: 0 }, listening: { speed: 1, hue: 0, hover: .12 }, thinking: { speed: 2.4, hue: 18, hover: 1 }, speaking: { speed: 1.5, hue: -12, hover: .5 } };
+// Light-voice recolour (round 7): pen-blue shader base above, small blue/teal hue shifts only (no purple).
+// Kept variant (b): mid pen-blue sphere + light glowing eyes (comparison shots v4-light-orb-a/b.png). Motion untouched.
 
 export function createOrb({ isCalm = () => false, STILL = false, T0 = 0, look = null } = {}) {
   const orb = document.getElementById('orb'), face = document.getElementById('face'), mouth = document.getElementById('mouth');

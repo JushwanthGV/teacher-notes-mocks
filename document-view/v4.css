@@ -307,73 +307,77 @@ body.solid .composer{background:#fff}
 .send:hover{background:var(--pen-2)}
 
 /* ============ 6. VOICE MODE (orb only here) ============ */
-/* A deep indigo "well" inside the glass pane: the v3 orb and its glowing eyes need a dark field to read.
-   Only descendants fade/scale; the glass pane itself is never animated (backdrop-root rule). */
+/* Light "well" in the same Exercise Book material as the other panes: translucent
+   white over the desk in Glass, solid white in Solid. Dark ink text throughout. */
 .voice{position:absolute;inset:0;padding:8px;opacity:0;visibility:hidden;transition:opacity .22s ease,visibility 0s linear .22s}
 body.mode-voice .voice{opacity:1;visibility:visible;transition:opacity .32s ease .12s,visibility 0s}
-.v-well{height:100%;border-radius:12px;color:#fff;display:flex;flex-direction:column;overflow:hidden;position:relative;
-  background:radial-gradient(120% 62% at 50% 36%,#30358A 0%,#1A1E54 52%,#10133A 100%);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.14);transform:scale(.97);transition:transform .5s var(--spring)}
+.v-well{height:100%;border-radius:12px;color:var(--ink);display:flex;flex-direction:column;overflow:hidden;position:relative;
+  background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.82);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 6px 18px -12px rgba(30,50,70,.35);
+  transform:scale(.97);transition:transform .5s var(--spring)}
+body.solid .v-well{background:#fff;border-color:var(--solid-line)}
 body.mode-voice .v-well{transform:none}
 .v-head{display:flex;align-items:center;gap:8px;padding:14px 14px 0 16px;font-size:13.5px}
-.v-live{width:9px;height:9px;border-radius:50%;background:#6EE7A8;box-shadow:0 0 0 4px rgba(110,231,168,.18)}
+.v-live{width:9px;height:9px;border-radius:50%;background:#178A4C;box-shadow:0 0 0 4px rgba(23,138,76,.16)}
 body:not(.still)[data-vstate="listening"] .v-live{animation:livepulse 1.6s ease-in-out infinite}
-@keyframes livepulse{50%{box-shadow:0 0 0 7px rgba(110,231,168,.05)}}
-body[data-vstate="normal"] .v-live{background:#8F98D0;box-shadow:0 0 0 4px rgba(143,152,208,.18)}
-body[data-vstate="thinking"] .v-live{background:#B9C2FF;box-shadow:0 0 0 4px rgba(185,194,255,.18)}
-body[data-vstate="speaking"] .v-live{background:#FFFFFF;box-shadow:0 0 0 4px rgba(255,255,255,.16)}
-.v-state{font-weight:600;flex:1}
-.v-ctx{font-size:12.5px;font-weight:600;padding:3px 10px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.24)}
+@keyframes livepulse{50%{box-shadow:0 0 0 7px rgba(23,138,76,.06)}}
+body[data-vstate="normal"] .v-live{background:#7A8595;box-shadow:0 0 0 4px rgba(122,133,149,.18)}
+body[data-vstate="thinking"] .v-live{background:#2A5BD7;box-shadow:0 0 0 4px rgba(42,91,215,.16)}
+body[data-vstate="speaking"] .v-live{background:#0B6E7F;box-shadow:0 0 0 4px rgba(11,110,127,.16)}
+.v-state{font-weight:600;flex:1;color:var(--ink)}
+.v-ctx{font-size:12.5px;font-weight:600;padding:3px 10px;border-radius:999px;background:var(--pen-soft);border:1px solid rgba(42,91,215,.28);color:var(--pen-2)}
 .v-stage{flex:1;min-height:210px;display:grid;place-items:center;position:relative}
 .float{position:relative;width:176px;height:176px;will-change:transform}
 /* float, breathing, wobble, glow pulse and dots are driven from orb.js (state + Motion switch), not from the OS media query */
 .orb-scale{position:absolute;inset:0;transform:scale(1.22)}
-/* orb parts: copied from v3-target/index-v3a.html */
+/* orb parts: copied from v3-target/index-v3a.html, recoloured to pen-blue (no purple) */
 .orb{position:absolute;inset:0;transition:transform .5s cubic-bezier(.3,1.5,.5,1)}
 .orb-gl{position:absolute;inset:-18px}
 .orb-gl canvas{display:block;width:100%;height:100%}
+/* --- variant (b), KEPT: mid pen-blue sphere, light glowing eyes --- */
 .sphere{position:absolute;inset:29px;border-radius:50%;overflow:hidden;
   background:
     radial-gradient(60% 50% at 32% 24%,rgba(255,255,255,.55),rgba(255,255,255,0) 60%),
-    radial-gradient(70% 70% at 70% 80%,rgba(255,140,230,.55),rgba(255,140,230,0) 70%),
-    radial-gradient(80% 80% at 50% 50%,#7d74ff 0%,#5a48e6 45%,#3c2aa8 100%);
-  box-shadow:inset 0 0 calc(26px + var(--lvl,0)*10px) rgba(210,200,255,calc(.65 + var(--lvl,0)*.25)),inset 0 -12px 24px rgba(40,20,140,.55),0 0 calc(40px + var(--lvl,0)*20px) calc(-6px + var(--lvl,0)*8px) rgba(150,130,255,calc(.9 + var(--lvl,0)*.1))}
+    radial-gradient(70% 70% at 70% 80%,rgba(127,184,230,.6),rgba(127,184,230,0) 70%),
+    radial-gradient(80% 80% at 50% 50%,#5B8DEF 0%,#2A5BD7 48%,#1A3690 100%);
+  box-shadow:inset 0 0 calc(26px + var(--lvl,0)*10px) rgba(190,214,248,calc(.65 + var(--lvl,0)*.25)),inset 0 -12px 24px rgba(16,38,96,.55),0 0 calc(40px + var(--lvl,0)*20px) calc(-6px + var(--lvl,0)*8px) rgba(42,91,215,calc(.55 + var(--lvl,0)*.1))}
 .sphere::after{content:"";position:absolute;left:18%;top:9%;width:40%;height:22%;border-radius:50%;
   background:radial-gradient(closest-side,rgba(255,255,255,.75),rgba(255,255,255,0));transform:rotate(-24deg)}
 .swirl{position:absolute;inset:-20%;border-radius:50%;opacity:.55;mix-blend-mode:screen;
-  background:conic-gradient(from 0deg,rgba(120,220,255,0),rgba(120,220,255,.6),rgba(255,150,240,0) 40%,rgba(180,140,255,.55) 70%,rgba(120,220,255,0))}
+  background:conic-gradient(from 0deg,rgba(127,184,230,0),rgba(127,184,230,.6),rgba(11,110,127,0) 40%,rgba(91,141,239,.55) 70%,rgba(127,184,230,0))}
 .face{position:absolute;left:50%;top:50%;width:0;height:0}
 .eye{position:absolute;top:-17px;width:17px;height:30px;border-radius:50%;
   background:radial-gradient(60% 55% at 45% 40%,#ffffff 0%,#d8f2ff 45%,#8fd4ff 100%);
-  box-shadow:0 0 14px 2px rgba(150,220,255,.95),0 0 30px 4px rgba(120,160,255,.6);transform-origin:50% 50%}
+  box-shadow:0 0 14px 2px rgba(127,184,230,.95),0 0 30px 4px rgba(42,91,215,.55);transform-origin:50% 50%}
 .eye.l{left:-24px}.eye.r{left:7px}
 .orb[data-state="thinking"] .eye{height:22px;top:-13px}
-.mouth{position:absolute;left:-11px;top:18px;width:22px;height:8px;border-radius:0 0 14px 14px;border:2.5px solid rgba(215,242,255,.95);border-top:0;
-  box-shadow:0 4px 10px -2px rgba(150,220,255,.8);opacity:0;transition:opacity .25s;transform-origin:50% 0}
+.mouth{position:absolute;left:-11px;top:18px;width:22px;height:8px;border-radius:0 0 14px 14px;border:2.5px solid rgba(216,242,255,.95);border-top:0;
+  box-shadow:0 4px 10px -2px rgba(42,91,215,.55);opacity:0;transition:opacity .25s;transform-origin:50% 0}
 .orb[data-state="speaking"] .mouth{opacity:1}
 .dots{position:absolute;left:50%;top:calc(100% + 10px);transform:translateX(-50%);display:flex;gap:6px;opacity:0;transition:opacity .3s}
 .orb[data-state="thinking"] .dots{opacity:1}
-.dots i{width:6px;height:6px;border-radius:50%;background:#dfe6ff;box-shadow:0 0 8px #aebdff}
+.dots i{width:6px;height:6px;border-radius:50%;background:#2A5BD7;box-shadow:0 0 8px rgba(42,91,215,.8)}
 /* live captions */
 .v-cap{padding:0 20px;min-height:128px;text-align:center}
-.v-who{font-size:12.5px;font-weight:600;color:rgba(255,255,255,.86);margin-bottom:6px}
-.v-text{font-family:Literata,serif;font-size:18px;line-height:1.45;color:#fff;max-width:30ch;margin:0 auto;text-wrap:balance}
+.v-who{font-size:12.5px;font-weight:600;color:var(--ink-3);margin-bottom:6px}
+.v-text{font-family:Literata,serif;font-size:18px;line-height:1.45;color:var(--ink);max-width:30ch;margin:0 auto;text-wrap:balance}
 /* part 2 fix: long replies ran into the Stop button. Rolling captions: max 4 lines, JS keeps the spoken word in view */
 .v-text{position:relative;max-height:calc(1.45em * 4);overflow:hidden}
 .v-text.rolled{-webkit-mask-image:linear-gradient(transparent,#000 1.1em);mask-image:linear-gradient(transparent,#000 1.1em)}
-.v-text .interim{color:rgba(255,255,255,.74)}
+.v-text .interim{color:var(--ink-3)}
 .v-text .w{transition:color .15s}
-.v-text .w.later{color:rgba(255,255,255,.62)}      /* not yet spoken: 5.9:1 on the well */
+.v-text .w.later{color:rgba(24,33,44,.68)}
 .v-ctrl{display:flex;align-items:center;justify-content:center;gap:18px;padding:20px 0 8px}
-.v-round{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;color:#fff;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.26);transition:background .2s}
-.v-round:hover{background:rgba(255,255,255,.18)}
+.v-round{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;color:var(--ink-2);background:#fff;border:1px solid rgba(24,33,44,.14);transition:background .2s,border-color .2s}
+.v-round:hover{background:var(--pen-soft);border-color:rgba(42,91,215,.35)}
 .v-round .slash{opacity:0}
 .v-round[aria-pressed="true"] .slash{opacity:1}
 .v-stop{height:52px;padding:0 24px 0 20px;border-radius:26px;display:inline-flex;align-items:center;gap:9px;font-size:15px;font-weight:600;
-  background:#fff;color:#A8231A;box-shadow:0 10px 26px -10px rgba(0,0,0,.6);transition:transform .25s var(--spring)}
+  background:#fff;color:#A8231A;border:1.5px solid #A8231A;box-shadow:0 10px 26px -14px rgba(168,35,26,.55);transition:transform .25s var(--spring),background .2s}
+.v-stop:hover{background:#FCEBEA}
 .v-stop:active{transform:scale(.95)}
-.voice :focus-visible{outline-color:#fff}
-.v-foot{font-size:12.5px;line-height:1.4;color:rgba(255,255,255,.8);text-align:center;padding:4px 18px 14px}
+.voice :focus-visible{outline-color:var(--pen)}
+.v-foot{font-size:12.5px;line-height:1.4;color:var(--ink-3);text-align:center;padding:4px 18px 14px}
 @media (max-height:800px){.v-stage{min-height:180px}.orb-scale{transform:scale(1.05)}.v-cap{min-height:110px}.v-text{font-size:16.5px}}
 
 /* mock controls (not product UI) */

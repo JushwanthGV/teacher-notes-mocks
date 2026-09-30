@@ -217,7 +217,7 @@ stGo.onclick = () => window.__showFirstSuggestion();
 /* ============ 6. VOICE MODE: mic -> orb fills the agent pane, live captions, Stop ============ */
 const chat = $('#chat'), voice = $('#voice'), vState = $('#vState'), vWho = $('#vWho'), vText = $('#vText');
 const CAPS = {
-  normal:    { label: 'Ready', who: 'Assistant', html: 'Tap the mic to talk again' },
+  normal:    { label: 'Ready', who: 'Assistant', html: 'Tap Talk to start, or type instead' },
   listening: { label: 'Listening', who: 'You', html: 'Read me the new questions, and make question 5 a bit easier<span class="interim"> for my slower</span>' },
   thinking:  { label: 'Thinking', who: 'Assistant', html: 'Reading your 4 suggestions and pages 49 to 54' },
   speaking:  { label: 'Speaking', who: 'Assistant', words: 'Here are the new ones. Question 4. Saliva contains an enzyme called blank. It breaks down starch into sugar. Question 5 is next.' },
@@ -263,8 +263,9 @@ $('#vMute').onclick = e => { const b = e.currentTarget, on = b.getAttribute('ari
 addEventListener('keydown', e => { if (e.key === 'Escape' && body.classList.contains('mode-voice') && !body.classList.contains('print')) { if (vs !== 'normal') $('#vStop').click(); else $('#vType').click(); } });   // Esc: stop, then back to chat
 $$('#modeSeg button').forEach(b => b.onclick = () => setMode(b.dataset.m));
 $$('#stateSeg button').forEach(b => b.onclick = () => { setVState(b.dataset.s); if (!body.classList.contains('mode-voice')) setMode('voice'); });
-setVState(['normal', 'listening', 'thinking', 'speaking'].includes(q.get('state')) ? q.get('state') : 'listening');
-if (q.get('mode') === 'voice' || q.has('state')) setMode('voice');
+/* Kakashi (user 2026-09-30): the app opens in VOICE mode, NORMAL state (Talk / Type instead). ?mode=type opens the chat. */
+setVState(['normal', 'listening', 'thinking', 'speaking'].includes(q.get('state')) ? q.get('state') : 'normal');
+if (q.get('mode') !== 'type') setMode('voice');
 
 /* ============ 7. PRINT PREVIEW: same paginator, exact A4 sheets ============ */
 /* Prints the note as it stands: waiting suggestions are left out (nothing changes until the teacher accepts). */
