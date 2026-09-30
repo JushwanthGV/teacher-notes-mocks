@@ -1,0 +1,1004 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#4f5096">
+<meta name="color-scheme" content="dark">
+<title>Human Digestive System - Class 6 Science - Teacher Notes (v3 target mock)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- KaTeX (MIT) + mhchem extension, CDN in this mock only; the build bundles them -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/mhchem.min.js"></script>
+<!--
+  v3 target-look mock (Sai, 2026-09-30). Static mock, no app code.
+  Orb ring shader: ported from React Bits "Orb" (orb-kit/react-bits/Orb.tailwind.jsx).
+  React Bits licence: MIT + Commons Clause License Condition v1.0, Copyright (c) 2026 David Haz.
+  "You may use this Software, including for any commercial purpose, so long as you do not sell,
+  sublicense, or redistribute the components themselves." Full text: orb-kit/react-bits/LICENSE.md.
+  OGL (oframe/ogl) is Unlicense, loaded from esm.sh at runtime.
+  Eyes, blink, float, states, nebula backdrop: our own code.
+  URL flags: ?solid=1 ?state=idle|thinking|speaking ?still=1&t=<sec> ?clean=1 ?print=1 ?bg=aurora
+  v3b (note surface): ?page=dark ?accepted=1 ?view=nopages ?scroll=draft|formula
+-->
+<style>
+:root{
+  --ink:#fff;
+  --ink-2:rgba(255,255,255,.92);
+  --ink-3:rgba(255,255,255,.86);
+  --line:rgba(255,255,255,.16);
+  --line-2:rgba(255,255,255,.26);
+  --sci:#5fe3a1;      /* Science = green, everywhere */
+  --eng:#f5bd5c;      /* English = amber, everywhere */
+  --accent:#8f8cff;   /* app accent (send, new, focus) */
+  --pad:22px; --gap:14px;
+  --tint:44,50,108; --tint2:36,42,94; --ta1:.64; --ta2:.60; --tm1:.64; --tm2:.60;
+  --r-pane:28px; --r-ctl:14px; --r-chip:999px;
+  font-family:Figtree,system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-variant-numeric:normal;
+}
+*{box-sizing:border-box}
+html{color-scheme:dark}
+html,body{margin:0;height:100%}
+h1,h2,h3{text-wrap:balance}
+body{color:var(--ink);background:#3a2f86;overflow:hidden;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid #fff;outline-offset:2px;border-radius:8px}
+svg{display:block}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- Nebula backdrop (layered radial gradients, transform-only drift) ---------- */
+.nebula{position:fixed;inset:0;z-index:0;overflow:hidden;
+  background:
+    radial-gradient(120% 90% at 0% 0%, #aebbe6 0%, rgba(169,182,236,0) 45%),
+    radial-gradient(110% 90% at 100% 0%, #c6b8e6 0%, rgba(198,184,230,0) 50%),
+    radial-gradient(90% 80% at 0% 100%, #e2b4dc 0%, rgba(226,180,220,0) 50%),
+    radial-gradient(90% 80% at 100% 100%, #b7a6ea 0%, rgba(183,166,234,0) 55%),
+    linear-gradient(160deg,#6a70b4 0%,#4f5096 45%,#6c62ac 100%);}
+.blob{position:absolute;border-radius:50%;will-change:transform;animation:drift var(--dur,70s) ease-in-out infinite alternate}
+.b1{width:70vw;height:70vw;left:-18vw;top:-30vw;background:radial-gradient(closest-side,rgba(150,200,255,.40),rgba(150,200,255,0));--dur:64s}
+.b2{width:60vw;height:60vw;right:-20vw;top:-18vw;background:radial-gradient(closest-side,rgba(232,196,255,.45),rgba(232,196,255,0));--dur:80s;animation-delay:-20s}
+.b3{width:75vw;height:60vw;left:12vw;bottom:-32vw;background:radial-gradient(closest-side,rgba(30,32,90,.75),rgba(30,32,90,0));--dur:90s;animation-delay:-35s}
+.b4{width:55vw;height:55vw;left:-22vw;bottom:-26vw;background:radial-gradient(closest-side,rgba(255,190,230,.5),rgba(255,190,230,0));--dur:72s;animation-delay:-10s}
+.b5{width:50vw;height:40vw;left:30vw;top:18vh;background:radial-gradient(closest-side,rgba(120,96,200,.5),rgba(120,96,200,0));--dur:58s;animation-delay:-30s}
+@keyframes drift{0%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(4vw,3vh,0) scale(1.08)}100%{transform:translate3d(-3vw,-2vh,0) scale(.96)}}
+.wisps{position:absolute;inset:0;width:100%;height:100%;opacity:.55}
+.wisps path{fill:none;stroke:url(#wispG);stroke-width:1.4}
+#aurora{position:absolute;inset:0;opacity:.55;mix-blend-mode:screen}
+body.still .blob,body.solid .blob{animation-play-state:paused}
+body.stress .nebula{background:#d8c8f0}body.stress .blob,body.stress .wisps{display:none}
+
+/* ---------- App frame ---------- */
+.app{position:relative;z-index:1;height:100vh;padding:var(--pad);display:grid;gap:var(--gap);
+  grid-template-columns:clamp(264px,21vw,330px) minmax(0,1fr) clamp(336px,26vw,400px)}
+/* GLASS RECIPE: blur+saturate+tint+hairline. No ancestor of a .glass pane animates opacity/filter/mask. */
+.glass{position:relative;border-radius:var(--r-pane);overflow:hidden;
+  background:linear-gradient(180deg,rgba(var(--tint),var(--ta1)) 0%,rgba(var(--tint2),var(--ta2)) 100%);
+  -webkit-backdrop-filter:blur(30px) saturate(140%);backdrop-filter:blur(30px) saturate(140%);
+  border:1px solid rgba(255,255,255,.22);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.30),inset 0 0 0 1px rgba(255,255,255,.04),0 24px 60px -20px rgba(18,10,70,.55)}
+.glass::before{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+  background:linear-gradient(135deg,rgba(255,255,255,.14) 0%,rgba(255,255,255,0) 32%,rgba(255,255,255,0) 70%,rgba(255,255,255,.06) 100%)}
+.pane{display:flex;flex-direction:column;min-height:0}
+.doc-pane{background:linear-gradient(180deg,rgba(var(--tint),var(--tm1)) 0%,rgba(var(--tint2),var(--tm2)) 100%)}
+body.solid .glass{-webkit-backdrop-filter:none;backdrop-filter:none;background:#343d70;border-color:rgba(255,255,255,.14)}
+body.solid .doc-pane{background:#2c3564}
+body.solid .glass::before{opacity:.5}
+/* prefers-reduced-transparency is handled in JS so the user's Glass/Solid choice can override it */
+.rt-note{display:none;flex-basis:100%;margin:0 4px 4px;font-size:12.5px;line-height:1.4;color:var(--ink-2)}
+body.rt .rt-note{display:block}
+.mo-note{display:none;flex-basis:100%;margin:0 4px 4px;font-size:12.5px;line-height:1.4;color:var(--ink-2)}
+body.rmos .mo-note{display:block}
+
+/* inner chips/controls: translucent fill, NO nested backdrop-filter */
+.ctl{background:rgba(16,18,60,.26);border:1px solid rgba(255,255,255,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.10);border-radius:var(--r-ctl)}
+.ibtn{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);transition:background .2s}
+.ibtn:hover{background:rgba(255,255,255,.16)}
+.ibtn svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* glowing tinted icon tiles */
+.tile{--c:#9aa0ff;flex:none;width:36px;height:36px;border-radius:11px;display:grid;place-items:center;
+  background:linear-gradient(160deg,color-mix(in srgb,var(--c) 34%,transparent),color-mix(in srgb,var(--c) 14%,transparent));
+  border:1px solid color-mix(in srgb,var(--c) 45%,transparent);
+  box-shadow:0 0 18px -4px color-mix(in srgb,var(--c) 65%,transparent),inset 0 1px 0 rgba(255,255,255,.25)}
+.tile svg{width:19px;height:19px;stroke:var(--c);fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 5px color-mix(in srgb,var(--c) 70%,transparent))}
+.tile.sm{width:30px;height:30px;border-radius:9px}.tile.sm svg{width:16px;height:16px}
+
+/* ---------- Left: tree ---------- */
+.side-head{display:flex;align-items:center;gap:12px;padding:22px 20px 14px}
+.side-head h1{font-size:21px;font-weight:650;margin:0;flex:1;letter-spacing:-.01em;white-space:nowrap}
+.btn-new{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;
+  background:radial-gradient(circle at 35% 30%,#b3b0ff,#6e68f0 70%);box-shadow:0 0 22px -2px rgba(140,136,255,.85),inset 0 1px 0 rgba(255,255,255,.5)}
+.btn-new svg{width:18px;height:18px;stroke:#fff;stroke-width:2.2;fill:none;stroke-linecap:round}
+.search{margin:0 18px 12px;display:flex;align-items:center;gap:10px;height:44px;padding:0 14px}
+.search svg{width:17px;height:17px;stroke:var(--ink-3);fill:none;stroke-width:1.8;stroke-linecap:round}
+.search input{flex:1;background:none;border:0;color:#fff;font:inherit;font-size:14.5px;outline:none;min-width:0}
+.search input::placeholder{color:var(--ink-3)}
+.tree{flex:1;overflow:auto;padding:4px 12px 12px;scrollbar-width:thin;scrollbar-color:transparent transparent}
+.tree ul{list-style:none;margin:0;padding:0}
+.cls{display:flex;align-items:center;gap:8px;width:100%;padding:10px 8px 8px;font-size:14px;font-weight:600;color:#fff;text-align:left}
+.cls .chev{width:16px;height:16px;stroke:var(--ink-2);fill:none;stroke-width:2;transition:transform .25s cubic-bezier(.3,1.4,.5,1)}
+.cls[aria-expanded="false"] .chev{transform:rotate(-90deg)}
+.cls .n{margin-left:auto;font-weight:500;font-size:13px;color:var(--ink-3)}
+.subj{display:flex;align-items:center;gap:9px;padding:8px 10px 6px 14px;font-size:13.5px;font-weight:600;color:var(--ink-2)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--c);box-shadow:0 0 10px var(--c)}
+.chap{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:10px 10px;margin:2px 0 6px;border-radius:16px;
+  border:1px solid transparent;transition:background .2s,border-color .2s}
+.chap:hover{background:rgba(255,255,255,.07)}
+.chap[aria-current="page"]{background:linear-gradient(180deg,rgba(150,150,255,.30),rgba(120,120,240,.20));border-color:rgba(255,255,255,.28);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 8px 24px -12px rgba(20,10,80,.6)}
+.chap .t{font-size:14.5px;font-weight:600;line-height:1.3}
+.chap .s{font-size:12.5px;color:var(--ink-3);margin-top:2px}
+.chap .txt{min-width:0}
+.empty-note{margin:2px 10px 8px 34px;font-size:13px;color:var(--ink-3);line-height:1.45}
+.side-foot{display:flex;flex-wrap:wrap;gap:6px 8px;padding:12px 16px 14px;border-top:1px solid var(--line)}
+.side-foot .mat{flex-basis:100%;display:flex;align-items:center;justify-content:space-between;padding:0 4px 2px;font-size:13px;color:var(--ink-2);font-weight:500}
+.side-foot > button{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;height:38px;font-size:13px;font-weight:500;color:var(--ink-2);border-radius:12px}
+.side-foot > button:hover{background:rgba(255,255,255,.08)}
+.side-foot svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- Middle: note ---------- */
+.doc-head{display:flex;align-items:center;gap:10px;padding:16px 16px 10px 22px;min-height:66px}
+.crumbs{display:flex;align-items:center;gap:8px;font-size:14px;color:#fff;min-width:0;flex:1;white-space:nowrap}
+.crumbs .sep{width:14px;height:14px;stroke:var(--ink-3);fill:none;stroke-width:2;flex:none}
+.crumbs b{font-weight:600;color:#fff;overflow:hidden;text-overflow:ellipsis}
+.saved{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-3);white-space:nowrap}
+.saved svg{width:17px;height:17px;stroke:var(--ink-3);fill:none;stroke-width:1.8}
+.seg{display:flex;padding:3px;border-radius:999px;background:rgba(16,18,60,.30);border:1px solid rgba(255,255,255,.16)}
+.seg button{height:28px;padding:0 11px;border-radius:999px;font-size:12.5px;font-weight:600;color:var(--ink-2)}
+.seg button[aria-pressed="true"]{background:rgba(255,255,255,.10);outline:1px solid rgba(255,255,255,.5);outline-offset:-1px;color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.3)}
+.pill{display:flex;align-items:center;gap:7px;height:36px;padding:0 14px;border-radius:999px;font-size:13.5px;font-weight:600;
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.22);transition:background .2s}
+.pill:hover{background:rgba(255,255,255,.2)}
+.pill svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.toolbar{margin:0 16px 6px;display:flex;align-items:center;gap:2px;height:52px;padding:0 8px;border-radius:18px;overflow:hidden}
+.toolbar button{flex:none;white-space:nowrap;height:36px;min-width:36px;padding:0 8px;border-radius:10px;display:flex;align-items:center;gap:6px;font-size:14px;font-weight:500}
+.toolbar button:hover{background:rgba(255,255,255,.1)}
+.toolbar svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.toolbar .div{width:1px;height:22px;background:var(--line-2);margin:0 6px;flex:none}
+.toolbar .fmt{font-weight:600;font-size:14.5px}.toolbar .fmt.i{font-style:italic;font-family:Georgia,serif}.toolbar .fmt.u{text-decoration:underline}
+/* ---------- Note PAGE: always SOLID (never glass). Light is the default, Dark is an option. ---------- */
+.page,.pp-sheet{--p-bg:#fbfbfd;--p-ink:#1d1b2e;--p-ink2:#4a4766;--p-line:#e2e0ec;--p-line2:#cfcce0;
+  --p-sci:#0b7a48;--p-sci-dot:#1fae6b;--p-sci-soft:#e3f6ec;--p-acc:#4f47cf;--p-acc-soft:#eceaff;
+  --p-mark:rgba(95,227,161,.38);--p-block:#f2f8f5;--p-block-line:#cfe7da;--p-draft:#f4f3ff;--p-draft-line:#8580f0;
+  --p-badge:#e3e1ff;--p-badge-ink:#2d2790;--p-dock:#f3f2f8;--p-btn:#fff;--p-warn:#8a4b00;--p-warn-soft:#fff3df;--p-warn-line:#f0c47a;--p-glow:none}
+.page{flex:1;min-height:0;display:flex;flex-direction:column;margin:2px 12px 12px;border-radius:20px;overflow:hidden;
+  background:var(--p-bg);color:var(--p-ink);color-scheme:light;
+  box-shadow:0 18px 40px -18px rgba(10,6,50,.65),0 0 0 1px rgba(255,255,255,.35)}
+body.pdark .page{--p-bg:#1f2552;--p-ink:#fff;--p-ink2:rgba(255,255,255,.86);--p-line:rgba(255,255,255,.14);--p-line2:rgba(255,255,255,.26);
+  --p-sci:#8ff0c0;--p-sci-dot:#5fe3a1;--p-sci-soft:rgba(95,227,161,.16);--p-acc:#aab0ff;--p-acc-soft:rgba(170,176,255,.16);
+  --p-mark:rgba(110,190,70,.32);--p-block:rgba(95,227,161,.08);--p-block-line:rgba(120,240,180,.30);--p-draft:rgba(143,140,255,.14);--p-draft-line:rgba(190,195,255,.65);
+  --p-badge:rgba(170,176,255,.28);--p-badge-ink:#fff;--p-dock:#262d5e;--p-btn:rgba(255,255,255,.08);--p-warn:#ffd08a;--p-warn-soft:rgba(245,189,92,.12);--p-warn-line:rgba(245,189,92,.45);--p-glow:0 0 10px;
+  color-scheme:dark;box-shadow:0 18px 40px -18px rgba(10,6,50,.8),0 0 0 1px rgba(255,255,255,.14)}
+.doc{flex:1;min-height:0;overflow:auto;padding:26px 40px 48px;scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:var(--p-line2) transparent}
+.doc:focus-visible{outline:2px solid var(--p-acc);outline-offset:-4px;border-radius:18px}
+.pp-sheet:focus-visible{outline:3px solid #8f8cff;outline-offset:3px}
+.doc h2.title{font-size:36px;line-height:1.1;font-weight:700;letter-spacing:-.02em;margin:0 0 10px}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.chip{display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 12px;border-radius:999px;font-size:12.5px;font-weight:600;
+  background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.20)}
+.page .chip{background:transparent;border-color:var(--p-line2);color:var(--p-ink)}
+.page .chip.sci{border-color:color-mix(in srgb,var(--p-sci-dot) 70%,transparent);background:var(--p-sci-soft)}
+.page .chip.warn{border-color:var(--p-warn-line);background:var(--p-warn-soft);color:var(--p-warn)}
+.page .dot{--c:var(--p-sci-dot)!important;box-shadow:none}
+body.pdark .page .dot{box-shadow:0 0 10px var(--c)}
+.doc p{font-size:16.5px;line-height:1.65;margin:0 0 14px;max-width:68ch}
+.doc mark{background:var(--p-mark);color:inherit;border-radius:5px;padding:1px 4px}
+.doc h3{display:flex;align-items:baseline;gap:10px;font-size:24px;font-weight:700;margin:28px 0 12px;letter-spacing:-.01em}
+.doc h3 .num{font-size:15px;font-weight:700;color:var(--p-sci);min-width:22px}
+.doc h3 .from{margin-left:auto;font-size:13px;font-weight:500;color:var(--p-ink2)}
+.kw{list-style:none;padding:0;margin:0 0 16px}
+.kw li{position:relative;padding-left:26px;font-size:16.5px;line-height:1.55;margin:0 0 8px}
+.kw li::before{content:"";position:absolute;left:4px;top:.62em;width:8px;height:8px;border-radius:50%;background:var(--p-acc)}
+body.pdark .kw li::before{box-shadow:0 0 10px var(--p-acc)}
+.kw b{font-weight:700}
+/* content blocks: table, formula, diagram. Solid tints only. */
+.blk{margin:12px 0 8px;padding:16px 20px 12px;border-radius:16px;background:var(--p-block);border:1px solid var(--p-block-line)}
+.blk-head{display:flex;align-items:center;gap:12px;margin-bottom:10px;font-size:15px;font-weight:600}
+.blk-head .aside{margin-left:auto;font-size:12.5px;font-weight:500;color:var(--p-ink2)}
+.page .tile{--c:var(--p-sci);background:var(--p-sci-soft);border-color:color-mix(in srgb,var(--p-sci) 40%,transparent);box-shadow:none}
+.page .tile svg{filter:none}
+.doc table{width:100%;border-collapse:collapse;font-size:15.5px}
+.doc th{text-align:left;font-weight:600;font-size:13.5px;color:var(--p-ink2);padding:8px 10px;border-bottom:1px solid var(--p-line2)}
+.doc td{padding:10px 10px;border-bottom:1px solid var(--p-line)}
+.doc tr:last-child td{border-bottom:0}
+.doc td:first-child{font-weight:700}
+/* formula (KaTeX + mhchem in the build) */
+.fx{display:grid;gap:10px;padding:4px 2px 2px}
+.fx .row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.fx .lbl{flex:none;width:98px;font-size:13px;font-weight:600;color:var(--p-ink2)}
+.fx .tex{font-size:17px;overflow-x:auto;overflow-y:hidden;padding:2px 8px 2px 0;scrollbar-width:thin;scrollbar-color:var(--p-line2) transparent}
+.fx .tex .katex{font-size:1.12em}
+.fx .fallback sub{font-size:.72em}
+.doc .blk-cap{margin:10px 0 2px;font-size:14px;line-height:1.5;color:var(--p-ink2)}
+/* flow diagram, code-drawn: real text, every box editable */
+.flow ol{list-style:none;margin:6px 0 2px;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0}
+.flow li{position:relative;text-align:center;padding:0 6px}
+.flow .node{position:relative;z-index:1;margin:0 auto 8px;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;
+  font-size:13.5px;font-weight:700;color:var(--p-sci);background:var(--p-bg);border:2px solid var(--p-sci)}
+.flow li:not(:last-child)::after{content:"";position:absolute;top:15px;left:calc(50% + 19px);right:calc(-50% + 23px);height:2px;background:var(--p-sci);opacity:.75}
+.flow .ah{position:absolute;top:10px;right:calc(-50% + 17px);width:9px;height:12px;fill:var(--p-sci)}
+.flow b{display:block;font-size:15px;font-weight:700;line-height:1.25}
+.flow span{display:block;margin-top:3px;font-size:13px;line-height:1.35;color:var(--p-ink2)}
+.flow li.hl .node{background:var(--p-sci);color:var(--p-bg)}
+ol.q{margin:0 0 10px;padding-left:24px}
+ol.q li{font-size:16.5px;line-height:1.6;margin:0 0 12px;padding-left:4px}
+ol.q li::marker{font-weight:700;color:var(--p-ink2)}
+.opts{display:flex;flex-wrap:wrap;gap:4px 18px;margin-top:4px;color:var(--p-ink2);font-size:15.5px}
+.draft{position:relative;margin:18px 0 10px;border-radius:16px;padding:14px 18px 4px;background:var(--p-draft);border:1.5px dashed var(--p-draft-line);
+  transition:background-color .5s,border-color .5s,padding .3s}
+.draft-head{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:600;margin-bottom:10px}
+.badge{height:24px;padding:0 10px;border-radius:999px;display:inline-flex;align-items:center;font-size:12.5px;font-weight:600;background:var(--p-badge);color:var(--p-badge-ink)}
+/* after Accept: the draft becomes ordinary note text, a short green edge marks what was added */
+.draft.merged{background:transparent;border-color:transparent;padding:0 0 0 0;margin-top:0}
+.draft.merged .draft-head{display:none}
+.draft.merged ol.q{box-shadow:-14px 0 0 -11px var(--p-sci-dot)}
+/* the decision dock: a row UNDER the page scroll area, so it never covers a line of the note */
+.dock{flex:none;display:none;align-items:center;gap:8px;min-height:60px;padding:10px 12px 10px 16px;background:var(--p-dock);border-top:1px solid var(--p-line)}
+.page.show-dock .dock.decide,.page.show-toast .dock.toast{display:flex}
+/* Kakashi fix (Kurenai v3b FAIL 1): decide only while the draft is in view */
+.dock.decide.away #bEdit,.dock.decide.away #bReject,.dock.decide.away #bAccept{display:none}
+.dock.decide:not(.away) #bJump{display:none}
+.dock .what{flex:1;min-width:0;display:flex;align-items:center;gap:10px;font-size:14px;font-weight:600}
+.dock .what small{display:block;font-size:12.5px;font-weight:500;color:var(--p-ink2)}
+.dock .ok{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--p-sci-soft);border:1px solid var(--p-sci)}
+.dock .ok svg{width:14px;height:14px;stroke:var(--p-sci);fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.btn{height:38px;padding:0 14px;border-radius:12px;font-size:14px;font-weight:600;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn.primary{color:#fff;background:linear-gradient(180deg,#5c55e3,#4a42c9);box-shadow:0 6px 16px -8px rgba(74,66,201,.9),inset 0 1px 0 rgba(255,255,255,.3)}
+.btn.ghost{color:var(--p-ink);background:var(--p-btn);border:1px solid var(--p-line2)}
+.btn.ghost:hover{border-color:var(--p-ink2)}
+.agent .btn.ghost,.agent .btn.primary{color:#fff}
+.agent .btn.ghost{background:rgba(16,18,60,.30);border-color:rgba(255,255,255,.22)}
+/* chapter with no textbook pages */
+.doc .empty-sec{margin:0 0 8px;padding:12px 14px;border-radius:12px;border:1.5px dashed var(--p-line2);font-size:15px;color:var(--p-ink2)}
+.refuse{margin:6px 0 12px;padding:16px 18px;border-radius:16px;background:var(--p-warn-soft);border:1px solid var(--p-warn-line)}
+.refuse h4{margin:0 0 6px;font-size:16px;font-weight:700;display:flex;align-items:center;gap:10px}
+.refuse h4 svg{width:20px;height:20px;stroke:var(--p-warn);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.refuse p{font-size:15.5px!important;margin:0 0 12px!important}
+.refuse .acts{display:flex;gap:8px;flex-wrap:wrap}
+.v-nop{display:none}
+body.nopages .v-nop{display:revert}body.nopages .v-dig{display:none!important}
+
+/* ---------- Right: agent ---------- */
+.ag-head{display:flex;align-items:center;gap:12px;padding:20px 18px 6px 20px}
+.ag-head .who{flex:1;min-width:0}
+.ag-head .name{font-size:20px;font-weight:650}
+.ag-head .sub{font-size:13px;color:var(--ink-2);margin-top:1px}
+.mini-orb{width:38px;height:38px;border-radius:50%;flex:none;
+  background:radial-gradient(circle at 35% 30%,#e9e6ff 0%,#9c95ff 30%,#5a4fd8 70%,#3b2fa8 100%);box-shadow:0 0 18px -2px rgba(150,140,255,.9),inset 0 -3px 6px rgba(30,20,110,.5)}
+.ag-tools{display:flex;gap:8px}
+.ag-body{flex:1;overflow:auto;padding:0 18px 30px;-webkit-mask-image:linear-gradient(#000 calc(100% - 22px),transparent);mask-image:linear-gradient(#000 calc(100% - 22px),transparent);scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.35) transparent} /* Kakashi fix: show that the list scrolls */
+.stage{position:relative;height:196px;margin:0 -18px;display:grid;place-items:center}
+.streaks{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.streaks path{fill:none;stroke-linecap:round}
+.float{position:relative;width:176px;height:176px;margin-top:-16px;will-change:transform}
+/* float, breathing, wobble, glow pulse and dots are driven from the orb loop (JS), so Full/Calm and the state decide them, not the OS media query */
+.orb{position:absolute;inset:0;transition:transform .5s cubic-bezier(.3,1.5,.5,1)}
+.orb-gl{position:absolute;inset:-18px}
+.orb-gl canvas{display:block;width:100%;height:100%}
+.sphere{position:absolute;inset:29px;border-radius:50%;overflow:hidden;
+  background:
+    radial-gradient(60% 50% at 32% 24%,rgba(255,255,255,.55),rgba(255,255,255,0) 60%),
+    radial-gradient(70% 70% at 70% 80%,rgba(255,140,230,.55),rgba(255,140,230,0) 70%),
+    radial-gradient(80% 80% at 50% 50%,#7d74ff 0%,#5a48e6 45%,#3c2aa8 100%);
+  box-shadow:inset 0 0 calc(26px + var(--lvl,0)*10px) rgba(210,200,255,calc(.65 + var(--lvl,0)*.25)),inset 0 -12px 24px rgba(40,20,140,.55),0 0 calc(40px + var(--lvl,0)*20px) calc(-6px + var(--lvl,0)*8px) rgba(150,130,255,calc(.9 + var(--lvl,0)*.1))}
+.sphere::after{content:"";position:absolute;left:18%;top:9%;width:40%;height:22%;border-radius:50%;
+  background:radial-gradient(closest-side,rgba(255,255,255,.75),rgba(255,255,255,0));transform:rotate(-24deg)}
+.swirl{position:absolute;inset:-20%;border-radius:50%;opacity:.55;mix-blend-mode:screen;
+  background:conic-gradient(from 0deg,rgba(120,220,255,0),rgba(120,220,255,.6),rgba(255,150,240,0) 40%,rgba(180,140,255,.55) 70%,rgba(120,220,255,0));}
+.face{position:absolute;left:50%;top:50%;width:0;height:0}
+.eye{position:absolute;top:-17px;width:17px;height:30px;border-radius:50%;
+  background:radial-gradient(60% 55% at 45% 40%,#ffffff 0%,#d8f2ff 45%,#8fd4ff 100%);
+  box-shadow:0 0 14px 2px rgba(150,220,255,.95),0 0 30px 4px rgba(120,160,255,.6);transform-origin:50% 50%}
+.eye.l{left:-24px}.eye.r{left:7px}
+.eye .lid{position:absolute;inset:0}
+/* states */
+.orb[data-state="thinking"] .eye{height:22px;top:-13px}
+.orb[data-state="speaking"] .mouth{opacity:1}
+.mouth{position:absolute;left:-11px;top:18px;width:22px;height:8px;border-radius:0 0 14px 14px;border:2.5px solid rgba(215,242,255,.95);border-top:0;
+  box-shadow:0 4px 10px -2px rgba(150,220,255,.8);opacity:0;transition:opacity .25s;transform-origin:50% 0}
+.orb[data-state="thinking"] .dots{opacity:1}
+.dots{position:absolute;left:50%;top:calc(100% + 2px);transform:translateX(-50%);display:flex;gap:6px;opacity:0;transition:opacity .3s}
+.dots i{width:6px;height:6px;border-radius:50%;background:#dfe6ff;box-shadow:0 0 8px #aebdff}
+.state-line{position:absolute;bottom:-6px;left:0;right:0;text-align:center;font-size:12.5px;color:var(--ink-2);font-weight:500}
+.hello{text-align:center;padding:4px 6px 0}
+.hello h2{font-size:22px;font-weight:700;margin:6px 0 8px;letter-spacing:-.01em}
+.hello p{font-size:14.5px;line-height:1.5;color:var(--ink-2);margin:0 auto;max-width:34ch}
+.status{display:flex;align-items:center;gap:12px;margin:14px 0 12px;padding:9px 10px;border-radius:16px;
+  background:rgba(160,166,255,.16);border:1px solid rgba(190,195,255,.38)}
+.status .txt{flex:1;font-size:13.5px;line-height:1.4}
+.status .txt span{display:block;color:var(--ink-3);font-size:12.5px}
+.status button{font-size:13px;font-weight:600;height:32px;padding:0 12px;border-radius:10px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22)}
+.sugg-h{font-size:13px;font-weight:600;color:var(--ink-2);margin:4px 2px 8px}
+.sugg{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.sugg button{width:100%;display:flex;align-items:center;gap:12px;padding:7px 12px 7px 8px;min-height:50px;border-radius:16px;text-align:left;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.12);
+  transition:background .2s,transform .35s cubic-bezier(.3,1.5,.5,1),border-color .2s}
+.sugg button:hover{background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.28);transform:translateX(2px)}
+.sugg .l{flex:1;font-size:14.5px;font-weight:500;line-height:1.3}
+.sugg .l span{display:block;font-size:12.5px;color:var(--ink-3);font-weight:400}
+.sugg .go{width:16px;height:16px;stroke:var(--ink-2);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.composer{margin:4px 16px 16px;border-radius:22px;padding:12px 12px 10px;
+  background:rgba(16,18,60,.30);border:1px solid rgba(255,255,255,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.18)}
+.composer .ctx{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px 0 6px;border-radius:999px;font-size:12.5px;font-weight:600;
+  background:rgba(16,40,40,.35);border:1px solid color-mix(in srgb,var(--sci) 60%,transparent)}
+.composer .ctx .at{width:18px;height:18px;border-radius:50%;display:grid;place-items:center;background:var(--sci);color:#0c2a1c;font-weight:700;font-size:12px}
+.composer textarea{display:block;width:100%;margin:6px 0 2px;background:none;border:0;color:#fff;font:inherit;font-size:15px;resize:none;outline:none;height:28px;overflow:hidden}
+.composer textarea::placeholder{color:var(--ink-3)}
+.composer .row{display:flex;align-items:center;gap:8px}
+.composer .row .hint{flex:1;font-size:12.5px;color:var(--ink-3)}
+.send{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;
+  background:radial-gradient(circle at 35% 30%,#c9c6ff,#7a74f5 70%);box-shadow:0 0 26px -2px rgba(150,146,255,.95),inset 0 1px 0 rgba(255,255,255,.55)}
+.send svg{width:19px;height:19px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+.tree:hover,.ag-body:hover{scrollbar-color:rgba(255,255,255,.3) transparent}
+/* assistant: short thread (used when it declines) */
+.thread{display:grid;gap:10px;margin:12px 0 6px}
+.msg{font-size:14.5px;line-height:1.5}
+.msg.me{justify-self:end;max-width:85%;padding:9px 13px;border-radius:16px 16px 4px 16px;background:rgba(16,18,60,.34);border:1px solid rgba(255,255,255,.2)}
+.msg.ai{padding:2px 2px 0}
+.msg.ai p{margin:0 0 10px}
+.msg.ai .acts{display:flex;gap:8px;flex-wrap:wrap}
+/* 1366 and narrower laptops: the tree already shows the class, so the breadcrumb drops it (fix: title no longer cut) */
+@media (max-width:1439px){ .crumbs .c1{display:none} .doc{padding:22px 30px 40px} .doc-head{gap:8px;padding-left:20px}
+  /* criterion: page >= 640px at 1366. Thinner frame around the page instead of narrower side panes. */
+  .page{margin:2px 5px 5px;border-radius:23px} .toolbar{margin:0 5px 6px} }
+/* ---------- mock controls ---------- */
+.mockbar{position:fixed;left:50%;bottom:6px;transform:translateX(-50%);z-index:20;display:flex;align-items:center;gap:8px;padding:5px 6px 5px 12px;border-radius:999px;
+  background:rgba(20,14,60,.86);border:1px solid rgba(255,255,255,.22);font-size:12.5px;box-shadow:0 10px 30px -10px rgba(0,0,0,.6)}
+.mockbar .lbl{color:var(--ink-2);font-weight:600}
+.mockbar .seg button{height:24px;font-size:12px;padding:0 9px}
+body.clean .mockbar{display:none}
+
+/* ---------- print preview ---------- */
+.pp{position:fixed;inset:0;z-index:30;display:none;place-items:center;background:rgba(18,12,54,.72)}
+body.print .pp{display:grid}
+.pp-sheet{overscroll-behavior:contain;width:min(640px,92vw);height:calc(100vh - 80px);overflow:auto;background:#fff;color:#1d1b2e;border-radius:6px;padding:48px 56px;box-shadow:0 30px 80px -20px rgba(0,0,0,.7);font-size:14px;line-height:1.55}
+.pp-sheet h2{font-size:26px;margin:0 0 4px}.pp-sheet .m{color:#555;font-size:13px;margin-bottom:18px}
+.pp-sheet h3{font-size:17px;margin:18px 0 8px;border-bottom:1px solid #d6d3e6;padding-bottom:4px}
+.pp-sheet table{font-size:13.5px;width:100%;border-collapse:collapse}.pp-sheet th{text-align:left;font-weight:600;padding:6px 8px}.pp-sheet td{padding:7px 8px}.pp-sheet td:first-child{font-weight:700}
+.pp-sheet .blk-cap{margin:8px 0 2px;font-size:13px}.pp-sheet p{max-width:none}.pp-sheet th{color:#333;border-bottom:1px solid #bbb}.pp-sheet td{border-bottom:1px solid #e3e0ee}
+.pp-bar{position:fixed;top:14px;right:18px;display:flex;gap:8px}
+.pp-sheet *{color:#1d1b2e!important;text-shadow:none!important}
+.pp-sheet mark{background:#fff1a8;box-shadow:none}
+.pp-sheet .from{display:block;font-size:12px;font-weight:400;color:#555!important;margin:2px 0 0}
+.pp-sheet h3{display:block}
+.pp-sheet .kw li{font-size:14px}.pp-sheet .kw li::before{background:#1d1b2e;box-shadow:none;width:5px;height:5px}
+.pp-sheet ol.q{list-style:decimal;padding-left:22px}.pp-sheet ol.q li{font-size:14px;margin-bottom:8px}.pp-sheet ol.q li::marker{color:#1d1b2e}
+.pp-sheet .opts{font-size:13.5px}.pp-sheet .num{color:#1d1b2e!important}
+.pp-sheet .blk{background:#fff;border-color:#d6d3e6;padding:12px 14px 8px}.pp-sheet .blk-head .aside,.pp-sheet .tile{display:none}
+.pp-sheet .flow .node{background:#fff}.pp-sheet .flow b{font-size:13.5px}.pp-sheet .flow span{font-size:12px}
+.pp-sheet .fx .tex{font-size:15px}
+
+@media (prefers-reduced-motion:reduce){.blob{animation:none!important}}   /* nebula backdrop only; the orb follows the Motion switch */
+
+@media (max-height:820px) and (min-width:901px){.stage{height:150px}.float{zoom:.78;margin-top:-6px}.hello p{display:none}.hello h2{margin-top:2px}.status{margin-top:10px}}
+/* narrow fallback (phone layout is out of scope; keep it usable) */
+@media (max-width:900px){
+  body{overflow:auto}
+  .app{height:auto;grid-template-columns:1fr;padding:12px}
+  .pane{max-height:none}
+  .side{height:auto}.doc-pane{height:80vh}.agent{height:auto}
+  .toolbar{overflow-x:auto}
+  .saved,.seg.gs{display:none}
+}
+</style>
+</head>
+<body>
+<div class="nebula" aria-hidden="true">
+  <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="blob b4"></div><div class="blob b5"></div>
+  <div id="aurora"></div>
+  <svg class="wisps" viewBox="0 0 1440 900" preserveAspectRatio="none">
+    <defs><linearGradient id="wispG" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".8"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+    <path d="M-40 760 C 200 640, 330 900, 620 780"/><path d="M-40 790 C 210 670, 350 930, 640 810" opacity=".6"/>
+    <path d="M900 140 C 1100 60, 1250 220, 1480 120"/><path d="M920 170 C 1110 90, 1260 250, 1480 150" opacity=".5"/>
+  </svg>
+</div>
+
+<main class="app">
+  <!-- LEFT: Class > Subject > Chapter tree -->
+  <nav class="glass pane side" aria-label="Classes and chapters">
+    <div class="side-head">
+      <div class="tile" style="--c:#aab0ff"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/></svg></div>
+      <h1>My classes</h1>
+      <button class="btn-new" aria-label="New note"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+    </div>
+    <label class="search ctl"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <span class="sr">Search chapters and notes</span><input type="search" placeholder="Search chapters and notes…"></label>
+    <div class="tree">
+      <ul>
+        <li>
+          <button class="cls" aria-expanded="true"><svg aria-hidden="true" focusable="false" class="chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>Class 6<span class="n">2 chapters</span></button>
+          <ul>
+            <li>
+              <div class="subj" style="--c:var(--sci)"><span class="dot"></span>Science</div>
+              <ul><li>
+                <button class="chap" id="chapDig" aria-current="page">
+                  <span class="tile" style="--c:var(--sci)"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10Z"/><path d="M2 21c0-3 1.9-5.4 5.1-6"/></svg></span>
+                  <span class="txt"><span class="t" style="display:block">Human Digestive System</span><span class="s" id="digStatus" style="display:block">Block 15, draft waiting</span></span>
+                </button>
+              </li></ul>
+            </li>
+            <li>
+              <div class="subj" style="--c:var(--eng)"><span class="dot"></span>English</div>
+              <ul><li>
+                <button class="chap">
+                  <span class="tile" style="--c:var(--eng)"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M2 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2z"/><path d="M22 4h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"/></svg></span>
+                  <span class="txt"><span class="t" style="display:block">Bakunawa, the Moon-Eating Dragon</span><span class="s" style="display:block">Block 13, edited yesterday</span></span>
+                </button>
+              </li></ul>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <button class="cls" id="cls9" aria-expanded="false"><svg aria-hidden="true" focusable="false" class="chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>Class 9<span class="n">1 chapter</span></button>
+          <ul hidden>
+            <li>
+              <div class="subj" style="--c:var(--sci)"><span class="dot"></span>Science</div>
+              <ul><li>
+                <button class="chap" id="chapMot">
+                  <span class="tile" style="--c:var(--sci)"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10Z"/><path d="M2 21c0-3 1.9-5.4 5.1-6"/></svg></span>
+                  <span class="txt"><span class="t" style="display:block">Motion</span><span class="s" style="display:block">No textbook pages yet</span></span>
+                </button>
+              </li></ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <div class="side-foot">
+      <div class="mat"><span>Panes</span><div class="seg gs" role="group" aria-label="Pane material"><button id="bGlass" aria-pressed="true">Glass</button><button id="bSolid" aria-pressed="false">Solid</button></div></div>
+      <div class="mat"><span>Page</span><div class="seg gs" role="group" aria-label="Note page colour"><button id="bLight" aria-pressed="true">Light</button><button id="bDark" aria-pressed="false">Dark</button></div></div>
+      <div class="mat"><span>Motion</span><div class="seg gs" role="group" aria-label="Orb motion"><button id="bFull" aria-pressed="true">Full</button><button id="bCalm" aria-pressed="false">Calm</button></div></div>
+      <p class="mo-note" id="moNote">Your system asks for less motion. The orb still moves here. Choose Calm to follow it.</p>
+      <p class="rt-note" id="rtNote">Windows asks for less transparency. Choose Solid to follow it.</p>
+      <button><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Note formats</button>
+      <button><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M2 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2z"/><path d="M22 4h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"/></svg>Textbooks</button>
+    </div>
+  </nav>
+
+  <!-- MIDDLE: note -->
+  <section class="glass pane doc-pane" aria-label="Note editor">
+    <header class="doc-head">
+      <div class="crumbs">
+        <span class="c1" id="crClass">Class 6</span><svg aria-hidden="true" focusable="false" class="sep c1" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg>
+        <span style="display:flex;align-items:center;gap:7px"><span class="dot" style="--c:var(--sci)"></span>Science</span><svg aria-hidden="true" focusable="false" class="sep" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg>
+        <b id="crChap">Human Digestive System</b>
+      </div>
+      <span class="saved"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M17.5 19a4.5 4.5 0 1 0-1.4-8.8A6 6 0 0 0 4.3 12.5 3.5 3.5 0 0 0 6.5 19z"/></svg>Saved 10:24</span>
+      <button class="pill" id="bPrint"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M6 14h12v7H6z"/></svg>Print</button>
+      <button class="pill"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M17 8v6M14 11h6"/></svg>Share</button>
+    </header>
+    <div class="toolbar ctl" role="toolbar" aria-label="Formatting">
+      <button aria-label="Undo"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg></button>
+      <span class="div"></span>
+      <button>Heading 1<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" style="width:14px;height:14px"><path d="m6 9 6 6 6-6"/></svg></button>
+      <span class="div"></span>
+      <button class="fmt" aria-label="Bold">B</button><button class="fmt i" aria-label="Italic">I</button><button class="fmt u" aria-label="Underline">U</button>
+      <span class="div"></span>
+      <button aria-label="Bullet list"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r=".8"/><circle cx="4.5" cy="12" r=".8"/><circle cx="4.5" cy="18" r=".8"/></svg></button>
+      <button aria-label="Numbered list"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M10 6h10M10 12h10M10 18h10M4 5l1.5-1v5M3.5 14.5a1.5 1.5 0 1 1 2.6 1L3.5 18.5h3"/></svg></button>
+      <span class="div"></span>
+      <button aria-label="Table"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 4v16"/></svg></button>
+      <button aria-label="Image"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/></svg></button>
+      <button aria-label="Chemical or maths formula"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M4 18 11 6M4 6l7 12"/><path d="M15 8.5a2 2 0 1 1 3.4 1.4L15 13h4"/></svg>Formula</button>
+    </div>
+
+    <div class="page" id="page">
+    <article class="doc" id="doc" tabindex="0" aria-label="Note page">
+     <div class="v-dig">
+      <h2 class="title">Human Digestive System</h2>
+      <div class="meta">
+        <span class="chip sci"><span class="dot" style="--c:var(--sci)"></span>Science, Class 6 format</span>
+        <span class="chip">Block 15, pages 49 to 54</span>
+      </div>
+      <p>Enzymes are chemicals in our body that <mark>break food down into small, simple parts</mark> the body can absorb. Each enzyme works on only one kind of food.</p>
+
+      <figure class="blk flow" id="flow" aria-labelledby="flowT">
+        <figcaption class="blk-head"><span class="tile sm"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><circle cx="5" cy="12" r="2.5"/><circle cx="19" cy="12" r="2.5"/><path d="M7.5 12h9M13.5 9l3 3-3 3"/></svg></span><span id="flowT">Path of food</span><span class="aside">Drawn from text. Click a box to edit.</span></figcaption>
+        <ol>
+          <li><span class="node" aria-hidden="true">1</span><b>Mouth</b><span>Chewing. Saliva starts on starch.</span><svg class="ah" viewBox="0 0 9 12" aria-hidden="true"><path d="M0 0 9 6 0 12z"/></svg></li>
+          <li><span class="node" aria-hidden="true">2</span><b>Oesophagus</b><span>Food pipe. Pushes food down.</span><svg class="ah" viewBox="0 0 9 12" aria-hidden="true"><path d="M0 0 9 6 0 12z"/></svg></li>
+          <li><span class="node" aria-hidden="true">3</span><b>Stomach</b><span>Churns food. Acid and protease.</span><svg class="ah" viewBox="0 0 9 12" aria-hidden="true"><path d="M0 0 9 6 0 12z"/></svg></li>
+          <li><span class="node" aria-hidden="true">4</span><b>Small intestine</b><span>Digestion ends. Food is absorbed.</span><svg class="ah" viewBox="0 0 9 12" aria-hidden="true"><path d="M0 0 9 6 0 12z"/></svg></li>
+          <li><span class="node" aria-hidden="true">5</span><b>Large intestine</b><span>Absorbs water.</span></li>
+        </ol>
+      </figure>
+
+      <h3><span class="num">1</span>Keywords</h3>
+      <ul class="kw">
+        <li><b>Digestion</b>: breaking food down into small, simple parts the body can absorb.</li>
+        <li><b>Enzyme</b>: a chemical that speeds up the breakdown of food.</li>
+        <li><b>Substrate</b>: the food substance an enzyme acts on.</li>
+        <li><b>Lock and key</b>: each enzyme fits only one kind of substrate, like a key in its lock.</li>
+        <li><b>Amylase</b>: enzyme in saliva. Breaks starch into sugar.</li>
+      </ul>
+      <div class="blk">
+        <div class="blk-head"><span class="tile sm"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.7 3h10.6a2 2 0 0 0 1.7-3l-5-9V3"/></svg></span>Enzymes and what they digest</div>
+        <table>
+          <thead><tr><th scope="col">Enzyme</th><th scope="col">Acts on</th><th scope="col">Digested product</th></tr></thead>
+          <tbody>
+            <tr><td>Amylase</td><td>Starch</td><td>Maltose (complex sugar)</td></tr>
+            <tr><td>Protease</td><td>Proteins</td><td>Amino acids</td></tr>
+            <tr><td>Lipase</td><td>Fats</td><td>Fatty acids and glycerol</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <figure class="blk" id="formula" aria-labelledby="fxT">
+        <figcaption class="blk-head"><span class="tile sm"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M4 18 11 6M4 6l7 12"/><path d="M15 8.5a2 2 0 1 1 3.4 1.4L15 13h4"/></svg></span><span id="fxT">Starch to maltose</span><span class="aside">Typed as a formula, not a picture</span></figcaption>
+        <div class="fx">
+          <div class="row"><span class="lbl">In words</span><span class="tex" data-tex="\text{starch} + \text{water} \xrightarrow[\text{in saliva}]{\text{amylase}} \text{maltose}"><span class="fallback">starch + water, with amylase in saliva, gives maltose</span></span></div>
+          <div class="row"><span class="lbl">As a formula</span><span class="tex" data-tex="\ce{2(C6H10O5)_{n} + nH2O ->[amylase] nC12H22O11}"><span class="fallback">2(C<sub>6</sub>H<sub>10</sub>O<sub>5</sub>)<sub>n</sub> + nH<sub>2</sub>O, amylase, nC<sub>12</sub>H<sub>22</sub>O<sub>11</sub></span></span></div>
+        </div>
+        <p class="blk-cap">Amylase in saliva starts breaking starch into maltose while we chew.</p>
+      </figure>
+
+      <h3><span class="num">2</span>Practice questions<span class="from">From the textbook, page 50</span></h3>
+      <ol class="q">
+        <li>The action of salivary enzymes on food can be best compared to:
+          <div class="opts"><span>a. pen and pencil</span><span>b. lock and key</span><span>c. bat and ball</span></div></li>
+        <li>Liana eats grilled chicken breast for lunch every day. Name one enzyme that helps in digesting the food she eats.</li>
+        <li>How will the absence of the enzyme lipase affect the process of digestion in our body?</li>
+      </ol>
+
+      <section class="draft" id="draft" aria-labelledby="draftT">
+        <div class="draft-head"><span class="badge">Draft</span><span id="draftT">3 more questions from pages 49 to 54</span></div>
+        <ol class="q" start="4">
+          <li>Saliva contains an enzyme called ________. It breaks down starch into sugar.</li>
+          <li>Why can an enzyme that breaks down proteins not break down starch?</li>
+          <li>Name the juice made by the pancreas and the one made by the liver.</li>
+        </ol>
+      </section>
+     </div>
+
+     <!-- chapter with NO textbook pages: the Assistant declines to invent questions -->
+     <div class="v-nop">
+      <h2 class="title">Motion</h2>
+      <div class="meta">
+        <span class="chip sci"><span class="dot" style="--c:var(--sci)"></span>Science, Class 9 format</span>
+        <span class="chip warn">No textbook pages yet</span>
+      </div>
+      <p>Start typing here, or add the textbook pages for this chapter. The Assistant drafts only from those pages.</p>
+      <h3><span class="num">1</span>Keywords</h3>
+      <p class="empty-sec">Empty. Type your keywords, or add the pages and the Assistant will suggest them.</p>
+      <h3><span class="num">2</span>Practice questions</h3>
+      <div class="refuse" role="note" aria-labelledby="refT">
+        <h4 id="refT"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 3 2 20h20z"/><path d="M12 10v4M12 17h.01"/></svg>No questions written</h4>
+        <p>This chapter has no textbook pages yet. I only write from your textbook, so I did not make up any questions.</p>
+        <div class="acts"><button class="btn primary">Add textbook pages</button><button class="btn ghost">Write my own</button></div>
+      </div>
+     </div>
+    </article>
+    <!-- ONE decision per draft. It sits in its own row under the scroll area, so it covers no text. -->
+    <div class="dock decide" id="dockDecide" role="region" aria-label="Draft decision">
+      <div class="what"><span class="badge">Draft</span><span>3 questions<small>Nothing changes until you accept.</small></span></div>
+      <button class="btn primary" id="bJump">Show the 3 questions</button>
+      <button class="btn ghost" id="bEdit">Edit first</button>
+      <button class="btn ghost" id="bReject">Reject</button>
+      <button class="btn primary" id="bAccept">Accept</button>
+    </div>
+    <div class="dock toast" id="dockToast" role="status" aria-live="polite">
+      <div class="what"><span class="ok" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><span>3 questions added to Practice questions<small>Questions 4 to 6, from pages 49 to 54</small></span></div>
+      <button class="btn ghost" id="bUndo">Undo</button>
+    </div>
+    </div>
+  </section>
+
+  <!-- RIGHT: agent -->
+  <aside class="glass pane agent" aria-label="Assistant">
+    <div class="ag-head">
+      <span class="mini-orb" aria-hidden="true"></span>
+      <div class="who"><div class="name">Assistant</div><div class="sub" id="agSub">Class 6 Science</div></div>
+      <div class="ag-tools">
+        <button class="ibtn" aria-label="Sources"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M2 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2z"/><path d="M22 4h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"/></svg></button>
+        <button class="ibtn" aria-label="History"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/></svg></button>
+        <button class="ibtn" aria-label="Close assistant"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+      </div>
+    </div>
+    <div class="ag-body">
+      <div class="stage">
+        <svg class="streaks" viewBox="0 0 400 226" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="stA" x1="0" x2="1"><stop offset="0" stop-color="#9fd6ff" stop-opacity="0"/><stop offset=".45" stop-color="#b9c4ff" stop-opacity=".9"/><stop offset="1" stop-color="#e3b8ff" stop-opacity="0"/></linearGradient>
+          </defs>
+          <g id="streakG">
+            <path d="M0 150 C 90 60, 170 190, 260 110 S 380 60, 420 90" stroke="url(#stA)" stroke-width="1.6"/>
+            <path d="M0 160 C 100 80, 180 200, 270 125 S 380 80, 420 110" stroke="url(#stA)" stroke-width="1" opacity=".7"/>
+            <path d="M0 175 C 110 100, 190 215, 280 140 S 380 100, 420 130" stroke="url(#stA)" stroke-width=".8" opacity=".5"/>
+          </g>
+        </svg>
+        <div class="float">
+          <div class="orb" id="orb" data-state="normal">
+            <div class="orb-gl" id="orbGl"></div>
+            <div class="sphere"><div class="swirl" id="swirl"></div></div>
+            <div class="face" id="face">
+              <div class="eye l" id="eyeL"></div><div class="eye r" id="eyeR"></div>
+              <div class="mouth" id="mouth"></div>
+            </div>
+            <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+          </div>
+        </div>
+        <div class="state-line" id="stateLine" aria-live="polite">Ready</div>
+      </div>
+      <div class="hello v-dig">
+        <h2>What shall we make today?</h2>
+        <p>I work only from Block 15, pages 49 to 54. If the textbook does not cover it, I ask you first.</p>
+      </div>
+      <div class="status v-dig" id="status">
+        <span class="tile sm" style="--c:#aab0ff" id="stTile"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></span>
+        <div class="txt" id="stTxt">3 questions wait in the note<span>Accept or reject them there</span></div>
+        <button id="bShow">Show</button>
+      </div>
+      <div class="v-nop">
+        <div class="thread">
+          <div class="msg me">Make 5 practice questions for Motion.</div>
+          <div class="msg ai">
+            <p>I can't write them yet. Motion has no textbook pages, and I only write from your textbook. Questions I make up could teach something your book does not say.</p>
+            <p>Add the pages and I will draft the questions in the note for you to check.</p>
+            <div class="acts"><button class="btn primary">Add textbook pages</button><button class="btn ghost">Write my own</button></div>
+          </div>
+        </div>
+      </div>
+      <div class="sugg-h v-dig" id="sh">Next for this chapter</div>
+      <ul class="sugg v-dig" aria-labelledby="sh">
+        <li><button><span class="tile" style="--c:#7cc4ff"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg></span><span class="l">Worksheet with space to write</span><svg aria-hidden="true" focusable="false" class="go" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button></li>
+        <li><button><span class="tile" style="--c:var(--sci)"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><span class="l">Answer key for all 6 questions</span><svg aria-hidden="true" focusable="false" class="go" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button></li>
+        <li><button><span class="tile" style="--c:#ffd36e"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M9 18h6M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7V16h8v-1.3A7 7 0 0 0 12 2z"/></svg></span><span class="l">Simpler version of this note</span><svg aria-hidden="true" focusable="false" class="go" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button></li>
+        <li><button><span class="tile" style="--c:#ff8fb8"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h.01"/></svg></span><span class="l">Class quiz, 10 quick questions</span><svg aria-hidden="true" focusable="false" class="go" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button></li>
+        <li><button><span class="tile" style="--c:#b69cff"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span><span class="l">Flashcards from the keywords</span><svg aria-hidden="true" focusable="false" class="go" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button></li>
+      </ul>
+    </div>
+    <div class="composer">
+      <span class="ctx"><span class="at">@</span><span id="ctxName">Block 15 Human Digestive System</span></span>
+      <label class="sr" for="ask">Ask the Assistant</label>
+      <textarea id="ask" placeholder="Ask about this chapter…"></textarea>
+      <div class="row">
+        <button class="ibtn" id="bMic" aria-label="Speak instead of typing"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>
+        <span class="hint">Uses only this chapter</span>
+        <button class="send" aria-label="Send"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button>
+      </div>
+    </div>
+  </aside>
+</main>
+
+<aside class="mockbar" aria-label="Mock controls">
+  <span class="lbl">Mock: orb</span>
+  <div class="seg" id="stateSeg"><button data-s="normal" aria-pressed="true">Normal</button><button data-s="listening" aria-pressed="false">Listening</button><button data-s="thinking" aria-pressed="false">Thinking</button><button data-s="speaking" aria-pressed="false">Speaking</button></div>
+  <span class="lbl">Chapter</span>
+  <div class="seg" id="viewSeg"><button data-v="dig" aria-pressed="true">With pages</button><button data-v="nop" aria-pressed="false">No pages</button></div>
+</aside>
+
+<div class="pp" role="dialog" aria-modal="true" aria-label="Print preview">
+  <div class="pp-bar"><button class="pill" id="ppPrint" onclick="window.print()">Print / Save as PDF</button> <button class="pill" id="ppClose">Close preview</button></div>
+  <div class="pp-sheet" id="ppSheet" tabindex="0" aria-label="Printed pages"></div>
+</div>
+
+<script type="module">
+const q = new URLSearchParams(location.search);
+history.scrollRestoration = 'manual';
+addEventListener('load', () => { document.getElementById('doc').scrollTop = 0; document.querySelector('.ag-body').scrollTop = 0; });
+const body = document.body;
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const STILL = q.has('still');
+const T0 = parseFloat(q.get('t') || '0');
+if (RM) body.classList.add('rmos');   // the OS asks for less motion: only shows a hint, the orb still follows the Motion switch
+if (STILL) body.classList.add('still');
+if (q.has('clean')) body.classList.add('clean');
+if (q.has('stress')) body.classList.add('stress');
+
+/* nebula phase: negative delay places each blob at a fixed point of its loop */
+if (STILL) document.querySelectorAll('.blob').forEach(b => {
+  const dur = parseFloat(getComputedStyle(b).getPropertyValue('--dur')) || 70;
+  const d0 = parseFloat(getComputedStyle(b).animationDelay) || 0;
+  b.style.animationDelay = (d0 - T0) + 's'; b.style.animationPlayState = 'paused';
+});
+
+/* Glass / Solid */
+const bG = document.getElementById('bGlass'), bS = document.getElementById('bSolid');
+function setSolid(s){ body.classList.toggle('solid', s); bG.setAttribute('aria-pressed', !s); bS.setAttribute('aria-pressed', s); }
+bG.onclick = () => setSolid(false); bS.onclick = () => setSolid(true);
+const RT = matchMedia('(prefers-reduced-transparency: reduce)').matches;
+if (RT && !q.has('clean')) body.classList.add('rt');
+if (q.has('solid') || (RT && q.has('respect'))) setSolid(true);
+document.documentElement.dataset.rt = RT;
+
+/* Motion: Full / Calm. Full is the default even when the OS asks for less motion (user decision, round 6). ?calm=1 starts Calm. */
+const bF = document.getElementById('bFull'), bC = document.getElementById('bCalm');
+let CALM = q.has('calm') && q.get('calm') !== '0';
+function setCalm(c){ CALM = c; body.classList.toggle('calm', c); bF.setAttribute('aria-pressed', !c); bC.setAttribute('aria-pressed', c); document.documentElement.dataset.motion = c ? 'calm' : 'full'; }
+bF.onclick = () => setCalm(false); bC.onclick = () => setCalm(true);
+setCalm(CALM);
+document.documentElement.dataset.rm = RM;
+
+/* tree disclosure */
+document.querySelectorAll('.cls').forEach(b => b.onclick = () => {
+  const o = b.getAttribute('aria-expanded') === 'true'; b.setAttribute('aria-expanded', !o);
+  const ul = b.nextElementSibling; if (ul) ul.hidden = o;
+});
+
+const $ = id => document.getElementById(id);
+const page = $('page'), doc = $('doc'), draft = $('draft');
+
+/* ---------- Page: Light / Dark (solid in both; never glass) ---------- */
+function setPage(dark){ body.classList.toggle('pdark', dark); $('bLight').setAttribute('aria-pressed', !dark); $('bDark').setAttribute('aria-pressed', dark); }
+$('bLight').onclick = () => setPage(false); $('bDark').onclick = () => setPage(true);
+setPage(q.get('page') === 'dark');
+
+/* ---------- draft: one decision, in the dock row under the page ---------- */
+let draftState = 'pending';            /* pending | accepted | rejected */
+const stTxt = $('stTxt'), digStatus = $('digStatus');
+function syncDraft(){
+  const nop = body.classList.contains('nopages');
+  page.classList.toggle('show-dock', !nop && draftState === 'pending');
+  page.classList.toggle('show-toast', !nop && draftState !== 'pending' && toastOn);
+  draft.hidden = draftState === 'rejected';
+  draft.classList.toggle('merged', draftState === 'accepted');
+  if (draftState === 'pending') { stTxt.innerHTML = '3 questions wait in the note<span>Accept or reject them there</span>'; digStatus.textContent = 'Block 15, draft waiting'; }
+  if (draftState === 'accepted') { stTxt.innerHTML = '3 questions added<span>Questions 4 to 6 are in the note</span>'; digStatus.textContent = 'Block 15, edited just now'; }
+  if (draftState === 'rejected') { stTxt.innerHTML = 'Draft rejected<span>The note did not change</span>'; digStatus.textContent = 'Block 15, no draft'; }
+  $('bShow').hidden = draftState === 'rejected';
+}
+let toastOn = false;
+const toastMain = $('dockToast').querySelector('.what > span:last-child');
+function decide(s){
+  draftState = s; toastOn = true;
+  toastMain.innerHTML = s === 'accepted'
+    ? '3 questions added to Practice questions<small>Questions 4 to 6, from pages 49 to 54</small>'
+    : 'Draft rejected. The note did not change.<small>The 3 questions are gone from the note</small>';
+  syncDraft(); $('bUndo').focus({ preventScroll: true });
+}
+$('bAccept').onclick = () => decide('accepted');
+$('bReject').onclick = () => decide('rejected');
+$('bUndo').onclick = () => { draftState = 'pending'; toastOn = false; syncDraft(); $('bAccept').focus({ preventScroll: true }); };
+$('bEdit').onclick = () => { const ol = draft.querySelector('ol'); ol.contentEditable = 'true'; ol.focus(); draft.scrollIntoView({ block: 'center' }); };
+if (q.has('accepted')) { draftState = 'accepted'; toastOn = true; }
+
+/* Kakashi fix: Accept/Reject/Edit appear only when the draft is on screen */
+const dockDecide = $('dockDecide');
+new IntersectionObserver(es => { es.forEach(e => dockDecide.classList.toggle('away', e.intersectionRatio < 0.5)); }, { root: doc, threshold: [0, 0.5, 1] }).observe(draft);
+dockDecide.classList.add('away');
+$('bJump').onclick = () => { draft.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'center' }); };
+
+/* show draft (agent status button) */
+$('bShow').onclick = () => draft.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'center' });
+
+/* ---------- chapter view: with pages / no pages ---------- */
+function setView(v){
+  const nop = v === 'nop';
+  body.classList.toggle('nopages', nop);
+  $('crClass').textContent = nop ? 'Class 9' : 'Class 6';
+  $('crChap').textContent = nop ? 'Motion' : 'Human Digestive System';
+  $('agSub').textContent = nop ? 'Class 9 Science' : 'Class 6 Science';
+  $('ctxName').textContent = nop ? 'Motion' : 'Block 15 Human Digestive System';
+  document.title = (nop ? 'Motion - Class 9' : 'Human Digestive System - Class 6') + ' Science - Teacher Notes (v3 target mock)';
+  $('chapDig').toggleAttribute('aria-current', !nop); if (!nop) $('chapDig').setAttribute('aria-current', 'page');
+  $('chapMot').toggleAttribute('aria-current', nop); if (nop) $('chapMot').setAttribute('aria-current', 'page');
+  if (nop) { $('cls9').setAttribute('aria-expanded', 'true'); $('cls9').nextElementSibling.hidden = false; }
+  document.querySelectorAll('#viewSeg button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === v));
+  doc.scrollTop = 0; syncDraft();
+}
+document.querySelectorAll('#viewSeg button').forEach(b => b.onclick = () => setView(b.dataset.v));
+$('chapDig').onclick = () => setView('dig'); $('chapMot').onclick = () => setView('nop');
+setView(q.get('view') === 'nopages' ? 'nop' : 'dig');
+
+/* ---------- formulas: KaTeX + mhchem (fallback text stays if the CDN fails) ---------- */
+function renderTex(){
+  if (!window.katex) return false;
+  document.querySelectorAll('.tex[data-tex]').forEach(el => {
+    try { katex.render(el.dataset.tex, el, { throwOnError: false, output: 'htmlAndMathml' }); el.dataset.ok = '1'; } catch (e) { console.warn('katex', e); }
+  });
+  document.documentElement.dataset.katex = 'ok'; return true;
+}
+if (!renderTex()) addEventListener('load', () => { if (!renderTex()) document.documentElement.dataset.katex = 'failed'; });
+
+/* ---------- print preview: white paper, same blocks as the note ---------- */
+const sheet = $('ppSheet');
+function openPrint(){
+  const nop = body.classList.contains('nopages');
+  const src = document.querySelector(nop ? '.v-nop' : '.v-dig').cloneNode(true);
+  const d = src.querySelector('.draft');
+  if (d && d.classList.contains('merged') && !d.hidden) d.replaceWith(d.querySelector('ol')); else d?.remove();
+  src.querySelectorAll('.title,.meta,.aside,.draft-head,.refuse,.empty-sec').forEach(n => n.remove());
+  if (nop) src.querySelector('p')?.remove();
+  src.querySelectorAll('[id]').forEach(n => n.removeAttribute('id'));
+  src.querySelectorAll('[aria-labelledby]').forEach(n => n.removeAttribute('aria-labelledby'));
+  sheet.innerHTML = nop
+    ? '<h2>Motion</h2><div class="m">Class 9 Science</div>'
+    : '<h2>Human Digestive System</h2><div class="m">Class 6 Science, Block 15, pages 49 to 54</div>';
+  sheet.append(...src.childNodes);
+  sheet.querySelectorAll('.num').forEach(n => n.textContent = n.textContent + '. ');
+  body.classList.add('print'); $('ppClose').focus();
+}
+$('bPrint').onclick = openPrint;
+$('ppClose').onclick = () => { body.classList.remove('print'); $('bPrint').focus(); };
+addEventListener('keydown', e => { if (e.key === 'Escape' && body.classList.contains('print')) $('ppClose').click(); });
+if (q.has('print')) addEventListener('load', () => setTimeout(openPrint, 300));
+const SCROLL = q.get('scroll');
+if (SCROLL) addEventListener('load', () => setTimeout(() => {
+  doc.style.scrollBehavior = 'auto';
+  if (SCROLL === 'draft') doc.scrollTop = doc.scrollHeight;
+  else { const el = $(SCROLL); if (el) doc.scrollTop += el.getBoundingClientRect().top - doc.getBoundingClientRect().top - 16; }
+}, 350));
+
+/* ---------- orb states: normal | listening | thinking | speaking ---------- */
+const orb = document.getElementById('orb'), line = document.getElementById('stateLine'), mic = document.getElementById('bMic');
+const LINES = { normal: 'Ready', listening: 'Listening', thinking: 'Reading pages 49 to 54', speaking: '' };
+const SAY = 'Three questions from page 50 are ready.';
+const MIC_SVG = mic.innerHTML, STOP_SVG = '<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2.5" fill="currentColor" stroke="none"/></svg>';
+let state = 'normal', flowOn = false, flowTimer = 0, wordTimer = 0, mouthKick = -1e9, mouthAmp = 0;
+function setState(s){
+  clearTimeout(flowTimer); clearInterval(wordTimer);
+  state = s; orb.dataset.state = s; document.documentElement.dataset.ostate = s;
+  document.querySelectorAll('#stateSeg button').forEach(b => b.setAttribute('aria-pressed', b.dataset.s === s));
+  const active = s !== 'normal';
+  mic.innerHTML = active ? STOP_SVG : MIC_SVG; mic.setAttribute('aria-label', active ? 'Stop' : 'Speak instead of typing'); mic.classList.toggle('on', active);
+  if (s === 'speaking') speak(); else line.textContent = LINES[s];
+  if (flowOn && s === 'listening') flowTimer = setTimeout(() => setState('thinking'), 3500);
+  if (flowOn && s === 'thinking') flowTimer = setTimeout(() => setState('speaking'), 2500);
+  if (s === 'normal') flowOn = false;
+  if (STILL && window.__redraw) window.__redraw();
+}
+function speak(){                                   // caption words drive the mouth: each word opens it, then it closes
+  const ws = SAY.split(' '); let i = 0; line.textContent = '';
+  const step = () => {
+    if (i < ws.length) { const w = ws[i++]; line.textContent += (i > 1 ? ' ' : '') + w; mouthKick = performance.now(); mouthAmp = Math.min(1, .5 + w.length * .09); }
+    else { clearInterval(wordTimer); flowTimer = setTimeout(() => flowOn ? setState('normal') : setState('speaking'), flowOn ? 700 : 1400); }
+  };
+  if (STILL) { while (i < 4) step(); clearInterval(wordTimer); return; }
+  step(); wordTimer = setInterval(step, 300);
+}
+document.querySelectorAll('#stateSeg button').forEach(b => b.onclick = () => { flowOn = false; setState(b.dataset.s); });
+mic.onclick = () => { if (state === 'normal') { flowOn = true; setState('listening'); } else { flowOn = false; setState('normal'); } };   // mic -> listening -> thinking -> speaking -> normal; Stop -> normal now
+setState(({ idle: 'normal' })[q.get('state')] || q.get('state') || 'normal');
+
+/* ---------- eyes: follow pointer anywhere, spring, blink ---------- */
+const face = document.getElementById('face'), eyes = [document.getElementById('eyeL'), document.getElementById('eyeR')];
+const mouth = document.getElementById('mouth'), floatEl = document.querySelector('.float'), dotEls = [...document.querySelectorAll('.dots i')];
+let tx = 0, ty = 0, x = 0, y = 0, vx = 0, vy = 0, blink = 1, nextBlink = performance.now() + 3000 + Math.random() * 3000, blinkStart = -1;
+let floatAmp = 0, wobbleAmp = 0, lvlS = 0;
+const MAX = 13;
+addEventListener('pointermove', e => {
+  const r = orb.getBoundingClientRect();
+  const dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
+  const d = Math.hypot(dx, dy) || 1, k = Math.min(1, d / 320);
+  tx = dx / d * MAX * k; ty = dy / d * MAX * k;
+});
+document.addEventListener('pointerleave', () => { tx = 0; ty = 0; });
+if (q.has('look')) { const [lx, ly] = q.get('look').split(',').map(Number); tx = x = lx; ty = y = ly; }
+
+/* ---------- WebGL orb ring (React Bits Orb shader, ported to plain OGL) ---------- */
+let prog = null, renderer = null, mesh = null, glOK = false;
+const stateTarget = { normal: { speed: 0, hue: 0, hover: 0 }, listening: { speed: 1, hue: 0, hover: .12 }, thinking: { speed: 2.4, hue: 28, hover: 1 }, speaking: { speed: 1.5, hue: -18, hover: .5 } };
+let cur = { speed: 1, hue: 0, hover: 0 }, orbTime = T0;
+try {
+  const { Renderer, Program, Mesh, Triangle, Vec3 } = await import('https://esm.sh/ogl@1.0.11');
+  const vert = `precision highp float;attribute vec2 position;attribute vec2 uv;varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position,0.0,1.0);}`;
+  const frag = `precision highp float;
+uniform float iTime;uniform vec3 iResolution;uniform float hue;uniform float hover;uniform float rot;uniform float hoverIntensity;uniform vec3 backgroundColor;varying vec2 vUv;
+vec3 rgb2yiq(vec3 c){float y=dot(c,vec3(0.299,0.587,0.114));float i=dot(c,vec3(0.596,-0.274,-0.322));float q=dot(c,vec3(0.211,-0.523,0.312));return vec3(y,i,q);}
+vec3 yiq2rgb(vec3 c){float r=c.x+0.956*c.y+0.621*c.z;float g=c.x-0.272*c.y-0.647*c.z;float b=c.x-1.106*c.y+1.703*c.z;return vec3(r,g,b);}
+vec3 adjustHue(vec3 color,float hueDeg){float hueRad=hueDeg*3.14159265/180.0;vec3 yiq=rgb2yiq(color);float cosA=cos(hueRad);float sinA=sin(hueRad);float i=yiq.y*cosA-yiq.z*sinA;float q=yiq.y*sinA+yiq.z*cosA;yiq.y=i;yiq.z=q;return yiq2rgb(yiq);}
+vec3 hash33(vec3 p3){p3=fract(p3*vec3(0.1031,0.11369,0.13787));p3+=dot(p3,p3.yxz+19.19);return -1.0+2.0*fract(vec3(p3.x+p3.y,p3.x+p3.z,p3.y+p3.z)*p3.zyx);}
+float snoise3(vec3 p){const float K1=0.333333333;const float K2=0.166666667;vec3 i=floor(p+(p.x+p.y+p.z)*K1);vec3 d0=p-(i-(i.x+i.y+i.z)*K2);vec3 e=step(vec3(0.0),d0-d0.yzx);vec3 i1=e*(1.0-e.zxy);vec3 i2=1.0-e.zxy*(1.0-e);vec3 d1=d0-(i1-K2);vec3 d2=d0-(i2-K1);vec3 d3=d0-0.5;vec4 h=max(0.6-vec4(dot(d0,d0),dot(d1,d1),dot(d2,d2),dot(d3,d3)),0.0);vec4 n=h*h*h*h*vec4(dot(d0,hash33(i)),dot(d1,hash33(i+i1)),dot(d2,hash33(i+i2)),dot(d3,hash33(i+1.0)));return dot(vec4(31.316),n);}
+vec4 extractAlpha(vec3 colorIn){float a=max(max(colorIn.r,colorIn.g),colorIn.b);return vec4(colorIn.rgb/(a+1e-5),a);}
+const vec3 baseColor1=vec3(0.611765,0.262745,0.996078);const vec3 baseColor2=vec3(0.298039,0.760784,0.913725);const vec3 baseColor3=vec3(0.062745,0.078431,0.600000);
+const float innerRadius=0.6;const float noiseScale=0.65;
+float light1(float intensity,float attenuation,float dist){return intensity/(1.0+dist*attenuation);}
+float light2(float intensity,float attenuation,float dist){return intensity/(1.0+dist*dist*attenuation);}
+vec4 draw(vec2 uv){vec3 color1=adjustHue(baseColor1,hue);vec3 color2=adjustHue(baseColor2,hue);vec3 color3=adjustHue(baseColor3,hue);
+float ang=atan(uv.y,uv.x);float len=length(uv);float invLen=len>0.0?1.0/len:0.0;float bgLuminance=dot(backgroundColor,vec3(0.299,0.587,0.114));
+float n0=snoise3(vec3(uv*noiseScale,iTime*0.5))*0.5+0.5;float r0=mix(mix(innerRadius,1.0,0.4),mix(innerRadius,1.0,0.6),n0);float d0=distance(uv,(r0*invLen)*uv);
+float v0=light1(1.0,10.0,d0);v0*=smoothstep(r0*1.05,r0,len);float innerFade=smoothstep(r0*0.8,r0*0.95,len);v0*=mix(innerFade,1.0,bgLuminance*0.7);
+float cl=cos(ang+iTime*2.0)*0.5+0.5;float a=iTime*-1.0;vec2 pos=vec2(cos(a),sin(a))*r0;float d=distance(uv,pos);float v1=light2(1.5,5.0,d);v1*=light1(1.0,50.0,d0);
+float v2=smoothstep(1.0,mix(innerRadius,1.0,n0*0.5),len);float v3=smoothstep(innerRadius,mix(innerRadius,1.0,0.5),len);
+vec3 colBase=mix(color1,color2,cl);float fadeAmount=mix(1.0,0.1,bgLuminance);vec3 darkCol=mix(color3,colBase,v0);darkCol=(darkCol+v1)*v2*v3;darkCol=clamp(darkCol,0.0,1.0);
+vec3 lightCol=(colBase+v1)*mix(1.0,v2*v3,fadeAmount);lightCol=mix(backgroundColor,lightCol,v0);lightCol=clamp(lightCol,0.0,1.0);vec3 finalCol=mix(darkCol,lightCol,bgLuminance);return extractAlpha(finalCol);}
+vec4 mainImage(vec2 fragCoord){vec2 center=iResolution.xy*0.5;float size=min(iResolution.x,iResolution.y);vec2 uv=(fragCoord-center)/size*2.0;float angle=rot;float s=sin(angle);float c=cos(angle);uv=vec2(c*uv.x-s*uv.y,s*uv.x+c*uv.y);
+uv.x+=hover*hoverIntensity*0.1*sin(uv.y*10.0+iTime);uv.y+=hover*hoverIntensity*0.1*sin(uv.x*10.0+iTime);return draw(uv);}
+void main(){vec2 fragCoord=vUv*iResolution.xy;vec4 col=mainImage(fragCoord);gl_FragColor=vec4(col.rgb*col.a,col.a);}`;
+  const host = document.getElementById('orbGl');
+  renderer = new Renderer({ alpha: true, premultipliedAlpha: false, dpr: Math.min(devicePixelRatio || 1, 2) });
+  const gl = renderer.gl; gl.clearColor(0, 0, 0, 0); host.appendChild(gl.canvas);
+  prog = new Program(gl, { vertex: vert, fragment: frag, uniforms: {
+    iTime: { value: T0 }, iResolution: { value: new Vec3(1, 1, 1) }, hue: { value: 0 }, hover: { value: 0 }, rot: { value: 0 },
+    hoverIntensity: { value: .35 }, backgroundColor: { value: new Vec3(0, 0, 0) } } });
+  mesh = new Mesh(gl, { geometry: new Triangle(gl), program: prog });
+  const size = () => { renderer.setSize(host.clientWidth, host.clientHeight); prog.uniforms.iResolution.value.set(gl.canvas.width, gl.canvas.height, 1); };
+  size(); addEventListener('resize', size);
+  glOK = true;
+} catch (err) { console.warn('OGL orb failed, CSS orb only', err); document.documentElement.dataset.ogl = 'failed'; }
+document.documentElement.dataset.ogl = glOK ? 'ok' : 'failed';
+
+/* optional aurora layer (?bg=aurora) for comparison */
+if (q.get('bg') === 'aurora') {
+  try {
+    const { Renderer, Program, Mesh, Color, Triangle } = await import('https://esm.sh/ogl@1.0.11');
+    const host = document.getElementById('aurora');
+    const r = new Renderer({ alpha: true, premultipliedAlpha: true, antialias: true, dpr: 1 });
+    const g = r.gl; g.clearColor(0,0,0,0); g.enable(g.BLEND); g.blendFunc(g.ONE, g.ONE_MINUS_SRC_ALPHA); host.appendChild(g.canvas);
+    g.canvas.style.width = '100%'; g.canvas.style.height = '100%';
+    const geo = new Triangle(g); delete geo.attributes.uv;
+    /* shader: React Bits Aurora (same licence note as above), dark mode path only */
+    const FR = `#version 300 es
+precision highp float;uniform float uTime;uniform float uAmplitude;uniform vec3 uColorStops[3];uniform vec2 uResolution;uniform float uBlend;out vec4 fragColor;
+vec3 permute(vec3 x){return mod(((x*34.0)+1.0)*x,289.0);}
+float snoise(vec2 v){const vec4 C=vec4(0.211324865405187,0.366025403784439,-0.577350269189626,0.024390243902439);vec2 i=floor(v+dot(v,C.yy));vec2 x0=v-i+dot(i,C.xx);vec2 i1=(x0.x>x0.y)?vec2(1.0,0.0):vec2(0.0,1.0);vec4 x12=x0.xyxy+C.xxzz;x12.xy-=i1;i=mod(i,289.0);vec3 p=permute(permute(i.y+vec3(0.0,i1.y,1.0))+i.x+vec3(0.0,i1.x,1.0));vec3 m=max(0.5-vec3(dot(x0,x0),dot(x12.xy,x12.xy),dot(x12.zw,x12.zw)),0.0);m=m*m;m=m*m;vec3 x=2.0*fract(p*C.www)-1.0;vec3 h=abs(x)-0.5;vec3 ox=floor(x+0.5);vec3 a0=x-ox;m*=1.79284291400159-0.85373472095314*(a0*a0+h*h);vec3 g;g.x=a0.x*x0.x+h.x*x0.y;g.yz=a0.yz*x12.xz+h.yz*x12.yw;return 130.0*dot(m,g);}
+void main(){vec2 uv=gl_FragCoord.xy/uResolution;vec3 c0=uColorStops[0],c1=uColorStops[1],c2=uColorStops[2];vec3 ramp=uv.x<0.5?mix(c0,c1,uv.x*2.0):mix(c1,c2,(uv.x-0.5)*2.0);
+float height=snoise(vec2(uv.x*2.0+uTime*0.1,uTime*0.25))*0.5*uAmplitude;height=exp(height);height=(uv.y*2.0-height+0.2);float intensity=0.6*height;float a=smoothstep(0.2-uBlend*0.5,0.2+uBlend*0.5,intensity);fragColor=vec4(intensity*ramp*a,a);}`;
+    const VR = `#version 300 es
+in vec2 position;void main(){gl_Position=vec4(position,0.0,1.0);}`;
+    const toC = h => { const c = new Color(h); return [c.r, c.g, c.b]; };
+    const p = new Program(g, { vertex: VR, fragment: FR, uniforms: { uTime: { value: 0 }, uAmplitude: { value: 1 }, uBlend: { value: .6 },
+      uColorStops: { value: ['#7cb8ff', '#b07cff', '#ff9ad8'].map(toC) }, uResolution: { value: [innerWidth, innerHeight] } } });
+    const m = new Mesh(g, { geometry: geo, program: p });
+    r.setSize(innerWidth, innerHeight);
+    window.__aurora = t => { p.uniforms.uTime.value = t * 0.03; r.render({ scene: m }); };
+  } catch (e) { console.warn('aurora failed', e); }
+}
+
+/* ---------- one rAF loop, paused when hidden ---------- */
+let last = performance.now(), running = true, rot = 0;
+
+document.addEventListener('visibilitychange', () => { running = !document.hidden; if (running) { last = performance.now(); requestAnimationFrame(loop); } });
+function loop(now){
+  if (!running) return;
+  const dt = Math.min(.05, (now - last) / 1000); last = now; window.__fc=(window.__fc||0)+1;
+  const anim = !STILL && !CALM;                     // Full motion: float, breathing, wobble, glow pulse, dots
+  /* eyes spring (stiffness 170, damping 18): always follow the pointer, in Full and Calm, whatever the OS says */
+  { const k = 170, c = 18;
+    vx += ((tx - x) * k - vx * c) * dt; vy += ((ty - y) * k - vy * c) * dt; x += vx * dt; y += vy * dt;
+    if (STILL) { x = tx; y = ty; } }
+  let ex = x, ey = y;
+  if (state === 'thinking' && anim) { ex = x * .4 + 7 * Math.cos(now / 900); ey = y * .4 - 8; }
+  /* blink every 3-6 s, in every state */
+  if (!STILL && now > nextBlink) { blinkStart = now; nextBlink = now + 3000 + Math.random() * 3000; }
+  blink = 1;
+  if (blinkStart > 0) { const p = (now - blinkStart) / 170; if (p < 1) blink = Math.max(.08, Math.abs(1 - 2 * p)); else blinkStart = -1; }
+  /* speaking: mouth opens on each caption word and closes again */
+  const env = state === 'speaking' ? mouthAmp * Math.exp(-(now - mouthKick) / 130) : 0;
+  face.style.transform = `translate(${ex.toFixed(2)}px,${ey.toFixed(2)}px)`;
+  for (const e of eyes) e.style.transform = `scaleY(${blink.toFixed(3)})`;
+  mouth.style.transform = `scaleY(${state === 'speaking' ? (STILL ? 1 : (.45 + env * 1.0).toFixed(3)) : 1})`;
+  /* float / breathing (listening) and wobble (thinking): amplitudes ease in and out, so nothing jumps */
+  const ea = Math.min(1, dt * 5);
+  floatAmp += ((anim && state === 'listening' ? 1 : 0) - floatAmp) * ea; wobbleAmp += ((anim && state === 'thinking' ? 1 : 0) - wobbleAmp) * ea;
+  const fy = Math.sin(now / 6000 * 6.283) * 5.5 * floatAmp, br = 1 + Math.sin(now / 2600 * 6.283) * .018 * floatAmp;
+  const wr = Math.sin(now / 170) * 2.6 * wobbleAmp, wx = Math.sin(now / 230) * 1.6 * wobbleAmp;
+  floatEl.style.transform = (floatAmp + wobbleAmp) > .002 ? `translate(${wx.toFixed(2)}px,${fy.toFixed(2)}px) rotate(${wr.toFixed(2)}deg) scale(${br.toFixed(4)})` : '';
+  /* glow pulse: a fake voice level while listening, the word envelope while speaking */
+  let lvl = 0;
+  if (anim && state === 'listening') lvl = Math.max(0, Math.sin(now / 800)) * (.5 + .5 * Math.sin(now / 260 + Math.sin(now / 900) * 2)) * .9 + .1;
+  if (anim && state === 'speaking') lvl = env;
+  lvlS += (lvl - lvlS) * Math.min(1, dt * 12);
+  orb.style.setProperty('--lvl', lvlS.toFixed(3));
+  dotEls.forEach((d, n) => { if (state === 'thinking' && anim) { const s = Math.sin((now / 1100 - n * .16) * 6.283); d.style.transform = `translateY(${(-2 - 2 * s).toFixed(2)}px)`; d.style.opacity = (.75 + .25 * s).toFixed(2); } else { d.style.transform = ''; d.style.opacity = ''; } });
+  /* orb shader: the ring only turns in Full motion; in Normal it holds still */
+  if (glOK) {
+    const tg = stateTarget[state];
+    const ease = STILL ? 1 : 1 - Math.pow(.02, dt);
+    const sp = anim ? tg.speed : 0, hv = anim ? tg.hover : 0;
+    cur.speed += (sp - cur.speed) * ease; cur.hue += (tg.hue - cur.hue) * ease; cur.hover += (hv - cur.hover) * ease;
+    if (!STILL) { orbTime += dt * cur.speed; rot += dt * .25 * cur.speed; }
+    prog.uniforms.iTime.value = orbTime; prog.uniforms.hue.value = cur.hue; prog.uniforms.hover.value = cur.hover; prog.uniforms.rot.value = rot;
+    renderer.render({ scene: mesh });
+  }
+  document.getElementById('swirl').style.transform = `rotate(${(orbTime * 22) % 360}deg)`;
+  if (window.__aurora && !body.classList.contains('solid')) window.__aurora(!STILL && !RM ? now / 1000 : T0);   // backdrop stays still when the OS asks for less motion
+  if (!STILL) requestAnimationFrame(loop); else running = false;
+}
+requestAnimationFrame(loop);
+/* still mode: redraw on state change / resize only */
+if (STILL) {
+  const redraw = () => { running = true; last = performance.now(); requestAnimationFrame(loop); };
+  window.__redraw = redraw;
+  addEventListener('resize', redraw);
+}
+window.__fps = (ms = 3000) => new Promise(res => { const s = window.__fc||0, t = performance.now(); setTimeout(() => res((((window.__fc||0) - s) / ((performance.now() - t) / 1000)).toFixed(1)), ms); });
+window.__ready = true;
+</script>
+</body>
+</html>
