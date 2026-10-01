@@ -360,7 +360,10 @@ body.pdark .page{--p-eng:#f8cf86;--p-eng-dot:#f5bd5c;--p-eng-soft:rgba(245,189,9
 .orb-sc{display:grid;place-items:center}
 .open-view{display:none}
 body.opening .side,body.opening .doc-pane{visibility:hidden}
-body.opening .agent{position:fixed;z-index:3;top:var(--pad);bottom:48px;width:min(620px,calc(100vw - 44px));left:max(22px,calc(50% - 310px))}
+/* Kakashi: first-move smoothness. prewarm = paint the hidden panes once, off screen, right after load, so the first chapter click does not pay for the first paint. ready = promote the panes to their own layers when the pointer nears a chapter. Both on the panes themselves, never on an ancestor (backdrop-root rule). */
+body.opening.prewarm .side,body.opening.prewarm .doc-pane{visibility:visible;transform:translateX(-300vw)}
+body.opening.ready .side,body.opening.ready .doc-pane,body.opening.ready .agent{will-change:transform}
+body.opening .agent{--ow:min(1040px,72vw,calc(100vw - 44px));position:fixed;z-index:3;top:var(--pad);bottom:var(--pad);width:var(--ow);left:calc(50% - var(--ow) / 2)} /* Kakashi: bigger opening panel, contents unchanged */
 body.opening .ag-head,body.opening .composer,body.opening .ag-body > :not(.stage){display:none}
 body.opening .ag-body{flex:none;overflow:visible;padding:14px 0 0;-webkit-mask-image:none;mask-image:none}
 body.opening{--os:1.45}
@@ -370,10 +373,10 @@ body.opening .orb-sc{transform:scale(var(--os))}
 body.opening .state-line{bottom:8px;font-size:21px;font-weight:650;color:#fff;padding:0 28px}
 body.opening .open-view,body.morphing .open-view{display:flex}
 body.opening .open-view{flex:1;min-height:0;flex-direction:column;align-items:center;overflow:auto;padding:0 28px 26px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.3) transparent}
-body.morphing .open-view{overflow:hidden;position:absolute;left:0;top:var(--ovtop,330px);width:var(--ovw,620px);flex-direction:column;align-items:center;padding:0 28px;pointer-events:none;animation:ovOut .24s ease-out forwards}
+body.morphing .open-view{overflow:hidden;position:absolute;left:0;top:var(--ovtop,330px);width:var(--ovw,620px);flex-direction:column;align-items:center;padding:0 28px;pointer-events:none;animation:ovOut .36s ease-out forwards}
 @keyframes ovOut{to{opacity:0}}
 @keyframes ovIn{from{opacity:0}to{opacity:1}}
-body.morphing .agent .ag-head,body.morphing .agent .ag-body > :not(.stage),body.morphing .agent .composer{animation:ovIn .38s .3s ease-out backwards}
+body.morphing .agent .ag-head,body.morphing .agent .ag-body > :not(.stage),body.morphing .agent .composer{animation:ovIn .5s .55s ease-out backwards}
 body.morphing.calm .agent .ag-head,body.morphing.calm .agent .ag-body > :not(.stage),body.morphing.calm .agent .composer{animation:ovIn .2s ease-out backwards}
 body.morphing .side{z-index:2}
 .ov-line{margin:0;font-size:15.5px;line-height:1.4;color:var(--ink-2);text-align:center}
@@ -970,16 +973,23 @@ function openChapter(k){
     [sd, dp, ap].forEach(el => el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, easing: 'ease-out' }));
     setTimeout(done, 230); return;
   }
-  const dur = 720;
+  const dur = 1150;   /* Kakashi: slower move (user: "too fast") */
   const aA = ap.animate([{ transform: 'translate(' + (F.left - L.left) + 'px,' + (F.top - L.top) + 'px)', width: F.width + 'px', height: F.height + 'px' }, { transform: 'translate(0,0)', width: L.width + 'px', height: L.height + 'px' }], { duration: dur, easing: EASE, fill: 'backwards' });
   const ty = (oF.top + oF.height / 2 - F.top) - (oL.top + oL.height / 2 - L.top);
   osc.animate([{ transform: 'translateY(' + ty + 'px) scale(' + (oF.width / oL.width) + ')' }, { transform: 'none' }], { duration: dur, easing: EASE, fill: 'backwards' });
   const dr = dp.getBoundingClientRect();
-  sd.animate([{ transform: 'translateX(-110%)' }, { transform: 'none' }], { duration: dur - 80, easing: EASE, fill: 'backwards' });
-  dp.animate([{ transform: 'translateX(' + (-(dr.right + 24)) + 'px)' }, { transform: 'none' }], { duration: dur - 80, delay: 80, easing: EASE, fill: 'backwards' });
+  sd.animate([{ transform: 'translateX(-110%)' }, { transform: 'none' }], { duration: dur - 150, easing: EASE, fill: 'backwards' });
+  dp.animate([{ transform: 'translateX(' + (-(dr.right + 24)) + 'px)' }, { transform: 'none' }], { duration: dur - 150, delay: 150, easing: EASE, fill: 'backwards' });
   aA.finished.then(done, done);
 }
 document.querySelectorAll('#openView [data-ch]').forEach(bt => bt.onclick = () => openChapter(bt.dataset.ch));
+/* Kakashi: prewarm the hidden panes once after load (2 frames off screen), then promote layers on approach */
+(function(){ if (!body.classList.contains('opening')) return;
+  const warm = () => { body.classList.add('prewarm'); requestAnimationFrame(() => requestAnimationFrame(() => body.classList.remove('prewarm'))); };
+  addEventListener('load', () => (window.requestIdleCallback || setTimeout)(warm, { timeout: 1200 }));
+  const ready = () => body.classList.add('ready');
+  document.querySelectorAll('#openView [data-ch]').forEach(bt => { bt.addEventListener('pointerenter', ready, { once: true }); bt.addEventListener('focus', ready, { once: true }); });
+})();
 
 /* ---------- eyes: follow pointer anywhere, spring, blink ---------- */
 const face = document.getElementById('face'), eyes = [document.getElementById('eyeL'), document.getElementById('eyeR')];
