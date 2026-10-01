@@ -279,6 +279,8 @@ body.nopages .v-nop{display:revert}body.nopages .v-dig{display:none!important}
 .orb{position:absolute;inset:0;transition:transform .5s cubic-bezier(.3,1.5,.5,1)}
 .orb-gl{position:absolute;inset:-18px}
 .orb-gl canvas{display:block;width:100%;height:100%}
+/* Kakashi: CSS backup ring when the WebGL ring cannot load (esm.sh blocked, no WebGL) */
+html[data-ogl="failed"] .orb-gl{border-radius:50%;background:radial-gradient(circle,transparent 60%,rgba(150,175,255,.55) 65%,rgba(196,130,255,.42) 69%,rgba(120,220,255,.18) 72%,transparent 75%);box-shadow:0 0 34px rgba(140,120,255,.28)}
 .sphere{position:absolute;inset:29px;border-radius:50%;overflow:hidden;
   background:
     radial-gradient(60% 50% at 32% 24%,rgba(255,255,255,.55),rgba(255,255,255,0) 60%),
@@ -346,6 +348,57 @@ body.nopages .v-nop{display:revert}body.nopages .v-dig{display:none!important}
 @media (max-width:1439px){ .crumbs .c1{display:none} .doc{padding:22px 30px 40px} .doc-head{gap:8px;padding-left:20px}
   /* criterion: page >= 640px at 1366. Thinner frame around the page instead of narrower side panes. */
   .page{margin:2px 5px 5px;border-radius:23px} .toolbar{margin:0 5px 6px} }
+/* English chapters in the note page use amber (subject colour stays consistent) */
+.page{--p-eng:#8a5a00;--p-eng-dot:#e0961a;--p-eng-soft:#fdf0d5}
+body.pdark .page{--p-eng:#f8cf86;--p-eng-dot:#f5bd5c;--p-eng-soft:rgba(245,189,92,.16)}
+.page .chip.eng{border-color:color-mix(in srgb,var(--p-eng-dot) 70%,transparent);background:var(--p-eng-soft)}
+.page .dot.eng{--c:var(--p-eng-dot)!important}
+
+/* ---------- OPENING SCREEN: the assistant panel alone, large and centred ----------
+   GLASS TRAP: nothing above a .glass pane animates opacity/filter/transform. The agent pane itself is
+   moved (WAAPI size+translate), the tree and note panes slide themselves. */
+.orb-sc{display:grid;place-items:center}
+.open-view{display:none}
+body.opening .side,body.opening .doc-pane{visibility:hidden}
+body.opening .agent{position:fixed;z-index:3;top:var(--pad);bottom:48px;width:min(620px,calc(100vw - 44px));left:max(22px,calc(50% - 310px))}
+body.opening .ag-head,body.opening .composer,body.opening .ag-body > :not(.stage){display:none}
+body.opening .ag-body{flex:none;overflow:visible;padding:14px 0 0;-webkit-mask-image:none;mask-image:none}
+body.opening{--os:1.45}
+body.opening .stage{height:330px}
+body.opening .float{zoom:1;margin-top:-16px}
+body.opening .orb-sc{transform:scale(var(--os))}
+body.opening .state-line{bottom:8px;font-size:21px;font-weight:650;color:#fff;padding:0 28px}
+body.opening .open-view,body.morphing .open-view{display:flex}
+body.opening .open-view{flex:1;min-height:0;flex-direction:column;align-items:center;overflow:auto;padding:0 28px 26px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.3) transparent}
+body.morphing .open-view{overflow:hidden;position:absolute;left:0;top:var(--ovtop,330px);width:var(--ovw,620px);flex-direction:column;align-items:center;padding:0 28px;pointer-events:none;animation:ovOut .24s ease-out forwards}
+@keyframes ovOut{to{opacity:0}}
+@keyframes ovIn{from{opacity:0}to{opacity:1}}
+body.morphing .agent .ag-head,body.morphing .agent .ag-body > :not(.stage),body.morphing .agent .composer{animation:ovIn .38s .3s ease-out backwards}
+body.morphing.calm .agent .ag-head,body.morphing.calm .agent .ag-body > :not(.stage),body.morphing.calm .agent .composer{animation:ovIn .2s ease-out backwards}
+body.morphing .side{z-index:2}
+.ov-line{margin:0;font-size:15.5px;line-height:1.4;color:var(--ink-2);text-align:center}
+.ov-ctrl{display:flex;align-items:flex-start;justify-content:center;gap:22px;padding:18px 0 4px}
+.ov-wrap{display:inline-flex;flex-direction:column;align-items:center;gap:6px;padding-top:3px}
+.ov-lab{font-size:13px;font-weight:500;color:var(--ink-2);line-height:1}
+.ov-round{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;color:#fff;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.28);box-shadow:inset 0 1px 0 rgba(255,255,255,.22);transition:background .2s,border-color .2s}
+.ov-round:hover{background:rgba(255,255,255,.20);border-color:rgba(255,255,255,.45)}
+.ov-round[aria-pressed="true"]{background:rgba(255,255,255,.22);border-color:#fff}
+.ov-round .slash{opacity:0}
+.ov-round[aria-pressed="true"] .slash{opacity:1}
+.ov-main{height:52px;padding:0 26px 0 22px;border-radius:26px;display:inline-flex;align-items:center;gap:9px;font-size:15.5px;font-weight:650;color:#fff;
+  background:linear-gradient(180deg,#6a63ee,#4a42c9);border:1.5px solid rgba(255,255,255,.55);box-shadow:0 10px 28px -10px rgba(74,66,201,.95),0 0 26px -6px rgba(143,140,255,.8),inset 0 1px 0 rgba(255,255,255,.35);transition:transform .25s cubic-bezier(.22,1,.36,1),background .2s}
+.ov-main:hover{background:linear-gradient(180deg,#7770f2,#554dd6)}
+.ov-main:active{transform:scale(.96)}
+.ov-main.on{color:#2d2380;background:#fff;border-color:#fff;box-shadow:0 10px 28px -10px rgba(10,6,60,.7),0 0 24px -6px rgba(255,255,255,.6)}
+.ov-main.on:hover{background:#eeeeff}
+.ov-main svg{width:18px;height:18px}
+.ov-type{width:100%;max-width:480px;margin:12px 0 0;display:flex;align-items:center;gap:10px;padding:8px 8px 8px 16px;border-radius:22px;background:rgba(16,18,60,.30);border:1px solid rgba(255,255,255,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.18)}
+.ov-type[hidden]{display:none}
+.ov-type input{flex:1;min-width:0;background:none;border:0;color:#fff;font:inherit;font-size:15px;outline:none;height:36px}
+.ov-type input::placeholder{color:var(--ink-3)}
+.ov-chaps{width:100%;max-width:480px;margin-top:16px}
+.ov-chaps h2{margin:0 2px 8px;font-size:13px;font-weight:600;color:var(--ink-2)}
+
 /* ---------- mock controls ---------- */
 .mockbar{position:fixed;left:50%;bottom:6px;transform:translateX(-50%);z-index:20;display:flex;align-items:center;gap:8px;padding:5px 6px 5px 12px;border-radius:999px;
   background:rgba(20,14,60,.86);border:1px solid rgba(255,255,255,.22);font-size:12.5px;box-shadow:0 10px 30px -10px rgba(0,0,0,.6)}
@@ -376,6 +429,7 @@ body.print .pp{display:grid}
 @media (prefers-reduced-motion:reduce){.blob{animation:none!important}}   /* nebula backdrop only; the orb follows the Motion switch */
 
 @media (max-height:820px) and (min-width:901px){.stage{height:150px}.float{zoom:.78;margin-top:-6px}.hello p{display:none}.hello h2{margin-top:2px}.status{margin-top:10px}}
+@media (max-height:820px){body.opening{--os:1.2}body.opening .stage{height:268px}body.opening .state-line{font-size:19px}body.opening .ov-ctrl{padding-top:12px}body.opening .ov-chaps{margin-top:10px}body.opening .sugg button{min-height:46px}}
 /* narrow fallback (phone layout is out of scope; keep it usable) */
 @media (max-width:900px){
   body{overflow:auto}
@@ -388,6 +442,9 @@ body.print .pp{display:grid}
 </style>
 </head>
 <body>
+<script>/* opening screen is the default; legacy deep links and ?start=panes go straight to the 3 panes */
+(function(){var q=new URLSearchParams(location.search),s=q.get('start');
+if(s==='opening'||(s!=='panes'&&!q.has('view')&&!q.has('print')&&!q.has('scroll')&&!q.has('accepted')))document.body.classList.add('opening');})();</script>
 <div class="nebula" aria-hidden="true">
   <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="blob b4"></div><div class="blob b5"></div>
   <div id="aurora"></div>
@@ -425,7 +482,7 @@ body.print .pp{display:grid}
             <li>
               <div class="subj" style="--c:var(--eng)"><span class="dot"></span>English</div>
               <ul><li>
-                <button class="chap">
+                <button class="chap" id="chapBak">
                   <span class="tile" style="--c:var(--eng)"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M2 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2z"/><path d="M22 4h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"/></svg></span>
                   <span class="txt"><span class="t" style="display:block">Bakunawa, the Moon-Eating Dragon</span><span class="s" style="display:block">Block 13, edited yesterday</span></span>
                 </button>
@@ -465,7 +522,7 @@ body.print .pp{display:grid}
     <header class="doc-head">
       <div class="crumbs">
         <span class="c1" id="crClass">Class 6</span><svg aria-hidden="true" focusable="false" class="sep c1" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg>
-        <span style="display:flex;align-items:center;gap:7px"><span class="dot" style="--c:var(--sci)"></span>Science</span><svg aria-hidden="true" focusable="false" class="sep" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg>
+        <span style="display:flex;align-items:center;gap:7px"><span class="dot" id="crDot" style="--c:var(--sci)"></span><span id="crSubj">Science</span></span><svg aria-hidden="true" focusable="false" class="sep" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg>
         <b id="crChap">Human Digestive System</b>
       </div>
       <span class="saved"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M17.5 19a4.5 4.5 0 1 0-1.4-8.8A6 6 0 0 0 4.3 12.5 3.5 3.5 0 0 0 6.5 19z"/></svg>Saved 10:24</span>
@@ -557,10 +614,10 @@ body.print .pp{display:grid}
 
      <!-- chapter with NO textbook pages: the Assistant declines to invent questions -->
      <div class="v-nop">
-      <h2 class="title">Motion</h2>
+      <h2 class="title" id="nopTitle">Motion</h2>
       <div class="meta">
-        <span class="chip sci"><span class="dot" style="--c:var(--sci)"></span>Science, Class 9 format</span>
-        <span class="chip warn">No textbook pages yet</span>
+        <span class="chip sci" id="nopChip"><span class="dot" id="nopDot" style="--c:var(--sci)"></span><span id="nopChipT">Science, Class 9 format</span></span>
+        <span class="chip warn" id="nopWarn">No textbook pages yet</span>
       </div>
       <p>Start typing here, or add the textbook pages for this chapter. The Assistant drafts only from those pages.</p>
       <h3><span class="num">1</span>Keywords</h3>
@@ -568,7 +625,7 @@ body.print .pp{display:grid}
       <h3><span class="num">2</span>Practice questions</h3>
       <div class="refuse" role="note" aria-labelledby="refT">
         <h4 id="refT"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 3 2 20h20z"/><path d="M12 10v4M12 17h.01"/></svg>No questions written</h4>
-        <p>This chapter has no textbook pages yet. I only write from your textbook, so I did not make up any questions.</p>
+        <p id="nopRef">This chapter has no textbook pages yet. I only write from your textbook, so I did not make up any questions.</p>
         <div class="acts"><button class="btn primary">Add textbook pages</button><button class="btn ghost">Write my own</button></div>
       </div>
      </div>
@@ -611,7 +668,7 @@ body.print .pp{display:grid}
             <path d="M0 175 C 110 100, 190 215, 280 140 S 380 100, 420 130" stroke="url(#stA)" stroke-width=".8" opacity=".5"/>
           </g>
         </svg>
-        <div class="float">
+        <div class="orb-sc" id="orbSc"><div class="float">
           <div class="orb" id="orb" data-state="normal">
             <div class="orb-gl" id="orbGl"></div>
             <div class="sphere"><div class="swirl" id="swirl"></div></div>
@@ -621,7 +678,7 @@ body.print .pp{display:grid}
             </div>
             <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
           </div>
-        </div>
+        </div></div>
         <div class="state-line" id="stateLine" aria-live="polite">Ready</div>
       </div>
       <div class="hello v-dig">
@@ -635,9 +692,9 @@ body.print .pp{display:grid}
       </div>
       <div class="v-nop">
         <div class="thread">
-          <div class="msg me">Make 5 practice questions for Motion.</div>
+          <div class="msg me" id="nopMe">Make 5 practice questions for Motion.</div>
           <div class="msg ai">
-            <p>I can't write them yet. Motion has no textbook pages, and I only write from your textbook. Questions I make up could teach something your book does not say.</p>
+            <p id="nopAi">I can't write them yet. Motion has no textbook pages, and I only write from your textbook. Questions I make up could teach something your book does not say.</p>
             <p>Add the pages and I will draft the questions in the note for you to check.</p>
             <div class="acts"><button class="btn primary">Add textbook pages</button><button class="btn ghost">Write my own</button></div>
           </div>
@@ -661,6 +718,28 @@ body.print .pp{display:grid}
         <span class="hint">Uses only this chapter</span>
         <button class="send" aria-label="Send"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button>
       </div>
+    </div>
+    <!-- OPENING SCREEN content: only visible while body.opening (and fades out during the move) -->
+    <div class="open-view" id="openView">
+      <p class="ov-line" id="ovLine">Pick a chapter or tap Talk</p>
+      <div class="ov-ctrl">
+        <span class="ov-wrap"><button class="ov-round" id="ovType" aria-label="Type instead" aria-pressed="false"><svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="6" width="19" height="12" rx="2.5"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M8 14h8"/></svg></button><span class="ov-lab" aria-hidden="true">Type instead</span></span>
+        <button class="ov-main" id="ovTalk" aria-label="Start talking"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><span id="ovTalkL">Talk</span></button>
+        <span class="ov-wrap"><button class="ov-round" id="ovMute" aria-label="Mute microphone" aria-pressed="false"><svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/><path class="slash" d="M4 4l16 16"/></svg></button><span class="ov-lab" aria-hidden="true">Mute</span></span>
+      </div>
+      <div class="ov-type" id="ovTypeBox" hidden>
+        <label class="sr" for="ovAsk">Type to the Assistant</label>
+        <input id="ovAsk" type="text" placeholder="Ask about a chapter…" autocomplete="off">
+        <button class="send" aria-label="Send"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button>
+      </div>
+      <section class="ov-chaps" aria-labelledby="ovH">
+        <h2 id="ovH">Your chapters</h2>
+        <ul class="sugg">
+          <li><button data-ch="dig"><span class="tile" style="--c:var(--sci)"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10Z"/><path d="M2 21c0-3 1.9-5.4 5.1-6"/></svg></span><span class="l">Human Digestive System<span>Class 6 Science, Block 15</span></span><svg aria-hidden="true" focusable="false" class="go" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button></li>
+          <li><button data-ch="bak"><span class="tile" style="--c:var(--eng)"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M2 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2z"/><path d="M22 4h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"/></svg></span><span class="l">Bakunawa, the Moon-Eating Dragon<span>Class 6 English, Block 13</span></span><svg aria-hidden="true" focusable="false" class="go" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button></li>
+          <li><button data-ch="mot"><span class="tile" style="--c:var(--sci)"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10Z"/><path d="M2 21c0-3 1.9-5.4 5.1-6"/></svg></span><span class="l">Motion<span>Class 9 Science, no textbook pages yet</span></span><svg aria-hidden="true" focusable="false" class="go" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button></li>
+        </ul>
+      </section>
     </div>
   </aside>
 </main>
@@ -766,24 +845,33 @@ $('bJump').onclick = () => { draft.scrollIntoView({ behavior: RM ? 'auto' : 'smo
 /* show draft (agent status button) */
 $('bShow').onclick = () => draft.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'center' });
 
-/* ---------- chapter view: with pages / no pages ---------- */
-function setView(v){
-  const nop = v === 'nop';
-  body.classList.toggle('nopages', nop);
-  $('crClass').textContent = nop ? 'Class 9' : 'Class 6';
-  $('crChap').textContent = nop ? 'Motion' : 'Human Digestive System';
-  $('agSub').textContent = nop ? 'Class 9 Science' : 'Class 6 Science';
-  $('ctxName').textContent = nop ? 'Motion' : 'Block 15 Human Digestive System';
-  document.title = (nop ? 'Motion - Class 9' : 'Human Digestive System - Class 6') + ' Science - Teacher Notes (v3 target mock)';
-  $('chapDig').toggleAttribute('aria-current', !nop); if (!nop) $('chapDig').setAttribute('aria-current', 'page');
-  $('chapMot').toggleAttribute('aria-current', nop); if (nop) $('chapMot').setAttribute('aria-current', 'page');
-  if (nop) { $('cls9').setAttribute('aria-expanded', 'true'); $('cls9').nextElementSibling.hidden = false; }
-  document.querySelectorAll('#viewSeg button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === v));
+/* ---------- chapters: Digestive (with pages), Bakunawa and Motion (existing empty-chapter treatment) ---------- */
+const CH = {
+  dig: { nop: false, cls: 'Class 6', subj: 'Science', sci: true,  title: 'Human Digestive System', ctx: 'Block 15 Human Digestive System', agSub: 'Class 6 Science', id: 'chapDig' },
+  bak: { nop: true,  cls: 'Class 6', subj: 'English', sci: false, title: 'Bakunawa, the Moon-Eating Dragon', ctx: 'Block 13 Bakunawa, the Moon-Eating Dragon', agSub: 'Class 6 English', id: 'chapBak', warn: 'Not drafted yet', ask: 'Make 5 practice questions for Bakunawa.', ai: 'I can\'t write them yet. Bakunawa has no draft in this preview, and I only write from your textbook. Questions I make up could teach something your book does not say.', ref: 'Bakunawa has no draft in this preview yet. I only write from your textbook, so I did not make up any questions.' },
+  mot: { nop: true,  cls: 'Class 9', subj: 'Science', sci: true,  title: 'Motion', ctx: 'Motion', agSub: 'Class 9 Science', id: 'chapMot', warn: 'No textbook pages yet', ask: 'Make 5 practice questions for Motion.', ai: 'I can\'t write them yet. Motion has no textbook pages, and I only write from your textbook. Questions I make up could teach something your book does not say.', ref: 'This chapter has no textbook pages yet. I only write from your textbook, so I did not make up any questions.' }
+};
+let chKey = 'dig';
+function setChapter(k){
+  const c = CH[k]; chKey = k;
+  body.classList.toggle('nopages', c.nop);
+  $('crClass').textContent = c.cls; $('crSubj').textContent = c.subj; $('crChap').textContent = c.title;
+  $('crDot').style.setProperty('--c', c.sci ? 'var(--sci)' : 'var(--eng)');
+  $('agSub').textContent = c.agSub; $('ctxName').textContent = c.ctx;
+  if (c.nop) {
+    $('nopTitle').textContent = c.title; $('nopChipT').textContent = c.subj + ', ' + c.cls + ' format'; $('nopWarn').textContent = c.warn; $('nopMe').textContent = c.ask; $('nopAi').textContent = c.ai; $('nopRef').textContent = c.ref;
+    $('nopChip').classList.toggle('sci', c.sci); $('nopChip').classList.toggle('eng', !c.sci); $('nopDot').classList.toggle('eng', !c.sci);
+  }
+  document.title = c.title + ' - ' + c.cls + ' ' + c.subj + ' - Teacher Notes (v3 target mock)';
+  for (const [kk, v] of Object.entries(CH)) { const el = $(v.id); el.toggleAttribute('aria-current', kk === k); if (kk === k) el.setAttribute('aria-current', 'page'); }
+  if (k === 'mot') { $('cls9').setAttribute('aria-expanded', 'true'); $('cls9').nextElementSibling.hidden = false; }
+  document.querySelectorAll('#viewSeg button').forEach(bt => bt.setAttribute('aria-pressed', bt.dataset.v === (c.nop ? 'nop' : 'dig')));
   doc.scrollTop = 0; syncDraft();
 }
-document.querySelectorAll('#viewSeg button').forEach(b => b.onclick = () => setView(b.dataset.v));
-$('chapDig').onclick = () => setView('dig'); $('chapMot').onclick = () => setView('nop');
-setView(q.get('view') === 'nopages' ? 'nop' : 'dig');
+const setView = v => setChapter(v === 'nop' ? 'mot' : 'dig');
+document.querySelectorAll('#viewSeg button').forEach(bt => bt.onclick = () => setView(bt.dataset.v));
+$('chapDig').onclick = () => setChapter('dig'); $('chapBak').onclick = () => setChapter('bak'); $('chapMot').onclick = () => setChapter('mot');
+setChapter(q.get('view') === 'nopages' ? 'mot' : 'dig');
 
 /* ---------- formulas: KaTeX + mhchem (fallback text stays if the CDN fails) ---------- */
 function renderTex(){
@@ -806,9 +894,11 @@ function openPrint(){
   if (nop) src.querySelector('p')?.remove();
   src.querySelectorAll('[id]').forEach(n => n.removeAttribute('id'));
   src.querySelectorAll('[aria-labelledby]').forEach(n => n.removeAttribute('aria-labelledby'));
+  const pc = CH[chKey];
   sheet.innerHTML = nop
-    ? '<h2>Motion</h2><div class="m">Class 9 Science</div>'
+    ? '<h2></h2><div class="m"></div>'
     : '<h2>Human Digestive System</h2><div class="m">Class 6 Science, Block 15, pages 49 to 54</div>';
+  if (nop) { sheet.querySelector('h2').textContent = pc.title; sheet.querySelector('.m').textContent = pc.agSub; }
   sheet.append(...src.childNodes);
   sheet.querySelectorAll('.num').forEach(n => n.textContent = n.textContent + '. ');
   body.classList.add('print'); $('ppClose').focus();
@@ -836,6 +926,9 @@ function setState(s){
   document.querySelectorAll('#stateSeg button').forEach(b => b.setAttribute('aria-pressed', b.dataset.s === s));
   const active = s !== 'normal';
   mic.innerHTML = active ? STOP_SVG : MIC_SVG; mic.setAttribute('aria-label', active ? 'Stop' : 'Speak instead of typing'); mic.classList.toggle('on', active);
+  { const tb = $('ovTalk'); $('ovTalkL').textContent = active ? 'Stop' : 'Talk'; tb.setAttribute('aria-label', active ? 'Stop' : 'Start talking'); tb.classList.toggle('on', active);
+    tb.querySelector('svg').innerHTML = active ? '<rect x="6" y="6" width="12" height="12" rx="2.5" fill="currentColor" stroke="none"/>' : '<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>';
+    $('ovLine').textContent = active ? 'Tap Stop when you are done' : 'Pick a chapter or tap Talk'; }
   if (s === 'speaking') speak(); else line.textContent = LINES[s];
   if (flowOn && s === 'listening') flowTimer = setTimeout(() => setState('thinking'), 3500);
   if (flowOn && s === 'thinking') flowTimer = setTimeout(() => setState('speaking'), 2500);
@@ -852,8 +945,41 @@ function speak(){                                   // caption words drive the m
   step(); wordTimer = setInterval(step, 300);
 }
 document.querySelectorAll('#stateSeg button').forEach(b => b.onclick = () => { flowOn = false; setState(b.dataset.s); });
-mic.onclick = () => { if (state === 'normal') { flowOn = true; setState('listening'); } else { flowOn = false; setState('normal'); } };   // mic -> listening -> thinking -> speaking -> normal; Stop -> normal now
+const toggleTalk = () => { if (state === 'normal') { flowOn = true; setState('listening'); } else { flowOn = false; setState('normal'); } };
+mic.onclick = toggleTalk; $('ovTalk').onclick = toggleTalk;
+$('ovMute').onclick = e => { const bt = e.currentTarget, on = bt.getAttribute('aria-pressed') !== 'true'; bt.setAttribute('aria-pressed', on); bt.setAttribute('aria-label', on ? 'Unmute microphone' : 'Mute microphone'); };
+$('ovType').onclick = e => { const bt = e.currentTarget, on = bt.getAttribute('aria-pressed') !== 'true'; bt.setAttribute('aria-pressed', on); $('ovTypeBox').hidden = !on; if (on) $('ovAsk').focus(); };   // mic -> listening -> thinking -> speaking -> normal; Stop -> normal now
 setState(({ idle: 'normal' })[q.get('state')] || q.get('state') || 'normal');
+
+/* ---------- opening screen -> 3 panes (FLIP on the agent pane itself, panes slide in; never animate an ancestor of a glass pane) ---------- */
+const EASE = 'cubic-bezier(.22,1,.36,1)';   // ease-out, no overshoot
+let moving = false;
+function openChapter(k){
+  if (!body.classList.contains('opening') || moving) return;
+  moving = true;
+  flowOn = false; setState('normal');
+  setChapter(k);
+  const ap = document.querySelector('.agent'), sd = document.querySelector('.side'), dp = document.querySelector('.doc-pane'), ov = $('openView'), osc = $('orbSc');
+  const F = ap.getBoundingClientRect(), oF = $('orb').getBoundingClientRect();
+  ov.style.setProperty('--ovtop', ov.offsetTop + 'px'); ov.style.setProperty('--ovw', F.width + 'px');
+  body.classList.remove('opening'); body.classList.add('morphing');
+  $('ovTypeBox').hidden = true; $('ovType').setAttribute('aria-pressed', 'false');
+  const L = ap.getBoundingClientRect(), oL = $('orb').getBoundingClientRect();
+  const done = () => { body.classList.remove('morphing'); moving = false; $(CH[k].id).focus({ preventScroll: true }); };
+  if (CALM) {
+    [sd, dp, ap].forEach(el => el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, easing: 'ease-out' }));
+    setTimeout(done, 230); return;
+  }
+  const dur = 720;
+  const aA = ap.animate([{ transform: 'translate(' + (F.left - L.left) + 'px,' + (F.top - L.top) + 'px)', width: F.width + 'px', height: F.height + 'px' }, { transform: 'translate(0,0)', width: L.width + 'px', height: L.height + 'px' }], { duration: dur, easing: EASE, fill: 'backwards' });
+  const ty = (oF.top + oF.height / 2 - F.top) - (oL.top + oL.height / 2 - L.top);
+  osc.animate([{ transform: 'translateY(' + ty + 'px) scale(' + (oF.width / oL.width) + ')' }, { transform: 'none' }], { duration: dur, easing: EASE, fill: 'backwards' });
+  const dr = dp.getBoundingClientRect();
+  sd.animate([{ transform: 'translateX(-110%)' }, { transform: 'none' }], { duration: dur - 80, easing: EASE, fill: 'backwards' });
+  dp.animate([{ transform: 'translateX(' + (-(dr.right + 24)) + 'px)' }, { transform: 'none' }], { duration: dur - 80, delay: 80, easing: EASE, fill: 'backwards' });
+  aA.finished.then(done, done);
+}
+document.querySelectorAll('#openView [data-ch]').forEach(bt => bt.onclick = () => openChapter(bt.dataset.ch));
 
 /* ---------- eyes: follow pointer anywhere, spring, blink ---------- */
 const face = document.getElementById('face'), eyes = [document.getElementById('eyeL'), document.getElementById('eyeR')];
