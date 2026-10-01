@@ -34,7 +34,7 @@
   --sci:#5fe3a1;      /* Science = green, everywhere */
   --eng:#f5bd5c;      /* English = amber, everywhere */
   --accent:#8f8cff;   /* app accent (send, new, focus) */
-  --pad:22px; --gap:14px;
+  --pad:22px; --gap:14px; --side-full:clamp(264px,21vw,330px); --rail-w:64px;
   --tint:44,50,108; --tint2:36,42,94; --ta1:.64; --ta2:.60; --tm1:.64; --tm2:.60;
   --r-pane:28px; --r-ctl:14px; --r-chip:999px;
   font-family:Figtree,system-ui,-apple-system,"Segoe UI",sans-serif;
@@ -73,7 +73,8 @@ body.stress .nebula{background:#d8c8f0}body.stress .blob,body.stress .wisps{disp
 
 /* ---------- App frame ---------- */
 .app{position:relative;z-index:1;height:100vh;padding:var(--pad);display:grid;gap:var(--gap);
-  grid-template-columns:clamp(264px,21vw,330px) minmax(0,1fr) clamp(336px,26vw,400px)}
+  grid-template-columns:var(--side-w,var(--side-full)) minmax(0,1fr) clamp(336px,26vw,400px)}
+body.rail{--side-w:var(--rail-w)}
 /* GLASS RECIPE: blur+saturate+tint+hairline. No ancestor of a .glass pane animates opacity/filter/mask. */
 .glass{position:relative;border-radius:var(--r-pane);overflow:hidden;
   background:linear-gradient(180deg,rgba(var(--tint),var(--ta1)) 0%,rgba(var(--tint2),var(--ta2)) 100%);
@@ -108,8 +109,16 @@ body.rmos .mo-note{display:block}
 .tile.sm{width:30px;height:30px;border-radius:9px}.tile.sm svg{width:16px;height:16px}
 
 /* ---------- Left: tree ---------- */
-.side-head{display:flex;align-items:center;gap:12px;padding:22px 20px 14px}
-.side-head h1{font-size:21px;font-weight:650;margin:0;flex:1;letter-spacing:-.01em;white-space:nowrap}
+.side-head{display:flex;align-items:center;gap:8px;padding:22px 16px 14px 18px}
+.side-head h1{font-size:20px;font-weight:650;margin:0;flex:1;min-width:0;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.side-head .tile{cursor:pointer;transition:background .2s,box-shadow .2s}
+.side-head .tile:hover{box-shadow:0 0 22px -2px color-mix(in srgb,var(--c) 85%,transparent),inset 0 1px 0 rgba(255,255,255,.35)}
+.side-head .tile{background:linear-gradient(160deg,rgba(16,18,60,.5),rgba(16,18,60,.34))}
+.side-head .tile svg{width:20px;height:20px;stroke:#fff;filter:none}
+.ibtn.quiet{flex:none;width:34px;height:34px;background:transparent;border-color:rgba(255,255,255,.18)}
+.ibtn.quiet:hover,.ibtn.quiet[aria-expanded="true"]{background:rgba(255,255,255,.14)}
+.ibtn.quiet svg{width:17px;height:17px;stroke:var(--ink-2)}
+.btn-new{flex:none}
 .btn-new{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;
   background:radial-gradient(circle at 35% 30%,#b3b0ff,#6e68f0 70%);box-shadow:0 0 22px -2px rgba(140,136,255,.85),inset 0 1px 0 rgba(255,255,255,.5)}
 .btn-new svg{width:18px;height:18px;stroke:#fff;stroke-width:2.2;fill:none;stroke-linecap:round}
@@ -135,7 +144,26 @@ body.rmos .mo-note{display:block}
 .chap .txt{min-width:0}
 .empty-note{margin:2px 10px 8px 34px;font-size:13px;color:var(--ink-3);line-height:1.45}
 .side-foot{display:flex;flex-wrap:wrap;gap:6px 8px;padding:12px 16px 14px;border-top:1px solid var(--line)}
-.side-foot .mat{flex-basis:100%;display:flex;align-items:center;justify-content:space-between;padding:0 4px 2px;font-size:13px;color:var(--ink-2);font-weight:500}
+/* panel content: full list and rail are two layers inside the same glass pane (the pane is what moves) */
+.side-full{position:absolute;left:0;top:0;bottom:0;width:var(--side-full);display:flex;flex-direction:column;min-height:0}
+.rail-c{position:absolute;left:0;top:0;bottom:0;width:var(--rail-w);display:flex;visibility:hidden;pointer-events:none;flex-direction:column;align-items:center;gap:10px;padding:18px 0 16px}
+body.rail .side-full{visibility:hidden;pointer-events:none}
+body.rail .rail-c{visibility:visible;pointer-events:auto}
+.rail-c .ibtn{width:42px;height:42px;background:rgba(16,18,60,.36)}
+.rail-c .ibtn:hover{background:rgba(255,255,255,.18)}
+.rail-c .ibtn svg{width:20px;height:20px}
+.rail-c .sp{flex:1}
+.rail-c .rule{width:28px;height:1px;background:var(--line);margin:2px 0}
+.rail-c .ibtn.main{border-color:rgba(255,255,255,.30)}
+/* Settings card + tooltip live at body level (outside every glass pane, so overflow:hidden on the panes cannot clip them) */
+.set-card{position:fixed;z-index:25;width:292px;padding:16px 16px 14px;border-radius:22px;--ta1:.82;--ta2:.80}
+.set-card[hidden]{display:none}
+.set-card h2{margin:0 0 4px;font-size:16px;font-weight:650;letter-spacing:-.01em}
+.set-card .mat{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 2px 0;font-size:13.5px;color:var(--ink-2);font-weight:500}
+.set-card .seg button{height:30px}
+.set-card .mo-note,.set-card .rt-note{margin:10px 2px 0}
+.tip{position:fixed;z-index:40;pointer-events:none;padding:6px 10px;border-radius:10px;font-size:13px;font-weight:600;line-height:1.2;white-space:nowrap;color:#fff;background:#1b1747;border:1px solid rgba(255,255,255,.3);box-shadow:0 10px 24px -8px rgba(8,4,40,.7)}
+.tip[hidden]{display:none}
 .side-foot > button{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;height:38px;font-size:13px;font-weight:500;color:var(--ink-2);border-radius:12px}
 .side-foot > button:hover{background:rgba(255,255,255,.08)}
 .side-foot svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
@@ -439,8 +467,9 @@ body.print .pp{display:grid}
   .app{height:auto;grid-template-columns:1fr;padding:12px}
   .pane{max-height:none}
   .side{height:auto}.doc-pane{height:80vh}.agent{height:auto}
+  .side-full{position:static;width:auto}body.rail .side-full{visibility:visible;pointer-events:auto}.rail-c{display:none!important}#sideHide{display:none}
   .toolbar{overflow-x:auto}
-  .saved,.seg.gs{display:none}
+  .saved{display:none}
 }
 </style>
 </head>
@@ -461,10 +490,20 @@ if(s==='opening'||(s!=='panes'&&!q.has('view')&&!q.has('print')&&!q.has('scroll'
 <main class="app">
   <!-- LEFT: Class > Subject > Chapter tree -->
   <nav class="glass pane side" aria-label="Classes and chapters">
+    <div class="rail-c" id="rail">
+      <button class="ibtn main" id="railExpand" data-tip="Show class list" aria-label="Show class list"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M9 4v16"/><path d="m14 9 3 3-3 3"/></svg></button>
+      <span class="rule" aria-hidden="true"></span>
+      <button class="ibtn" id="railSearch" data-tip="Search" aria-label="Search"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+      <button class="ibtn" id="railNew" data-tip="New note" aria-label="New note"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+      <span class="sp"></span>
+      <button class="ibtn" id="gearRail" data-tip="Settings" aria-label="Settings" aria-haspopup="dialog" aria-expanded="false" aria-controls="setCard"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+    </div>
+    <div class="side-full">
     <div class="side-head">
-      <div class="tile" style="--c:#aab0ff"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/></svg></div>
+      <button class="tile" id="sideHide" style="--c:#aab0ff" data-tip="Hide class list" data-tip-pos="below" aria-label="Hide class list"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M9 4v16"/><path d="m17 9-3 3 3 3"/></svg></button>
       <h1>My classes</h1>
-      <button class="btn-new" aria-label="New note"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+      <button class="btn-new" id="btnNew" aria-label="New note"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+      <button class="ibtn quiet" id="gearHead" data-tip="Settings" data-tip-pos="below" aria-label="Settings" aria-haspopup="dialog" aria-expanded="false" aria-controls="setCard"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
     </div>
     <label class="search ctl"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       <span class="sr">Search chapters and notes</span><input type="search" placeholder="Search chapters and notes…"></label>
@@ -510,15 +549,22 @@ if(s==='opening'||(s!=='panes'&&!q.has('view')&&!q.has('print')&&!q.has('scroll'
       </ul>
     </div>
     <div class="side-foot">
+      <button><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Note formats</button>
+      <button><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M2 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2z"/><path d="M22 4h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"/></svg>Textbooks</button>
+    </div>
+    </div>
+  </nav>
+
+  <!-- Settings card + tooltip: body level, never inside a glass pane -->
+  <div class="glass set-card" id="setCard" role="dialog" aria-label="Settings" tabindex="-1" hidden>
+    <h2>Settings</h2>
       <div class="mat"><span>Panes</span><div class="seg gs" role="group" aria-label="Pane material"><button id="bGlass" aria-pressed="true">Glass</button><button id="bSolid" aria-pressed="false">Solid</button></div></div>
       <div class="mat"><span>Page</span><div class="seg gs" role="group" aria-label="Note page colour"><button id="bLight" aria-pressed="true">Light</button><button id="bDark" aria-pressed="false">Dark</button></div></div>
       <div class="mat"><span>Motion</span><div class="seg gs" role="group" aria-label="Orb motion"><button id="bFull" aria-pressed="true">Full</button><button id="bCalm" aria-pressed="false">Calm</button></div></div>
       <p class="mo-note" id="moNote">Your system asks for less motion. The orb still moves here. Choose Calm to follow it.</p>
       <p class="rt-note" id="rtNote">Windows asks for less transparency. Choose Solid to follow it.</p>
-      <button><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Note formats</button>
-      <button><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M2 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2z"/><path d="M22 4h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"/></svg>Textbooks</button>
-    </div>
-  </nav>
+  </div>
+  <div class="tip" id="tip" role="presentation" hidden></div>
 
   <!-- MIDDLE: note -->
   <section class="glass pane doc-pane" aria-label="Note editor">
@@ -990,6 +1036,91 @@ document.querySelectorAll('#openView [data-ch]').forEach(bt => bt.onclick = () =
   const ready = () => body.classList.add('ready');
   document.querySelectorAll('#openView [data-ch]').forEach(bt => { bt.addEventListener('pointerenter', ready, { once: true }); bt.addEventListener('focus', ready, { once: true }); });
 })();
+
+/* ---------- left panel: collapse to a rail, Settings card, tooltips ----------
+   GLASS TRAP: only the panes themselves animate (side width, note margin-left); their contents fade. No ancestor gets opacity/filter/transform. */
+const sideEl = document.querySelector('.side'), docPane = document.querySelector('.doc-pane');
+const sideFull = sideEl.querySelector('.side-full'), railEl = $('rail');
+const narrowMQ = matchMedia('(max-width:900px)');
+let railBusy = false, noTip = false;
+function toggleRail(next, after){
+  if (body.classList.contains('opening') || body.classList.contains('morphing') || railBusy || narrowMQ.matches) return;
+  const collapse = next === undefined ? !body.classList.contains('rail') : next;
+  if (collapse === body.classList.contains('rail')) { if (after) after(); return; }
+  closeSettings(false); hideTip();
+  const wasIn = sideEl.contains(document.activeElement);
+  const F = sideEl.getBoundingClientRect(), D = docPane.getBoundingClientRect();
+  body.classList.toggle('rail', collapse);
+  const L = sideEl.getBoundingClientRect(), D2 = docPane.getBoundingClientRect();
+  const out = collapse ? sideFull : railEl, inn = collapse ? railEl : sideFull;
+  const vis = [{ opacity: 1, visibility: 'visible' }, { opacity: 0, visibility: 'visible' }];
+  railBusy = true;
+  if (CALM) {                               /* Calm: no movement, 180 ms fade */
+    out.animate(vis, { duration: 80, easing: 'ease-out' });
+    inn.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 180, easing: 'ease-out' });
+    docPane.animate([{ opacity: .55 }, { opacity: 1 }], { duration: 180, easing: 'ease-out' });
+    setTimeout(() => { railBusy = false; }, 190);
+  } else {
+    const dur = 500, opt = { duration: dur, easing: EASE };
+    const a = sideEl.animate([{ width: F.width + 'px' }, { width: L.width + 'px' }], opt);
+    docPane.animate([{ marginLeft: (D.left - D2.left) + 'px' }, { marginLeft: '0px' }], opt);
+    out.animate(vis, { duration: dur * .4, easing: 'ease-out' });
+    inn.animate([{ opacity: 0 }, { opacity: 1 }], { duration: dur * .5, delay: dur * .4, easing: 'ease-out', fill: 'backwards' });
+    a.finished.then(() => { railBusy = false; }, () => { railBusy = false; });
+  }
+  const sw = $('sideHide'), re = $('railExpand');
+  if (after) after(); else if (wasIn || document.activeElement === document.body) { noTip = true; (collapse ? re : sw).focus({ preventScroll: true }); noTip = false; }
+}
+$('sideHide').onclick = () => toggleRail(true);
+$('railExpand').onclick = () => toggleRail(false);
+$('railSearch').onclick = () => toggleRail(false, () => document.querySelector('.search input').focus({ preventScroll: true }));
+$('railNew').onclick = () => toggleRail(false, () => $('btnNew').click());
+addEventListener('keydown', e => { if (e.ctrlKey && !e.altKey && !e.metaKey && e.code === 'Backslash') { e.preventDefault(); toggleRail(); } });
+if (q.has('rail') && q.get('rail') !== '0') body.classList.add('rail');
+
+/* Settings card: opens from the header gear or the rail gear */
+const card = $('setCard'); let setOpener = null;
+function openSettings(btn){
+  hideTip(); setOpener = btn; card.hidden = false;
+  const r = btn.getBoundingClientRect(), w = card.offsetWidth, h = card.offsetHeight, fromRail = !!btn.closest('.rail-c');
+  const sr = sideEl.getBoundingClientRect();
+  let left = fromRail ? r.right + 14 : sr.left + (sr.width - w) / 2, top = fromRail ? r.bottom - h : r.bottom + 10;
+  left = Math.max(8, Math.min(left, innerWidth - w - 8)); top = Math.max(8, Math.min(top, innerHeight - h - 8));
+  card.style.left = left + 'px'; card.style.top = top + 'px';
+  card.style.transformOrigin = fromRail ? '0 100%' : '100% 0';
+  btn.setAttribute('aria-expanded', 'true');
+  card.animate(CALM ? [{ opacity: 0 }, { opacity: 1 }] : [{ opacity: 0, transform: 'scale(.96) translateY(' + (fromRail ? 4 : -4) + 'px)' }, { opacity: 1, transform: 'none' }], { duration: CALM ? 120 : 180, easing: EASE });
+  (card.querySelector('[aria-pressed="true"]') || card).focus({ preventScroll: true });
+}
+function closeSettings(refocus = true){
+  if (card.hidden) return;
+  card.hidden = true;
+  const o = setOpener; setOpener = null;
+  if (o) { o.setAttribute('aria-expanded', 'false'); if (refocus) o.focus({ preventScroll: true }); }
+}
+[$('gearHead'), $('gearRail')].forEach(b => b.onclick = () => { if (!card.hidden && setOpener === b) closeSettings(); else { closeSettings(false); openSettings(b); } });
+document.addEventListener('pointerdown', e => { if (!card.hidden && !card.contains(e.target) && !(setOpener && setOpener.contains(e.target))) closeSettings(false); });
+card.addEventListener('focusout', e => { if (!card.hidden && e.relatedTarget && !card.contains(e.relatedTarget) && !(setOpener && setOpener.contains(e.relatedTarget))) closeSettings(false); });
+addEventListener('keydown', e => { if (e.key === 'Escape' && !card.hidden) { e.preventDefault(); e.stopImmediatePropagation(); closeSettings(); } }, true);
+addEventListener('resize', () => closeSettings(false));
+
+/* Tooltips for the icon buttons (one floating label, body level) */
+const tip = $('tip');
+function showTip(b){
+  if (!b.dataset.tip || !card.hidden && card.contains(b)) return;
+  tip.textContent = b.dataset.tip; tip.hidden = false;
+  const r = b.getBoundingClientRect(), w = tip.offsetWidth, h = tip.offsetHeight;
+  const below = b.dataset.tipPos === 'below';
+  tip.style.left = Math.max(8, Math.min(below ? r.left + r.width / 2 - w / 2 : r.right + 10, innerWidth - w - 8)) + 'px';
+  tip.style.top = (below ? r.bottom + 8 : r.top + r.height / 2 - h / 2) + 'px';
+}
+function hideTip(){ tip.hidden = true; }
+document.querySelectorAll('[data-tip]').forEach(b => {
+  b.addEventListener('pointerenter', () => { if (card.hidden) showTip(b); });
+  b.addEventListener('pointerleave', hideTip); b.addEventListener('pointerdown', hideTip);
+  b.addEventListener('focus', () => { if (!noTip && b.matches(':focus-visible') && card.hidden) showTip(b); });
+  b.addEventListener('blur', hideTip);
+});
 
 /* ---------- eyes: follow pointer anywhere, spring, blink ---------- */
 const face = document.getElementById('face'), eyes = [document.getElementById('eyeL'), document.getElementById('eyeR')];
