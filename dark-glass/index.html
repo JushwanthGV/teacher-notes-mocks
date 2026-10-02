@@ -505,6 +505,153 @@ body.mynotes .doc-pane > .doc-head,body.mynotes .doc-pane > .toolbar,body.mynote
 .nc-vers .st{height:22px;padding:0 8px;font-size:12px}
 .nc-vers .nbtn{height:28px;padding:0 9px;font-size:12.5px}
 
+/* ---------- GUIDED FLOW: board > class > subject > chapter > (continue?) > template, all on the opening panel ---------- */
+.fl{width:100%;display:flex;flex-direction:column;align-items:center;margin-top:14px}
+.fl-crumbs{width:100%;margin:0 0 12px}
+.fl-crumbs[hidden],.fl-cont[hidden]{display:none}
+.fl-crumbs ol{list-style:none;margin:0;padding:0;display:flex;align-items:center;flex-wrap:wrap;justify-content:center;gap:6px}
+.fl-crumbs li{display:flex;align-items:center;gap:6px}
+.fl-crumbs .sep{width:14px;height:14px;stroke:var(--ink-3);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.fl-crumb{height:32px;padding:0 13px;border-radius:999px;display:inline-flex;align-items:center;gap:7px;font-size:14px;font-weight:600;color:#fff;
+  background:rgba(16,18,60,.34);border:1px solid rgba(255,255,255,.24);transition:background .2s,border-color .2s}
+.fl-crumb:hover{background:rgba(16,18,60,.5);border-color:rgba(255,255,255,.45)}
+.fl-crumb .cd{width:8px;height:8px;border-radius:50%;background:var(--cc);box-shadow:0 0 8px var(--cc)}
+.fl-crumb[aria-current="step"]{border-color:rgba(255,255,255,.5)}
+.fl-cont{width:100%;max-width:560px;margin:0 0 16px}
+.fl-cont .sugg button{background:rgba(143,140,255,.20);border-color:rgba(200,200,255,.55)}
+.fl-cont .sugg button:hover{background:rgba(143,140,255,.30);border-color:#fff}
+.fl-area{width:100%;display:flex;flex-direction:column;align-items:center}
+.fl-area.wide{align-self:center;width:calc(100% + 56px)}
+.fl-opts{display:flex;flex-wrap:wrap;gap:10px 12px;justify-content:center;align-items:center;max-width:600px}
+.fl-chip{height:46px;padding:0 22px;border-radius:999px;display:inline-flex;align-items:center;gap:9px;font-size:15.5px;font-weight:600;color:#fff;
+  background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.28);box-shadow:inset 0 1px 0 rgba(255,255,255,.22);transition:background .2s,border-color .2s,transform .25s cubic-bezier(.22,1,.36,1)}
+.fl-chip:hover{background:rgba(255,255,255,.20);border-color:rgba(255,255,255,.5)}
+.fl-chip:active{transform:scale(.97)}
+.fl-chip .cd{width:9px;height:9px;border-radius:50%;background:var(--cc);box-shadow:0 0 8px var(--cc)}
+.fl-chip svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.fl-list{max-width:480px;width:100%}
+.fl-empty{margin:0 0 14px;max-width:44ch;text-align:center;font-size:15px;line-height:1.5;color:var(--ink-2)}
+.chip[hidden]{display:none}
+/* the template step is taller: orb and buttons get smaller so the ring fits above the fold */
+body.opening.tpl{--os:.95}
+body.opening.tpl .stage{height:238px}
+body.opening.tpl .state-line{bottom:2px}
+body.opening.tpl .ov-line{display:none}
+body.opening.tpl .ov-ctrl{padding:4px 0 0;gap:18px}
+body.opening.tpl .ov-round{width:40px;height:40px}
+body.opening.tpl .ov-main{height:44px}
+body.opening.tpl .fl{margin-top:8px}
+body.opening .stage{transition:height .4s cubic-bezier(.22,1,.36,1)}
+body.opening .orb-sc{transition:transform .4s cubic-bezier(.22,1,.36,1)}
+body.calm.opening .stage,body.calm.opening .orb-sc{transition:none}
+body.busy .fl,body.busy .tpo-panel{pointer-events:none}
+body.busy{cursor:progress}
+
+/* ---------- TEMPLATE RING (ported from directions/templates, classes prefixed tr-). Cards are SOLID tint, never backdrop-filter. ---------- */
+:root{--cw:320px;--ch:344px;--cs:1}
+.tr{position:relative;width:100%;display:flex;flex-direction:column;align-items:center}
+.tr-wrap{position:relative;width:100%;height:calc(var(--ch) * var(--cs) + 26px);display:flex;justify-content:center}
+.tr-stage{position:relative;width:var(--cw);height:var(--ch);transform:scale(var(--cs));transform-origin:50% 0;perspective:1400px;perspective-origin:50% 45%;touch-action:pan-y;cursor:grab;border-radius:24px}
+.tr-stage.drag{cursor:grabbing}
+.tr-stage:focus-visible{outline-offset:8px;border-radius:28px}
+.tr-ring{position:absolute;inset:0;transform-style:preserve-3d}
+.trc{position:absolute;inset:0;border-radius:24px;padding:18px;display:flex;flex-direction:column;backface-visibility:hidden;-webkit-backface-visibility:hidden;user-select:none;-webkit-user-select:none;
+  background:linear-gradient(180deg,#3b4392 0%,#30377c 100%);border:1px solid rgba(255,255,255,.24);box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 26px 50px -26px rgba(10,6,50,.85)}
+.trc::before{content:"";position:absolute;inset:-1px;border-radius:inherit;background:#1a1e4a;opacity:var(--dim,0);pointer-events:none}
+.trc > *{position:relative}
+.trc > :not(.tr-use){opacity:var(--ink-op,1)}
+.trc.tr-front{border-color:rgba(255,255,255,.6);box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 0 0 1px rgba(143,140,255,.55),0 22px 60px -18px rgba(120,110,255,.65)}
+.trc .t-head{display:flex;align-items:flex-start;gap:12px}
+.trc .tile{width:38px;height:38px;border-radius:12px;background:linear-gradient(160deg,color-mix(in srgb,var(--c) 34%,transparent),color-mix(in srgb,var(--c) 14%,transparent));border-color:color-mix(in srgb,var(--c) 50%,transparent)}
+.trc .tile svg{width:20px;height:20px;filter:none}
+.t-name{font-size:19px;font-weight:700;line-height:1.2;margin:0;letter-spacing:-.005em}
+.t-sub{display:block;margin-top:3px;font-size:13.5px;font-weight:500;color:var(--ink-3)}
+.t-sub b{font-weight:650;color:#fff}
+.tr-fit{display:inline-flex;align-items:center;gap:5px;margin-top:6px;height:22px;padding:0 9px;border-radius:999px;font-size:12.5px;font-weight:650;color:#fff;background:rgba(95,227,161,.20);border:1px solid rgba(95,227,161,.65)}
+.tr-fit[hidden]{display:none}
+.tr-fit svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.t-body{display:flex;gap:14px;margin-top:14px;flex:1;min-height:0}
+.secs{list-style:none;margin:0;padding:0;flex:1;min-width:0;display:grid;align-content:start;gap:3px}
+.secs li{display:flex;align-items:center;gap:9px;min-height:28px;font-size:14.5px;font-weight:500;color:var(--ink-2);line-height:1.2}
+.secs .n{flex:none;width:21px;height:21px;border-radius:50%;display:grid;place-items:center;font-size:12.5px;font-weight:700;color:#fff;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22)}
+.th{flex:none;width:86px;height:114px;border-radius:7px;background:#f3f2fb;padding:9px 8px;display:flex;flex-direction:column;gap:6px;box-shadow:0 8px 18px -8px rgba(0,0,0,.6);transform:rotate(2deg)}
+.th i{display:block;border-radius:2px;background:#c8c5e4;height:4px}
+.th .th-t{height:6px;width:70%;background:#4a42c9}
+.th-b{display:flex;flex-direction:column;gap:3px}
+.th-r{display:flex;gap:3px;align-items:center}
+.th-p{width:15px;height:5px;border-radius:3px;background:color-mix(in srgb,var(--c) 70%,#fff)}
+.th-o{width:5px;height:5px;border-radius:50%;border:1px solid #9b97c9;background:none}
+.th-x{width:24px;height:6px;border:1px solid #9b97c9;background:none;border-radius:1px}
+.th-f{height:20px;border:1px solid #9b97c9;background:none;border-radius:3px;position:relative}
+.th-f::after{content:"";position:absolute;left:30%;top:4px;width:10px;height:10px;border-radius:50%;background:color-mix(in srgb,var(--c) 70%,#fff)}
+.th-g{width:12px;height:4px;background:none;border-bottom:1px solid #6b67a8;border-radius:0}
+.tr-use{margin-top:12px;height:48px;width:100%;border-radius:24px;display:inline-flex;align-items:center;justify-content:center;gap:9px;font-size:15.5px;font-weight:650;color:#fff;
+  background:linear-gradient(180deg,#6a63ee,#4a42c9);border:1.5px solid rgba(255,255,255,.55);box-shadow:0 10px 28px -10px rgba(74,66,201,.95),inset 0 1px 0 rgba(255,255,255,.35);transition:transform .25s cubic-bezier(.22,1,.36,1),background .2s}
+.tr-use:hover{background:linear-gradient(180deg,#7770f2,#554dd6)}
+.tr-use:active{transform:scale(.97)}
+.tr-use svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.trc.tr-up{background:linear-gradient(180deg,#363d88 0%,#2c3272 100%);border-style:dashed;border-width:1.5px;border-color:rgba(255,255,255,.45)}
+.trc.tr-up.tr-front{border-color:#fff}
+.tr-up-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;padding:0 6px}
+.tr-up-plus{width:64px;height:64px;border-radius:20px;display:grid;place-items:center;border:1.5px dashed rgba(255,255,255,.6);background:rgba(255,255,255,.08)}
+.tr-up-plus svg{width:28px;height:28px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round}
+.tr-up-body p{margin:0;font-size:14.5px;line-height:1.45;color:var(--ink-2);max-width:24ch}
+.tr-up-body .fmt{font-size:13.5px;color:var(--ink-3)}
+.tr-nav{position:absolute;top:calc(var(--ch) * var(--cs) / 2 - 23px);z-index:5}
+.tr-nav.prev{left:12px}.tr-nav.next{right:12px}
+.tr-nav svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.tr-below{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:2px}
+.tr-hint{margin:10px 0 0;font-size:13.5px;color:var(--ink);text-align:center}
+.tr-hint kbd{font:inherit;font-weight:650;color:#fff;padding:0 6px;border-radius:6px;border:1px solid rgba(255,255,255,.3);background:rgba(16,18,60,.34)}
+.tr-pager{display:flex;gap:7px}
+.tr-pager span{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.38);transition:background .2s,width .2s}
+.tr-pager span.on{width:20px;border-radius:4px;background:#fff}
+.tr-see{height:36px;padding:0 14px;border-radius:999px;display:inline-flex;align-items:center;gap:8px;font-size:14.5px;font-weight:600;color:#fff;background:rgba(16,18,60,.34);border:1px solid rgba(255,255,255,.26)}
+.tr-see:hover{background:rgba(16,18,60,.52);border-color:rgba(255,255,255,.5)}
+.tr-see svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+body.calm .tr-stage{perspective:none}
+body.calm .tr-ring{transform:none!important}
+body.calm .trc{backface-visibility:visible}
+body.calm .tr-wrap{overflow:hidden}
+/* see all: flat grid overlay */
+.tr-all{position:fixed;inset:0;z-index:31;display:none;place-items:center;background:rgba(18,12,54,.72)}
+.tr-all.open{display:grid}
+.tr-all-box{width:min(1000px,calc(100vw - 40px));max-height:calc(100vh - 40px);overflow:auto;border-radius:28px;padding:22px 24px 26px;background:#2f3670;border:1px solid rgba(255,255,255,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 30px 80px -20px rgba(0,0,0,.7)}
+body:not(.calm) .tr-all.open .tr-all-box{animation:trAllIn .26s cubic-bezier(.22,1,.36,1)}
+@keyframes trAllIn{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:none}}
+.tr-all-head{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.tr-all-head h2{margin:0;flex:1;font-size:21px;font-weight:700}
+.tr-all-head p{margin:2px 0 0;font-size:14px;color:var(--ink-3)}
+.tr-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.tr-gcard{width:100%;height:100%;min-height:170px;text-align:left;border-radius:20px;padding:14px;display:flex;flex-direction:column;gap:10px;background:linear-gradient(180deg,#3b4392,#323a80);border:1px solid rgba(255,255,255,.22);transition:border-color .2s,background .2s}
+.tr-gcard:hover{border-color:rgba(255,255,255,.55)}
+.tr-gcard[aria-current="true"]{border-color:#fff;box-shadow:0 0 0 1px rgba(143,140,255,.7)}
+.tr-gcard .t-head{display:flex;align-items:flex-start;gap:10px}
+.tr-gcard .tile{width:32px;height:32px;border-radius:10px}.tr-gcard .tile svg{width:17px;height:17px}
+.tr-gcard .t-name{font-size:16px}
+.tr-gcard .g-secs{margin:0;font-size:13.5px;line-height:1.45;color:var(--ink-2)}
+.tr-gcard.tr-up{border-style:dashed;border-width:1.5px;border-color:rgba(255,255,255,.45);background:#343b84}
+.tr-gcard .cur{margin-top:auto;font-size:13px;font-weight:650;color:#fff;display:none}
+.tr-gcard[aria-current="true"] .cur{display:block}
+@media (max-height:820px){:root{--cs:.86}body.opening.tpl{--os:.8}body.opening.tpl .stage{height:184px}body.opening.tpl .open-view{padding-bottom:12px}body.opening.tpl .state-line{font-size:19px}.tr-hint{margin-top:6px}}
+@media (max-height:700px){:root{--cs:.74}body.opening.tpl{--os:.7}body.opening.tpl .stage{height:150px}}
+@media (max-width:700px){:root{--cs:.84}.tr-nav.prev{left:2px}.tr-nav.next{right:2px}.tr-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:1000px) and (min-width:701px){.tr-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:520px){.tr-grid{grid-template-columns:minmax(0,1fr)}.tr-gcard{min-height:0}}
+
+/* ---------- TEMPLATES OVERLAY (sidebar "Templates"): the same ring for the current chapter, then a confirm ---------- */
+.tpo{position:fixed;inset:0;z-index:29;display:grid;place-items:center;background:rgba(18,12,54,.62)}
+.tpo[hidden]{display:none}
+.tpo-panel{position:relative;width:min(1040px,calc(100vw - 44px));max-height:calc(100vh - 44px);display:flex;flex-direction:column;align-items:center;overflow-x:hidden;overflow-y:auto;padding:20px 28px 16px;--ta1:.9;--ta2:.88;scrollbar-width:thin}
+.tpo-head{width:100%;display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.tpo-head h2{flex:1;margin:0;font-size:21px;font-weight:700;letter-spacing:-.01em}
+.tpo-body{width:calc(100% + 56px)}
+.tpo.confirming .tpo-body,.tpo.confirming .tpo-head{opacity:.3;pointer-events:none}
+.tpo-confirm{position:absolute;z-index:3;left:50%;top:50%;transform:translate(-50%,-50%);width:min(480px,calc(100% - 48px));display:flex;flex-direction:column;align-items:center;gap:6px;padding:28px 26px 24px;text-align:center;border-radius:24px;background:#2b3270;border:1px solid rgba(255,255,255,.4);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 30px 70px -20px rgba(6,3,40,.85)}
+.tpo-confirm[hidden]{display:none}
+.tpo-confirm h3{margin:0;font-size:22px;font-weight:700;letter-spacing:-.01em;max-width:30ch}
+.tpo-confirm p{margin:0 0 16px;font-size:15.5px;line-height:1.45;color:var(--ink-2)}
+
 /* ---------- mock controls ---------- */
 .mockbar{position:fixed;left:50%;bottom:6px;transform:translateX(-50%);z-index:20;display:flex;align-items:center;gap:8px;padding:5px 6px 5px 12px;border-radius:999px;
   background:rgba(20,14,60,.86);border:1px solid rgba(255,255,255,.22);font-size:12.5px;box-shadow:0 10px 30px -10px rgba(0,0,0,.6)}
@@ -535,7 +682,7 @@ body.print .pp{display:grid}
 @media (prefers-reduced-motion:reduce){.blob{animation:none!important}}   /* nebula backdrop only; the orb follows the Motion switch */
 
 @media (max-height:820px) and (min-width:901px){.stage{height:150px}.float{zoom:.78;margin-top:-6px}.hello p{display:none}.hello h2{margin-top:2px}.status{margin-top:10px}}
-@media (max-height:820px){body.opening{--os:1.2}body.opening .stage{height:268px}body.opening .state-line{font-size:19px}body.opening .ov-ctrl{padding-top:12px}body.opening .ov-chaps{margin-top:10px}body.opening .sugg button{min-height:46px}}
+@media (max-height:820px){body.opening{--os:1.2}body.opening .stage{height:286px}body.opening .state-line{font-size:19px;bottom:2px}body.opening .ov-ctrl{padding-top:12px}body.opening .ov-chaps{margin-top:10px}body.opening .sugg button{min-height:46px}}
 /* narrow fallback (phone layout is out of scope; keep it usable) */
 @media (max-width:900px){
   body{overflow:auto}
@@ -546,6 +693,20 @@ body.print .pp{display:grid}
   .toolbar{overflow-x:auto}
   .saved{display:none}
 }
+
+/* Kakashi: manual edit mode. Toolbar hidden while reviewing; pencil on the page corner turns editing on. */
+.toolbar{transition:height .32s cubic-bezier(.22,1,.36,1),margin .32s cubic-bezier(.22,1,.36,1),opacity .22s ease-out}
+body:not(.editing) .toolbar{height:0;margin-top:0;margin-bottom:0;border-width:0;opacity:0;pointer-events:none}
+.page{position:relative}
+.edit-btn{position:absolute;top:14px;right:18px;z-index:4;height:38px;min-width:38px;padding:0 12px;border-radius:999px;display:flex;align-items:center;gap:7px;
+  background:var(--p-btn,#fff);color:var(--p-ink,#1d2340);border:1px solid var(--p-line2,rgba(29,35,64,.22));box-shadow:0 4px 14px -6px rgba(20,24,60,.35);font-size:14px;font-weight:600;cursor:pointer;transition:background .2s,transform .2s}
+.edit-btn:hover{transform:translateY(-1px)}
+.edit-btn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.edit-btn .eb-l{display:none}
+body.editing .edit-btn{background:#4a42c9;color:#fff;border-color:rgba(255,255,255,.4)}
+body.editing .edit-btn .eb-l{display:inline}
+body.editing .doc{outline:2px solid rgba(90,82,230,.35);outline-offset:-2px}
+body.calm .toolbar{transition:none}
 </style>
 </head>
 <body>
@@ -631,7 +792,7 @@ if(s==='opening'||(s!=='panes'&&!q.has('view')&&!q.has('print')&&!q.has('scroll'
       <button class="pill" id="bSavePdf"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M12 11v6M9.5 14.5 12 17l2.5-2.5"/></svg>Save PDF</button>
       <button class="pill" id="bShare" data-tip="Share" data-tip-pos="below"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M17 8v6M14 11h6"/></svg><span class="pl">Share</span></button>
     </header>
-    <div class="toolbar ctl" role="toolbar" aria-label="Formatting">
+    <div class="toolbar ctl" id="fmtBar" role="toolbar" aria-label="Formatting" inert>
       <button aria-label="Undo"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg></button>
       <span class="div"></span>
       <button>Heading 1<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" style="width:14px;height:14px"><path d="m6 9 6 6 6-6"/></svg></button>
@@ -647,12 +808,14 @@ if(s==='opening'||(s!=='panes'&&!q.has('view')&&!q.has('print')&&!q.has('scroll'
     </div>
 
     <div class="page" id="page">
-    <article class="doc" id="doc" tabindex="0" role="textbox" aria-multiline="true" aria-label="Note page" contenteditable="true" spellcheck="false">
+    <button class="edit-btn" id="bEditMode" aria-pressed="false" aria-label="Edit this note" data-tip="Edit this note"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></svg><span class="eb-l">Edit</span></button>
+    <article class="doc" id="doc" tabindex="0" role="textbox" aria-multiline="true" aria-label="Note page" contenteditable="false" spellcheck="false">
      <div class="v-dig">
       <h2 class="title">Human Digestive System</h2>
       <div class="meta">
-        <span class="chip sci"><span class="dot" style="--c:var(--sci)"></span>Science, Class 6 format</span>
+        <span class="chip sci"><span class="dot" style="--c:var(--sci)"></span><span id="digChipT">Science, Class 6 format</span></span>
         <span class="chip">Block 15, pages 49 to 54</span>
+        <span class="chip" id="digCopy" hidden>v2 copy</span>
       </div>
       <p>Enzymes are chemicals in our body that <mark>break food down into small, simple parts</mark> the body can absorb. Each enzyme works on only one kind of food.</p>
 
@@ -720,6 +883,7 @@ if(s==='opening'||(s!=='panes'&&!q.has('view')&&!q.has('print')&&!q.has('scroll'
       <div class="meta">
         <span class="chip sci" id="nopChip"><span class="dot" id="nopDot" style="--c:var(--sci)"></span><span id="nopChipT">Science, Class 9 format</span></span>
         <span class="chip warn" id="nopWarn">No textbook pages yet</span>
+        <span class="chip" id="nopCopy" hidden>v2 copy</span>
       </div>
       <p>Start typing here, or add the textbook pages for this chapter. The Assistant drafts only from those pages.</p>
       <h3><span class="num">1</span>Keywords</h3>
@@ -842,13 +1006,10 @@ if(s==='opening'||(s!=='panes'&&!q.has('view')&&!q.has('print')&&!q.has('scroll'
         <input id="ovAsk" type="text" placeholder="Ask about a chapter…" autocomplete="off">
         <button class="send" aria-label="Send"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button>
       </div>
-      <section class="ov-chaps" aria-labelledby="ovH">
-        <h2 id="ovH">Your chapters</h2>
-        <ul class="sugg">
-          <li><button data-ch="dig"><span class="tile" style="--c:var(--sci)"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10Z"/><path d="M2 21c0-3 1.9-5.4 5.1-6"/></svg></span><span class="l">Human Digestive System<span>Class 6 Science, Block 15</span></span><svg aria-hidden="true" focusable="false" class="go" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button></li>
-          <li><button data-ch="bak"><span class="tile" style="--c:var(--eng)"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M2 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2z"/><path d="M22 4h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"/></svg></span><span class="l">Bakunawa, the Moon-Eating Dragon<span>Class 6 English, Block 13</span></span><svg aria-hidden="true" focusable="false" class="go" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button></li>
-          <li><button data-ch="mot"><span class="tile" style="--c:var(--sci)"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10Z"/><path d="M2 21c0-3 1.9-5.4 5.1-6"/></svg></span><span class="l">Motion<span>Class 9 Science, no textbook pages yet</span></span><svg aria-hidden="true" focusable="false" class="go" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button></li>
-        </ul>
+      <section class="fl" id="flow" aria-label="Choose what to prepare">
+        <nav class="fl-crumbs" id="flCrumbs" aria-label="Your answers so far" hidden><ol id="flCrumbList"></ol></nav>
+        <div class="fl-cont" id="flCont" hidden></div>
+        <div class="fl-area" id="flArea"></div>
       </section>
     </div>
   </aside>
@@ -861,6 +1022,46 @@ if(s==='opening'||(s!=='panes'&&!q.has('view')&&!q.has('print')&&!q.has('scroll'
   <div class="seg" id="viewSeg"><button data-v="dig" aria-pressed="true">With pages</button><button data-v="nop" aria-pressed="false">No pages</button></div>
 </aside>
 
+<!-- Template ring lives here while unused; the script moves it into the opening panel or the Templates overlay -->
+<div id="trHold" hidden>
+  <section class="tr" id="tr" aria-roledescription="carousel" aria-label="Templates">
+    <div class="tr-wrap">
+      <button class="ov-round tr-nav prev" id="trPrev" aria-label="Previous template"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></svg></button>
+      <div class="tr-stage" id="trStage" tabindex="0" aria-label="Template ring. Use the left and right arrow keys to turn it.">
+        <div class="tr-ring" id="trRing"></div>
+      </div>
+      <button class="ov-round tr-nav next" id="trNext" aria-label="Next template"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button>
+    </div>
+    <div class="tr-below">
+      <div class="tr-pager" id="trPager" aria-hidden="true"></div>
+      <button class="tr-see" id="trSee" aria-haspopup="dialog" aria-controls="trAll"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>See all templates</button>
+    </div>
+    <p class="tr-hint">Drag, scroll or press <kbd>&larr;</kbd> <kbd>&rarr;</kbd> to see more. Click a side card to bring it forward.</p>
+    <p class="sr" id="trLive" aria-live="polite"></p>
+    <input type="file" id="trFile" accept="application/pdf,image/*" class="sr" tabindex="-1" aria-hidden="true">
+  </section>
+</div>
+<div class="tr-all" id="trAll" role="dialog" aria-modal="true" aria-labelledby="trAllH">
+  <div class="tr-all-box">
+    <div class="tr-all-head">
+      <div style="flex:1"><h2 id="trAllH">All templates</h2><p>Pick one to see it in the ring.</p></div>
+      <button class="ibtn" id="trAllClose" aria-label="Close all templates"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+    <ul class="tr-grid" id="trGrid"></ul>
+  </div>
+</div>
+
+<div class="tpo" id="tpo" hidden>
+  <div class="glass tpo-panel" id="tpoPanel" role="dialog" aria-modal="true" aria-labelledby="tpoH" tabindex="-1">
+    <header class="tpo-head"><h2 id="tpoH">Change template</h2><button class="ibtn" id="tpoClose" aria-label="Close"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button></header>
+    <div class="tpo-body" id="tpoBody"></div>
+    <div class="tpo-confirm" id="tpoConfirm" role="alertdialog" aria-labelledby="tpoCH" aria-describedby="tpoCP" hidden>
+      <h3 id="tpoCH">Rewrite the note?</h3>
+      <p id="tpoCP">Your current version stays in Versions.</p>
+      <div class="fl-opts"><button class="ov-main" id="tpoYes">Rewrite</button><button class="fl-chip" id="tpoNo">Cancel</button></div>
+    </div>
+  </div>
+</div>
 <div class="pp" role="dialog" aria-modal="true" aria-label="Print preview">
   <div class="pp-bar"><button class="pill" id="ppPrint" onclick="window.print()">Print / Save as PDF</button> <button class="pill" id="ppClose">Close preview</button></div>
   <div class="pp-sheet" id="ppSheet" tabindex="0" aria-label="Printed pages"></div>
@@ -897,8 +1098,9 @@ document.documentElement.dataset.rt = RT;
 
 /* Motion: Full / Calm. Full is the default even when the OS asks for less motion (user decision, round 6). ?calm=1 starts Calm. */
 const bF = document.getElementById('bFull'), bC = document.getElementById('bCalm');
+const calmHooks = [];
 let CALM = q.has('calm') && q.get('calm') !== '0';
-function setCalm(c){ CALM = c; body.classList.toggle('calm', c); bF.setAttribute('aria-pressed', !c); bC.setAttribute('aria-pressed', c); document.documentElement.dataset.motion = c ? 'calm' : 'full'; }
+function setCalm(c){ CALM = c; body.classList.toggle('calm', c); bF.setAttribute('aria-pressed', !c); bC.setAttribute('aria-pressed', c); document.documentElement.dataset.motion = c ? 'calm' : 'full'; calmHooks.forEach(f => f()); }
 bF.onclick = () => setCalm(false); bC.onclick = () => setCalm(true);
 setCalm(CALM);
 document.documentElement.dataset.rm = RM;
@@ -963,6 +1165,35 @@ const SESS = [
   { id: 's4', t: 'Motion, where to start', ch: 'mot', day: 'Sep 24' }
 ];
 const CHIP = { dig: { c: 'sci', t: 'Sci 6 - ch 15' }, bak: { c: 'eng', t: 'Eng 6 - ch 13' }, mot: { c: 'sci', t: 'Sci 9 - ch 8' } };
+/* ---------- guided flow data + state (Part 2). The status line shows one question at a time. ---------- */
+CH.food = { nop: true, cls: 'Class 6', subj: 'Science', sci: true, title: 'Food and its Sources', ctx: 'Block 14 Food and its Sources', agSub: 'Class 6 Science', id: 'chapFood', warn: 'Not drafted yet', ask: 'Make 5 practice questions for Food and its Sources.', ai: 'I can\'t write them yet. Food and its Sources has no draft in this preview, and I only write from your textbook. Questions I make up could teach something your book does not say.', ref: 'Food and its Sources has no draft in this preview yet. I only write from your textbook, so I did not make up any questions.' };
+CHIP.food = { c: 'sci', t: 'Sci 6 - ch 14' };
+const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const BOARDS = ['CBSE', 'ICSE', 'State board'];
+const SUBJ = { 6: [['sci', 'Science'], ['eng', 'English']], 9: [['sci', 'Science']] };
+const CHAPS = { '6-sci': ['food', 'dig'], '6-eng': ['bak'], '9-sci': ['mot'] };
+const CHL = { food: '14 Food and its Sources', dig: '15 Human Digestive System', bak: '13 Bakunawa, the Moon-Eating Dragon', mot: '8 Motion' };
+const TPL = {}, COPY = {};   /* template id and fresh-copy flag per chapter, set when notes are written */
+const FLOW_SAVED = { dig: { short: 'Fri', full: 'Fri 4:10 pm' } };   /* chapters that already have saved notes */
+const FL = { step: 'board', board: null, cls: null, subj: null, chap: null, fresh: false, live: body.classList.contains('opening'), writing: false };
+const STEP_Q = { board: 'Which board?', class: 'Which class?', subject: 'Which subject?', chapter: 'Which chapter?', template: 'Pick a template', empty: 'No chapters in this mock yet' };
+const STEP_SUB = { board: 'Tap an answer, or tap Talk and say it.', class: 'Tap an answer, or tap Talk and say it.', subject: 'Tap an answer, or tap Talk and say it.', chapter: 'Tap an answer, or tap Talk and say it.',
+  continue: 'A fresh copy keeps your first notes as they are.', template: 'A template sets the sections of your notes. You can change it later.', empty: 'Class 6 and Class 9 are set up in this preview.' };
+function flowQ(){
+  if (FL.step === 'continue') return 'You already have notes for this chapter (saved ' + FLOW_SAVED[FL.chap].full + '). Continue them or start a fresh copy?';
+  return STEP_Q[FL.step] || 'Ready';
+}
+const flowSub = () => STEP_SUB[FL.step] || '';
+function lineFor(s){
+  if (s === 'normal' && FL.live && body.classList.contains('opening')) return flowQ();
+  if (s === 'thinking' && FL.writing) return 'Writing your notes…';
+  return LINES[s];
+}
+function refreshLines(){
+  if (state !== 'normal') return;
+  line.textContent = lineFor('normal');
+  if (body.classList.contains('opening')) $('ovLine').textContent = flowSub();
+}
 const sessList = $('sessList');
 let curSess = 's1', sessQuery = '', nowOn = false;
 let chKey = 'dig';
@@ -976,11 +1207,17 @@ function setChapter(k){
     $('nopTitle').textContent = c.title; $('nopChipT').textContent = c.subj + ', ' + c.cls + ' format'; $('nopWarn').textContent = c.warn; $('nopMe').textContent = c.ask; $('nopAi').textContent = c.ai; $('nopRef').textContent = c.ref;
     $('nopChip').classList.toggle('sci', c.sci); $('nopChip').classList.toggle('eng', !c.sci); $('nopDot').classList.toggle('eng', !c.sci);
   }
+  applyChip(k);
   document.title = c.title + ' - ' + c.cls + ' ' + c.subj + ' - Teacher Notes (v3 target mock)';
   if ((SESS.find(s => s.id === curSess) || {}).ch !== k) curSess = (SESS.find(s => s.ch === k) || {}).id;
   markCurrent();
   document.querySelectorAll('#viewSeg button').forEach(bt => bt.setAttribute('aria-pressed', bt.dataset.v === (c.nop ? 'nop' : 'dig')));
   doc.scrollTop = 0; syncDraft();
+}
+function applyChip(k){
+  const c = CH[k], tn = TPL[k] ? TPLS.find(x => x.id === TPL[k]).name : null;
+  if (c.nop) $('nopChipT').textContent = tn || (c.subj + ', ' + c.cls + ' format'); else $('digChipT').textContent = tn || 'Science, Class 6 format';
+  $('digCopy').hidden = $('nopCopy').hidden = !COPY[k];
 }
 const setView = v => setChapter(v === 'nop' ? 'mot' : 'dig');
 document.querySelectorAll('#viewSeg button').forEach(bt => bt.onclick = () => setView(bt.dataset.v));
@@ -1037,12 +1274,12 @@ function setState(s){
   clearTimeout(flowTimer); clearInterval(wordTimer);
   state = s; orb.dataset.state = s; document.documentElement.dataset.ostate = s;
   document.querySelectorAll('#stateSeg button').forEach(b => b.setAttribute('aria-pressed', b.dataset.s === s));
-  const active = s !== 'normal';
+  const active = s !== 'normal' && !(s === 'thinking' && FL.writing);   /* while the notes are written the Talk button stays as it is */
   mic.innerHTML = active ? STOP_SVG : MIC_SVG; mic.setAttribute('aria-label', active ? 'Stop' : 'Speak instead of typing'); mic.classList.toggle('on', active);
   { const tb = $('ovTalk'); $('ovTalkL').textContent = active ? 'Stop' : 'Talk'; tb.setAttribute('aria-label', active ? 'Stop' : 'Start talking'); tb.classList.toggle('on', active);
     tb.querySelector('svg').innerHTML = active ? '<rect x="6" y="6" width="12" height="12" rx="2.5" fill="currentColor" stroke="none"/>' : '<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>';
-    $('ovLine').textContent = active ? 'Tap Stop when you are done' : 'Pick a chapter or tap Talk'; }
-  if (s === 'speaking') speak(); else line.textContent = LINES[s];
+    $('ovLine').textContent = active ? 'Tap Stop when you are done' : flowSub(); }
+  if (s === 'speaking') speak(); else line.textContent = lineFor(s);
   if (flowOn && s === 'listening') flowTimer = setTimeout(() => setState('thinking'), 3500);
   if (flowOn && s === 'thinking') flowTimer = setTimeout(() => setState('speaking'), 2500);
   if (s === 'normal') flowOn = false;
@@ -1070,7 +1307,7 @@ let moving = false;
 function openChapter(k){
   if (!body.classList.contains('opening') || moving) return;
   moving = true;
-  flowOn = false; setState('normal');
+  FL.live = false; FL.writing = false; flowOn = false; setState('normal');
   setChapter(k);
   const ap = document.querySelector('.agent'), sd = document.querySelector('.side'), dp = document.querySelector('.doc-pane'), ov = $('openView'), osc = $('orbSc');
   const F = ap.getBoundingClientRect(), oF = $('orb').getBoundingClientRect();
@@ -1092,19 +1329,314 @@ function openChapter(k){
   dp.animate([{ transform: 'translateX(' + (-(dr.right + 24)) + 'px)' }, { transform: 'none' }], { duration: dur - 150, delay: 150, easing: EASE, fill: 'backwards' });
   aA.finished.then(done, done);
 }
-document.querySelectorAll('#openView [data-ch]').forEach(bt => bt.onclick = () => openChapter(bt.dataset.ch));
+/* ---------- templates + the rotating ring (ported from directions/templates; one ring, moved between the opening panel and the Templates overlay) ---------- */
+const TIC = {
+  leaf: '<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10Z"/><path d="M2 21c0-3 1.9-5.4 5.1-6"/>',
+  atom: '<circle cx="12" cy="12" r="1.6"/><ellipse cx="12" cy="12" rx="10" ry="4"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)"/>',
+  bolt: '<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+  sheet: '<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/>',
+  book: '<path d="M2 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2z"/><path d="M22 4h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"/>',
+  target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>'
+};
+/* fit = the class-subject a school format belongs to (marked "Fits Class 6 Science") */
+const TPLS = [
+  { id: 'sci6', name: 'Science Class 6 (school format)', fmt: true, fit: '6-sci', c: 'var(--sci)', ic: 'leaf', secs: [['Keywords', 'kw'], ['Practice questions', 'q']] },
+  { id: 'sci9', name: 'Science Class 9 (school format)', fmt: true, fit: '9-sci', c: '#7ee0d0', ic: 'atom', secs: [['Keywords', 'kw'], ['Main points', 'pt'], ['Textbook questions', 'q'], ['Additional questions', 'q']] },
+  { id: 'quick', name: 'Quick revision', c: '#ffd36e', ic: 'bolt', secs: [['Keywords', 'kw'], ['5 key points', 'pt'], ['5 MCQs', 'mcq']] },
+  { id: 'work', name: 'Worksheet', c: '#7cc4ff', ic: 'sheet', secs: [['Fill in the blanks', 'gap'], ['Match', 'match'], ['Short answers', 'ans']] },
+  { id: 'detail', name: 'Detailed notes', c: '#b69cff', ic: 'book', secs: [['Introduction', 'para'], ['Main points', 'pt'], ['Diagram', 'fig'], ['Summary', 'para'], ['Questions', 'q']] },
+  { id: 'exam', name: 'Exam prep', c: '#ff8fb8', ic: 'target', secs: [['Important questions', 'q'], ['Long answers', 'ans'], ['Marks guide', 'marks']] },
+  { id: 'up', name: 'Upload your pattern', up: true, c: '#ffffff', ic: 'plus', secs: [] }
+];
+const TN = TPLS.length;
+const tsvg = k => `<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24">${TIC[k]}</svg>`;
+function thumbHTML(t){
+  const B = { kw: '<div class="th-r"><span class="th-p"></span><span class="th-p"></span><span class="th-p"></span></div>',
+    q: '<i style="width:92%"></i><i style="width:76%"></i>', pt: '<i style="width:86%"></i><i style="width:70%"></i>',
+    mcq: '<div class="th-r"><span class="th-o"></span><span class="th-o"></span><span class="th-o"></span><span class="th-o"></span></div><i style="width:80%"></i>',
+    gap: '<div class="th-r"><i style="width:22px"></i><span class="th-g"></span><i style="width:14px"></i></div><div class="th-r"><i style="width:14px"></i><span class="th-g"></span></div>',
+    match: '<div class="th-r"><span class="th-x"></span><i style="width:10px;background:#9b97c9;height:1px"></i><span class="th-x"></span></div>',
+    ans: '<i style="width:90%"></i><i style="width:90%;background:#e3e1f2"></i>', para: '<i style="width:94%"></i><i style="width:88%"></i>',
+    fig: '<span class="th-f"></span>', marks: '<div class="th-r"><span class="th-x" style="width:30px"></span><span class="th-x" style="width:14px"></span></div>' };
+  return `<div class="th" aria-hidden="true" style="--c:${t.c}"><i class="th-t"></i>${t.secs.map(s => `<div class="th-b">${B[s[1]]}</div>`).join('')}</div>`;
+}
+const subHTML = t => t.fmt ? `<b>School format</b>, ${t.secs.length} sections` : `${t.secs.length} sections`;
+const trRing = $('trRing'), trStage = $('trStage'), trPager = $('trPager');
+const FITSVG = '<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>';
+TPLS.forEach((t, i) => {
+  const el = document.createElement('article');
+  el.className = 'trc' + (t.up ? ' tr-up' : '');
+  el.dataset.i = i;
+  el.setAttribute('aria-roledescription', 'slide');
+  el.setAttribute('aria-label', `${i + 1} of ${TN}: ${t.name}`);
+  el.innerHTML = t.up
+    ? `<div class="t-head"><span class="tile" style="--c:#cfd2ff">${tsvg('plus')}</span><div><h2 class="t-name">${t.name}</h2><span class="t-sub">Your own format</span></div></div>
+       <div class="tr-up-body"><span class="tr-up-plus" aria-hidden="true">${tsvg('plus')}</span><p>Add a PDF or a photo of a format, like your school's notes format. I copy its sections.</p><span class="fmt">PDF, JPG or PNG</span></div>
+       <button class="tr-use tr-fade" data-act="upload">${tsvg('plus')}Upload a file</button>`
+    : `<div class="t-head"><span class="tile" style="--c:${t.c}">${tsvg(t.ic)}</span><div><h2 class="t-name">${t.name}</h2><span class="t-sub">${subHTML(t)}</span><span class="tr-fit" hidden>${FITSVG}<span class="tf"></span></span></div></div>
+       <div class="t-body"><ol class="secs" aria-label="Sections">${t.secs.map((s, n) => `<li><span class="n" aria-hidden="true">${n + 1}</span>${s[0]}</li>`).join('')}</ol>${thumbHTML(t)}</div>
+       <button class="tr-use tr-fade" data-act="use">${FITSVG}Use this template</button>`;
+  trRing.appendChild(el);
+});
+const trCards = [...trRing.children];
+trPager.innerHTML = TPLS.map(() => '<span></span>').join('');
+
+/* ring maths: trPos is a float index; card i sits at d = i - trPos, wrapped to [-N/2, N/2) */
+const TSTEP = 36;
+const trCW = () => parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--cw')) || 300;
+let TR = 0;
+const trCalcR = () => { TR = (trCW() / 2 + 16) / Math.tan(TSTEP / 2 * Math.PI / 180); };
+trCalcR(); addEventListener('resize', () => { trCalcR(); trRender(); });
+const wrapD = d => { d = ((d % TN) + TN) % TN; return d >= TN / 2 ? d - TN : d; };
+const tmod = (a, n) => ((a % n) + n) % n;
+const clamp01 = v => Math.max(0, Math.min(1, v));
+let trPos = 0, trFront = -1, trAnim = 0, trAim = 0;
+function trRender(){
+  trRing.style.transform = CALM ? 'none' : `translateZ(${-TR}px)`;
+  const SP = trCW() * 0.98;
+  trCards.forEach((el, i) => {
+    const d = wrapD(i - trPos), a = Math.abs(d);
+    const f = clamp01(1 - a);
+    const vis = CALM ? clamp01(2 - a) : clamp01(2.6 - a);
+    el.style.transform = CALM ? `translateX(${(d * SP).toFixed(1)}px) scale(${(1 - .12 * Math.min(1, a)).toFixed(4)})`
+                              : `rotateY(${(d * TSTEP).toFixed(3)}deg) translateZ(${TR.toFixed(1)}px)`;
+    el.style.opacity = vis.toFixed(3);
+    el.style.setProperty('--dim', ((1 - f) * .55).toFixed(3));
+    el.style.setProperty('--ink-op', clamp01((2 - a) / .5).toFixed(3));   /* far slivers carry no text: shape only (contrast) */
+    el.style.zIndex = CALM ? String(100 - Math.round(a * 10)) : '';
+    el.querySelectorAll('.tr-fade').forEach(x => x.style.opacity = clamp01((f - .55) / .45).toFixed(3));
+    el.style.pointerEvents = vis < .05 ? 'none' : '';
+  });
+  const fi = tmod(Math.round(trPos), TN);
+  if (fi !== trFront) trSetFront(fi);
+}
+function trSetFront(fi){
+  trFront = fi;
+  trCards.forEach((el, i) => {
+    const on = i === fi;
+    el.classList.toggle('tr-front', on);
+    el.setAttribute('aria-hidden', on ? 'false' : 'true');
+    el.querySelectorAll('button').forEach(b => { b.tabIndex = on ? 0 : -1; });
+  });
+  if (document.activeElement && document.activeElement.closest && document.activeElement.closest('.trc')) trStage.focus({ preventScroll: true });
+  [...trPager.children].forEach((s, i) => s.classList.toggle('on', i === fi));
+  $('trLive').textContent = `Template ${fi + 1} of ${TN}: ${TPLS[fi].name}`;
+}
+/* motion: one ease-out tween, no spring, no overshoot */
+function trStopAnim(){ cancelAnimationFrame(trAnim); trAnim = 0; }
+function trGoTo(target, instant){
+  trStopAnim();
+  if (CALM || instant || STILL) { trPos = target; trRender(); return; }
+  const from = trPos, dist = target - from, dur = Math.min(720, 380 + 110 * Math.abs(dist)), t0 = performance.now();
+  const tick = now => {
+    const t = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - t, 3);
+    trPos = from + dist * e; trRender();
+    if (t < 1) trAnim = requestAnimationFrame(tick); else { trPos = target; trRender(); trAnim = 0; }
+  };
+  trAnim = requestAnimationFrame(tick);
+}
+function trStep(dir){ trAim = (trAnim ? trAim : Math.round(trPos)) + dir; trGoTo(trAim); }
+function trGoIndex(i, instant){ const cur = Math.round(trPos); trAim = cur + wrapD(i - cur); trGoTo(trAim, instant); }
+calmHooks.push(() => { trStopAnim(); trPos = Math.round(trPos); trRender(); });
+$('trPrev').onclick = () => trStep(-1);
+$('trNext').onclick = () => trStep(1);
+$('tr').addEventListener('keydown', e => {
+  if (e.target.closest('.tr-below') || body.classList.contains('busy')) return;
+  const k = e.key;
+  if (k === 'ArrowRight') { e.preventDefault(); trStep(1); }
+  else if (k === 'ArrowLeft') { e.preventDefault(); trStep(-1); }
+  else if (k === 'Home') { e.preventDefault(); trGoIndex(0); }
+  else if (k === 'End') { e.preventDefault(); trGoIndex(TN - 1); }
+  else if ((k === 'Enter' || k === ' ') && e.target === trStage) { e.preventDefault(); trCards[trFront].querySelector('.tr-use').click(); }
+});
+let wAcc = 0, wLock = 0;
+trStage.addEventListener('wheel', e => {
+  e.preventDefault();
+  const now = performance.now(); if (now < wLock) return;
+  const dlt = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+  wAcc += dlt;
+  if (Math.abs(wAcc) >= 40) { trStep(Math.sign(wAcc)); wAcc = 0; wLock = now + 260; }
+}, { passive: false });
+let trDrag = null, trMoved = false;
+trStage.addEventListener('pointerdown', e => {
+  if (e.button !== 0 || e.target.closest('.tr-use')) return;
+  trStopAnim(); trDrag = { id: e.pointerId, x: e.clientX, p: trPos, vx: 0, lx: e.clientX, lt: performance.now() }; trMoved = false;
+});
+trStage.addEventListener('pointermove', e => {
+  if (!trDrag) return;
+  const dx = e.clientX - trDrag.x;
+  if (!trMoved && Math.abs(dx) > 6) { trMoved = true; trStage.classList.add('drag'); trStage.setPointerCapture(trDrag.id); }
+  const now = performance.now(); trDrag.vx = (e.clientX - trDrag.lx) / Math.max(1, now - trDrag.lt); trDrag.lx = e.clientX; trDrag.lt = now;
+  if (trMoved) { trPos = trDrag.p - dx / (trCW() * (CALM ? 1 : .9)); trRender(); }
+});
+const trEndDrag = () => {
+  if (!trDrag) return;
+  trStage.classList.remove('drag');
+  if (trMoved) { const throwCards = Math.max(-1, Math.min(1, -trDrag.vx * 0.9)); trAim = Math.round(trPos + throwCards * .6); trGoTo(trAim); }
+  trDrag = null;
+};
+trStage.addEventListener('pointerup', trEndDrag); trStage.addEventListener('pointercancel', trEndDrag);
+trRing.addEventListener('click', e => {
+  if (trMoved) { trMoved = false; return; }
+  const c = e.target.closest('.trc'); if (!c) return;
+  const i = +c.dataset.i, btn = e.target.closest('.tr-use');
+  if (i !== trFront) { e.preventDefault(); trGoIndex(i); return; }
+  if (btn) trAct(btn.dataset.act, i);
+});
+$('trFile').addEventListener('change', e => { const f = e.target.files[0]; if (f) toast('Mock: would read "' + f.name + '" and turn its sections into a new template.'); e.target.value = ''; });
+/* see all: flat grid overlay */
+const trAll = $('trAll'), trGrid = $('trGrid'); let trLastFocus = null;
+trGrid.innerHTML = TPLS.map((t, i) => `<li><button class="tr-gcard${t.up ? ' tr-up' : ''}" data-i="${i}">
+  <span class="t-head"><span class="tile" style="--c:${t.up ? '#cfd2ff' : t.c}">${tsvg(t.ic)}</span><span><span class="t-name" style="display:block">${t.name}</span><span class="t-sub">${t.up ? 'PDF or photo of a format' : subHTML(t)}</span></span></span>
+  <span class="g-secs">${t.up ? 'Like your school notes format. I copy its sections.' : t.secs.map(s => s[0]).join(', ')}</span>
+  <span class="cur">In front now</span></button></li>`).join('');
+function trOpenAll(){
+  trLastFocus = document.activeElement; trAll.classList.add('open');
+  trGrid.querySelectorAll('.tr-gcard').forEach(b => b.setAttribute('aria-current', +b.dataset.i === trFront ? 'true' : 'false'));
+  (trGrid.querySelector('[aria-current="true"]') || trGrid.querySelector('.tr-gcard')).focus();
+}
+function trCloseAll(){ trAll.classList.remove('open'); (trLastFocus && document.contains(trLastFocus) ? trLastFocus : $('trSee')).focus(); }
+$('trSee').onclick = trOpenAll; $('trAllClose').onclick = trCloseAll;
+trAll.addEventListener('click', e => { if (e.target === trAll) trCloseAll(); const g = e.target.closest('.tr-gcard'); if (g) { const i = +g.dataset.i; trLastFocus = trStage; trCloseAll(); trGoIndex(i); } });
+trAll.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); trCloseAll(); return; }
+  if (e.key === 'Tab') {
+    const f = [...trAll.querySelectorAll('button')]; const first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
+});
+trRender();
+/* which card faces front, and which one is marked as fitting the chapter's class */
+function fitKey(k){ const c = CH[k]; return c.cls.replace('Class ', '') + '-' + (c.sci ? 'sci' : 'eng'); }
+function ringFor(k, wantId){
+  const key = fitKey(k);
+  trCards.forEach((el, i) => { const f = el.querySelector('.tr-fit'); if (!f) return; const on = TPLS[i].fit === key; f.hidden = !on; if (on) f.querySelector('.tf').textContent = 'Fits ' + CH[k].cls + ' ' + CH[k].subj; });
+  let i = wantId ? TPLS.findIndex(t => t.id === wantId) : TPLS.findIndex(t => t.fit === key);
+  if (i < 0) i = TPLS.findIndex(t => t.id === 'detail');
+  trGoIndex(i, true);
+}
+let ringCtx = 'flow';
+function trAct(kind, i){
+  if (kind === 'upload') { $('trFile').click(); return; }
+  if (body.classList.contains('busy')) return;
+  if (ringCtx === 'flow') writeNotes(i); else askRewrite(i);
+}
+
+/* ---------- guided flow on the opening panel ---------- */
+const flArea = $('flArea'), flCrumbs = $('flCrumbs'), flCrumbList = $('flCrumbList'), flCont = $('flCont');
+const SEP = '<svg class="sep" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg>';
+const ARROW_L = '<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></svg>';
+const ICLEAF = '<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10Z"/><path d="M2 21c0-3 1.9-5.4 5.1-6"/></svg>';
+const ICBOOK = '<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M2 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2z"/><path d="M22 4h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"/></svg>';
+const ICPLAY = '<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg>';
+const GO = '<svg aria-hidden="true" focusable="false" class="go" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg>';
+const ORDER = ['board', 'class', 'subject', 'chapter'];
+const subjName = () => ((SUBJ[FL.cls] || []).find(x => x[0] === FL.subj) || [0, ''])[1];
+function flowCrumbs(){
+  const c = [];
+  if (FL.board) c.push({ s: 'board', t: FL.board });
+  if (FL.cls) c.push({ s: 'class', t: 'Class ' + FL.cls });
+  if (FL.subj) c.push({ s: 'subject', t: subjName(), dot: FL.subj === 'eng' ? 'var(--eng)' : 'var(--sci)' });
+  if (FL.chap) c.push({ s: 'chapter', t: CHL[FL.chap] });
+  return c;
+}
+function areaHTML(st){
+  if (st === 'board') return `<div class="fl-opts" role="group" aria-label="Board">${BOARDS.map(b => `<button class="fl-chip" data-fl-board="${b}">${b}</button>`).join('')}</div>`;
+  if (st === 'class') return `<div class="fl-opts" role="group" aria-label="Class">${[6, 7, 8, 9, 10].map(n => `<button class="fl-chip" data-fl-class="${n}">Class ${n}</button>`).join('')}</div>`;
+  if (st === 'subject') return `<div class="fl-opts" role="group" aria-label="Subject">${SUBJ[FL.cls].map(s => `<button class="fl-chip" style="--cc:var(${s[0] === 'eng' ? '--eng' : '--sci'})" data-fl-subj="${s[0]}"><span class="cd" aria-hidden="true"></span>${s[1]}</button>`).join('')}</div>`;
+  if (st === 'chapter') return `<ul class="sugg fl-list" aria-label="Chapters">${CHAPS[FL.cls + '-' + FL.subj].map(k => { const sv = FLOW_SAVED[k]; return `<li><button data-fl-chap="${k}"><span class="tile" style="--c:var(${CH[k].sci ? '--sci' : '--eng'})">${CH[k].sci ? ICLEAF : ICBOOK}</span><span class="l">${esc(CHL[k])}${sv ? `<span>Notes saved ${esc(sv.short)}</span>` : ''}</span>${GO}</button></li>`; }).join('')}</ul>`;
+  if (st === 'continue') return `<div class="fl-opts"><button class="ov-main" data-fl-continue>Continue</button><button class="fl-chip" data-fl-fresh>Start a fresh copy</button></div>`;
+  if (st === 'empty') return `<p class="fl-empty">Only Class 6 and Class 9 have chapters in this preview. Go back and pick one of them.</p><div class="fl-opts"><button class="fl-chip" data-fl-back-class>${ARROW_L}Back</button></div>`;
+  return '';
+}
+function renderFlow(animate){
+  const st = FL.step;
+  body.classList.toggle('tpl', st === 'template');
+  const cr = flowCrumbs();
+  flCrumbs.hidden = !cr.length;
+  flCrumbList.innerHTML = cr.map((c, i) => `<li><button class="fl-crumb" data-fl-back="${c.s}"${i === cr.length - 1 ? ' aria-current="step"' : ''}${c.dot ? ` style="--cc:${c.dot}"` : ''}>${c.dot ? '<span class="cd" aria-hidden="true"></span>' : ''}${esc(c.t)}</button>${i < cr.length - 1 ? SEP : ''}</li>`).join('');
+  const lastS = SESS[0];
+  flCont.hidden = !(st === 'board' && lastS);
+  if (!flCont.hidden) flCont.innerHTML = `<ul class="sugg"><li><button data-fl-cont="${lastS.ch}"><span class="tile" style="--c:#aab0ff">${ICPLAY}</span><span class="l">Continue: ${esc(CH[lastS.ch].title)} (${CHIP[lastS.ch].t})</span>${GO}</button></li></ul>`;
+  flArea.classList.toggle('wide', st === 'template');
+  if (st !== 'template' && flArea.contains($('tr'))) $('trHold').appendChild($('tr'));   /* park the ring so it stays in the document */
+  if (st === 'template') { ringCtx = 'flow'; flArea.replaceChildren($('tr')); ringFor(FL.chap); }
+  else flArea.innerHTML = areaHTML(st);
+  if (animate && !CALM) flArea.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: 260, easing: EASE });
+  refreshLines();
+}
+function flowGo(st){
+  FL.step = st; renderFlow(true);
+  if (ORDER.indexOf(st) >= 3 || st === 'continue' || st === 'template') body.classList.add('ready');
+  const f = st === 'template' ? $('trStage') : flArea.querySelector('button');
+  if (f) f.focus({ preventScroll: true });
+}
+function flowBack(s){
+  const i = ORDER.indexOf(s);
+  if (i <= 0) FL.board = null; if (i <= 1) FL.cls = null; if (i <= 2) FL.subj = null; if (i <= 3) FL.chap = null;
+  FL.fresh = false; flowGo(s);
+}
+function flowReset(){ FL.board = FL.cls = FL.subj = FL.chap = null; FL.fresh = false; FL.step = 'board'; FL.writing = false; FL.live = true; body.classList.remove('busy'); renderFlow(false); }
+flArea.addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b || b.closest('#tr')) return;
+  const d = b.dataset;
+  if (d.flBoard) { FL.board = d.flBoard; flowGo('class'); }
+  else if (d.flClass) { FL.cls = +d.flClass; flowGo(SUBJ[FL.cls] ? 'subject' : 'empty'); }
+  else if (d.flSubj) { FL.subj = d.flSubj; flowGo('chapter'); }
+  else if (d.flChap) { FL.chap = d.flChap; FL.fresh = false; flowGo(FLOW_SAVED[FL.chap] ? 'continue' : 'template'); }
+  else if (d.flContinue !== undefined) enterChapter(FL.chap, { cont: true });
+  else if (d.flFresh !== undefined) { FL.fresh = true; flowGo('template'); }
+  else if (d.flBackClass !== undefined) { FL.cls = null; flowGo('class'); }
+});
+flCrumbs.addEventListener('click', e => { const b = e.target.closest('[data-fl-back]'); if (b && !body.classList.contains('busy')) flowBack(b.dataset.flBack); });
+flCont.addEventListener('click', e => { const b = e.target.closest('[data-fl-cont]'); if (b) enterChapter(b.dataset.flCont, { cont: true }); });
+function enterChapter(k, o = {}){
+  if (o.cont) curSess = (SESS.find(s => s.ch === k) || {}).id;
+  openChapter(k);
+}
+function writeNotes(i){
+  if (body.classList.contains('busy')) return;
+  body.classList.add('busy'); FL.writing = true; flowOn = false; setState('thinking');
+  setTimeout(() => { FL.writing = false; body.classList.remove('busy'); finishFlow(i); }, 1200);
+}
+let sessN = 0;
+/* the note is "written": the chapter gets its template, a new Recent row, and a Draft card in My notes */
+function finishFlow(i){
+  const t = TPLS[i], k = FL.chap, fresh = FL.fresh, n = NOTE[k];
+  if (n) { n.vers.unshift({ v: n.vers[0].v + 1, w: 'Just now', f: false }); n.tpl = t.name; n.saved = 'just now'; n.final = false; }
+  else NOTE[k] = { tpl: t.name, saved: 'just now', final: false, open: false, vers: [{ v: 1, w: 'Just now', f: false }] };
+  TPL[k] = t.id; COPY[k] = fresh;
+  FLOW_SAVED[k] = { short: 'Today', full: 'Today ' + clock() };
+  const id = 'n' + (++sessN);
+  SESS.unshift({ id, t: CH[k].title + (fresh ? ', fresh copy' : ', new notes'), ch: k, day: 'Now' });
+  curSess = id; renderSess(); sessList.scrollTop = 0; renderLib();
+  openChapter(k);
+}
+/* ?step=board|class|subject|chapter|continue|template|empty opens the flow at that step (for shots) */
+(function(){
+  const s = q.get('step'); if (!s || !body.classList.contains('opening')) return;
+  if (s !== 'board') FL.board = 'CBSE';
+  if (['subject', 'chapter', 'continue', 'template'].includes(s)) FL.cls = 6;
+  if (['chapter', 'continue', 'template'].includes(s)) FL.subj = 'sci';
+  if (['continue', 'template'].includes(s)) FL.chap = 'dig';
+  if (s === 'template') FL.fresh = true;
+  if (s === 'empty') FL.cls = 7;
+  if (['class', 'subject', 'chapter', 'continue', 'template', 'empty'].includes(s)) FL.step = s;
+})();
+renderFlow(false);
+if (FL.step === 'chapter' || FL.step === 'continue' || FL.step === 'template') body.classList.add('ready');
+
 /* Kakashi: prewarm the hidden panes once after load (2 frames off screen), then promote layers on approach */
 (function(){ if (!body.classList.contains('opening')) return;
   const warm = () => { body.classList.add('prewarm'); requestAnimationFrame(() => requestAnimationFrame(() => body.classList.remove('prewarm'))); };
   addEventListener('load', () => (window.requestIdleCallback || setTimeout)(warm, { timeout: 1200 }));
-  const ready = () => body.classList.add('ready');
-  document.querySelectorAll('#openView [data-ch]').forEach(bt => { bt.addEventListener('pointerenter', ready, { once: true }); bt.addEventListener('focus', ready, { once: true }); });
 })();
 
-const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 /* ---------- My notes: saved PDFs, one card per chapter ---------- */
 const LIB = [{ board: 'CBSE', classes: [
-  { cls: 'Class 6', subj: [{ n: 'Science', eng: false, ch: ['dig'] }, { n: 'English', eng: true, ch: ['bak'] }] },
+  { cls: 'Class 6', subj: [{ n: 'Science', eng: false, ch: ['food', 'dig'] }, { n: 'English', eng: true, ch: ['bak'] }] },
   { cls: 'Class 9', subj: [{ n: 'Science', eng: false, ch: ['mot'] }] }] }];
 const NOTE = {
   dig: { tpl: 'Science notes, Class 6 format', saved: 'Fri 4:10 pm', final: true, open: false, vers: [{ v: 2, w: 'Fri 4:10 pm', f: true }, { v: 1, w: 'Mon 9:30 am', f: false }] },
@@ -1129,7 +1661,7 @@ function cardHTML(k){
 }
 function renderLib(){
   $('nlScroll').innerHTML = LIB.map(b => `<section><h3 class="nl-board">${b.board}</h3>${b.classes.map(c => `<h4 class="nl-class">${c.cls}</h4><div class="nl-subjs">${c.subj.map(s =>
-    `<div><h5 class="nl-subj" style="--c:var(${s.eng ? '--eng' : '--sci'})"><span class="dot"></span>${s.n}</h5><div class="nl-grid">${s.ch.map(cardHTML).join('')}</div></div>`).join('')}</div>`).join('')}</section>`).join('');
+    `<div><h5 class="nl-subj" style="--c:var(${s.eng ? '--eng' : '--sci'})"><span class="dot"></span>${s.n}</h5><div class="nl-grid">${s.ch.filter(k => NOTE[k]).map(cardHTML).join('')}</div></div>`).join('')}</div>`).join('')}</section>`).join('');
 }
 function renderCard(k){ const el = $('nc-' + k); if (el) { const had = el.contains(document.activeElement) && document.activeElement.dataset; const f = had ? document.activeElement.dataset.a : null; el.outerHTML = cardHTML(k); if (f) $('nc-' + k).querySelector('[data-a="' + f + '"]')?.focus({ preventScroll: true }); } }
 renderLib();
@@ -1175,6 +1707,22 @@ function markSaving(){
 }
 setInterval(() => { if (savedEl.dataset.s === 'saved') savedTxt.textContent = agoText(); }, 20000);
 doc.addEventListener('input', markSaving);
+/* Kakashi: edit mode toggle (pencil <-> Done) */
+(function(){
+  const btn = document.getElementById('bEditMode'), bar = document.getElementById('fmtBar'), d = document.getElementById('doc');
+  const pen = '<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/>', tick = '<path d="M20 6 9 17l-5-5"/>';
+  function setEdit(on){
+    document.body.classList.toggle('editing', on);
+    d.contentEditable = on ? 'true' : 'false'; bar.inert = !on;
+    btn.setAttribute('aria-pressed', on); btn.setAttribute('aria-label', on ? 'Done editing' : 'Edit this note'); btn.dataset.tip = on ? 'Done editing (Esc)' : 'Edit this note';
+    btn.querySelector('svg').innerHTML = on ? tick : pen; btn.querySelector('.eb-l').textContent = on ? 'Done' : 'Edit';
+    if (on) d.focus({ preventScroll: true }); else if (typeof markSaving === 'function') markSaving();
+  }
+  btn.addEventListener('click', () => setEdit(!document.body.classList.contains('editing')));
+  d.addEventListener('keydown', e => { if (e.key === 'Escape' && document.body.classList.contains('editing')) { e.stopPropagation(); setEdit(false); btn.focus(); } });
+  window.__setEdit = setEdit;
+})();
+
 const clock = () => new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }).toLowerCase();
 /* Save PDF: marks the chapter's note final as the next version, and the My notes card updates */
 $('bSavePdf').onclick = () => {
@@ -1287,15 +1835,17 @@ searchIn.addEventListener('keydown', e => { if (e.key === 'Escape') { e.preventD
 /* ---------- New session: back to the opening screen (simple fade; Part 2 replaces this with the guided flow) ---------- */
 function goOpening(){
   if (body.classList.contains('opening') || moving) return;
-  moving = true; closeMenu(false); closeSettings(false); hideTip();
+  moving = true; closeMenu(false); closeSettings(false); hideTip(); closeTpl(false);
   if (typeof showNotes === 'function') showNotes(false);
-  flowOn = false; setState('normal'); openSearch(false);
+  flowOn = false; FL.live = true; setState('normal'); openSearch(false);
   const ap = document.querySelector('.agent'), sd = document.querySelector('.side'), dp = document.querySelector('.doc-pane');
-  const outs = [sd, dp, ap].map(el => el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: CALM ? 120 : 260, easing: 'ease-in', fill: 'forwards' }));
+  const enter = () => { body.classList.add('opening'); flowReset(); $('ovType').setAttribute('aria-pressed', 'false'); $('ovTypeBox').hidden = true; };
+  if (CALM) { enter(); moving = false; $('ovTalk').focus({ preventScroll: true }); return; }   /* Calm: instant */
+  const outs = [sd, dp, ap].map(el => el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 260, easing: 'ease-in', fill: 'forwards' }));
   Promise.all(outs.map(a => a.finished)).then(() => {
-    body.classList.add('opening');
+    enter();
     outs.forEach(a => a.cancel());
-    ap.animate(CALM ? [{ opacity: 0 }, { opacity: 1 }] : [{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: CALM ? 160 : 420, easing: EASE });
+    ap.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: 420, easing: EASE });
     moving = false; $('ovTalk').focus({ preventScroll: true });
   }, () => { moving = false; });
 }
@@ -1338,8 +1888,66 @@ $('sideHide').onclick = () => toggleRail(true);
 $('railExpand').onclick = () => toggleRail(false);
 $('railSearch').onclick = () => toggleRail(false, () => openSearch(true));
 $('navNew').onclick = $('railNew').onclick = () => goOpening();
-$('navTpl').onclick = $('railTpl').onclick = () => toast('Template picker comes in Part 2.');
 $('navNotes').onclick = $('railNotes').onclick = () => openNotes();
+/* ---------- Templates overlay for the CURRENT chapter ---------- */
+const tpo = $('tpo'), tpoPanel = $('tpoPanel');
+let tpoOpener = null, tpoPending = null;
+function openTpl(opener){
+  if (body.classList.contains('opening') || body.classList.contains('morphing') || !tpo.hidden || body.classList.contains('busy')) return;
+  closeMenu(false); closeSettings(false); hideTip();
+  tpoOpener = opener; ringCtx = 'change'; tpoPending = null;
+  $('tpoH').textContent = 'Change template for ' + CH[chKey].title;
+  tpo.classList.remove('confirming'); $('tpoConfirm').hidden = true;
+  tpo.hidden = false;
+  $('tpoBody').replaceChildren($('tr'));
+  ringFor(chKey, TPL[chKey]);
+  if (!CALM) {
+    tpo.animate([{ backgroundColor: 'rgba(18,12,54,0)' }, { backgroundColor: 'rgba(18,12,54,.62)' }], { duration: 220, easing: 'ease-out' });
+    tpoPanel.animate([{ opacity: 0, transform: 'scale(.97) translateY(6px)' }, { opacity: 1, transform: 'none' }], { duration: 260, easing: EASE });
+  } else tpoPanel.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 120, easing: 'ease-out' });
+  $('trStage').focus({ preventScroll: true });
+}
+function closeTpl(refocus = true){
+  if (tpo.hidden) return;
+  tpo.hidden = true; tpo.classList.remove('confirming'); $('tpoConfirm').hidden = true; tpoPending = null;
+  $('trHold').appendChild($('tr'));
+  const o = tpoOpener; tpoOpener = null;
+  if (refocus && o && document.contains(o) && o.getBoundingClientRect().width) { noTip = true; o.focus({ preventScroll: true }); noTip = false; }
+}
+function askRewrite(i){
+  tpoPending = i;
+  $('tpoCH').textContent = 'Rewrite the note in ' + TPLS[i].name + '?';
+  $('tpoConfirm').hidden = false; tpo.classList.add('confirming');
+  $('tpoYes').focus({ preventScroll: true });
+}
+function cancelRewrite(){ tpo.classList.remove('confirming'); $('tpoConfirm').hidden = true; tpoPending = null; $('trStage').focus({ preventScroll: true }); }
+$('tpoNo').onclick = cancelRewrite;
+$('tpoClose').onclick = () => closeTpl();
+tpo.addEventListener('pointerdown', e => { if (e.target === tpo) closeTpl(); });
+$('tpoYes').onclick = () => {
+  const i = tpoPending, t = TPLS[i], k = chKey; closeTpl(false);
+  body.classList.add('busy'); FL.writing = true; flowOn = false; setState('thinking');
+  document.querySelector('.ag-body').scrollTop = 0;
+  setTimeout(() => {
+    FL.writing = false; body.classList.remove('busy'); setState('normal');
+    const n = NOTE[k]; n.vers.unshift({ v: n.vers[0].v + 1, w: 'Just now', f: false }); n.tpl = t.name; n.saved = 'just now'; n.final = false;
+    TPL[k] = t.id; applyChip(k); renderCard(k); markSaving();
+    toast('Rewritten in ' + t.name + '. Your previous version is in Versions.');
+  }, 1200);
+};
+addEventListener('keydown', e => {
+  if (tpo.hidden) return;
+  if (e.key === 'Escape') { e.preventDefault(); if (tpoPending !== null) cancelRewrite(); else closeTpl(); return; }
+  if (e.key === 'Tab') {
+    const f = [...tpoPanel.querySelectorAll('button,[tabindex="0"]')].filter(x => x.tabIndex >= 0 && getComputedStyle(x).visibility !== 'hidden' && !x.closest('[hidden]') && x.getBoundingClientRect().width);
+    if (!f.length) return;
+    const first = f[0], last = f[f.length - 1];
+    if (!tpoPanel.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
+    else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
+});
+[$('navTpl'), $('railTpl')].forEach(b => { b.setAttribute('aria-haspopup', 'dialog'); b.onclick = () => openTpl(b); });
 addEventListener('keydown', e => { if (e.ctrlKey && !e.altKey && !e.metaKey && e.code === 'Backslash') { e.preventDefault(); toggleRail(); } });
 if (q.has('rail') && q.get('rail') !== '0') body.classList.add('rail');
 
