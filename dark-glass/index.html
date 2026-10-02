@@ -668,7 +668,8 @@ body.print .pp{display:grid}
 .pp-sheet table{font-size:13.5px;width:100%;border-collapse:collapse}.pp-sheet th{text-align:left;font-weight:600;padding:6px 8px}.pp-sheet td{padding:7px 8px}.pp-sheet td:first-child{font-weight:700}
 .pp-sheet .blk-cap{margin:8px 0 2px;font-size:13px}.pp-sheet p{max-width:none}.pp-sheet th{color:#333;border-bottom:1px solid #bbb}.pp-sheet td{border-bottom:1px solid #e3e0ee}
 .pp-bar{position:fixed;top:14px;right:18px;display:flex;gap:8px}
-.pp-sheet *{color:#1d1b2e!important;text-shadow:none!important}
+.pp-sheet :not(.katex,.katex *){color:#1d1b2e!important;text-shadow:none!important} /* Kakashi: keep KaTeX's own transparent spacer glyphs */
+.pp-sheet .katex{color:#1d1b2e}
 .pp-sheet mark{background:#fff1a8;box-shadow:none}
 .pp-sheet .from{display:block;font-size:12px;font-weight:400;color:#555!important;margin:2px 0 0}
 .pp-sheet h3{display:block}
@@ -707,6 +708,61 @@ body.editing .edit-btn{background:#4a42c9;color:#fff;border-color:rgba(255,255,2
 body.editing .edit-btn .eb-l{display:inline}
 body.editing .doc{outline:2px solid rgba(90,82,230,.35);outline-offset:-2px}
 body.calm .toolbar{transition:none}
+/* ---------- document viewer (Print): solid dark, no glass ---------- */
+@page{size:A4;margin:0}
+.dv{position:fixed;inset:0;z-index:45;display:none;grid-template-columns:188px minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);background:#14141b;color:#ececf6}
+body.dvopen .dv{display:grid}
+body.dvopen .gtoast{z-index:60}
+.dv-top{grid-column:1/-1;display:flex;align-items:center;gap:10px;min-height:56px;padding:8px 16px;background:#1d1d27;border-bottom:1px solid #31313f;flex-wrap:wrap}
+.dv-ttl{flex:1 1 200px;min-width:0;display:flex;flex-direction:column;gap:1px}
+.dv-title{font-size:15px;font-weight:650;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dv-pg{font-size:12.5px;color:#b9b9cd;font-variant-numeric:tabular-nums}
+.dv-zoom{display:flex;align-items:center;gap:4px}
+.dv-b{display:inline-flex;align-items:center;justify-content:center;gap:7px;height:34px;padding:0 13px;border-radius:8px;border:1px solid #3e3e52;background:#2a2a38;color:#ececf6;font:inherit;font-size:13.5px;font-weight:600;cursor:pointer}
+.dv-b:hover{background:#363649}
+.dv-b:focus-visible,.dv-th:focus-visible .dv-thp,.dv-main:focus-visible{outline:2px solid #b9b7ff;outline-offset:2px}
+.dv-b svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.dv-ico{width:34px;padding:0}
+.dv-pri{background:#4a42c9;border-color:#6a63e6;color:#fff}
+.dv-pri:hover{background:#5850d6}
+select.dv-b{padding:0 8px;appearance:auto}
+.dv-side{overflow:auto;background:#181820;border-right:1px solid #2c2c3a;padding:18px 0;display:flex;flex-direction:column;align-items:center;gap:18px;--tw:132px;overscroll-behavior:contain}
+.dv-th{flex:none;display:flex;flex-direction:column;align-items:center;gap:7px;background:none;border:0;padding:0;font:inherit;color:#b9b9cd;cursor:pointer}
+.dv-thp{width:var(--tw);height:calc(var(--tw) * 1.4143);position:relative;overflow:hidden;background:#fff;border-radius:2px;outline:2px solid transparent;outline-offset:3px;box-shadow:0 2px 8px rgba(0,0,0,.5)}
+.dv-thp .dv-sheet{text-align:left;position:absolute;left:0;top:0;transform:scale(var(--ts,.17));pointer-events:none;box-shadow:none}
+.dv-th[aria-current=page] .dv-thp{outline-color:#8f8cff}
+.dv-th:hover .dv-thp{outline-color:#5d5b9c}
+.dv-th[aria-current=page]:hover .dv-thp{outline-color:#8f8cff}
+.dv-n{font-size:12px;line-height:1.5;padding:0 10px;border-radius:999px;font-variant-numeric:tabular-nums}
+.dv-th[aria-current=page] .dv-n{background:#4a42c9;color:#fff}
+.dv-main{position:relative;overflow:auto;background:#262631;padding:24px 24px 0;display:flex;flex-direction:column;align-items:center;gap:20px;overscroll-behavior:contain}
+.dv-main::after{content:"";flex:none;height:max(24px,calc(100vh - 56px - 297mm * var(--s,1) - 24px))}
+.dv-fit{flex:none;width:calc(210mm * var(--s,1));height:calc(297mm * var(--s,1));position:relative}
+.dv-sheet{position:relative;width:210mm;height:297mm;box-sizing:border-box;padding:16mm 16mm 18mm;background:#fff;color:#1d1b2e;overflow:hidden;box-shadow:0 10px 36px -8px rgba(0,0,0,.65);transform-origin:0 0;transform:scale(var(--s,1));-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.dv-sheet .dv-body.pp-sheet{width:auto;height:auto;overflow:visible;padding:0;margin:0;box-shadow:none;border-radius:0;background:none;font-size:14px}
+.dv-sheet .dv-body > :first-child{margin-top:0}
+.dv-run,.dv-foot{position:absolute;left:16mm;right:16mm;display:flex;justify-content:space-between;gap:12px;font-size:10.5px;line-height:1.3;color:#5d5a73}
+.dv-run{top:8mm}.dv-foot{bottom:8mm}
+.dv-meas{position:absolute;left:-10000px;top:0;visibility:hidden;pointer-events:none}
+.dv-meas.pp-sheet{height:auto;overflow:visible;padding:0;border-radius:0;box-shadow:none;background:#fff;font-size:14px}
+@media (max-width:720px){
+  .dv{grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto minmax(0,1fr)}
+  .dv-side{flex-direction:row;overflow-x:auto;overflow-y:hidden;padding:10px 14px;gap:12px;border-right:0;border-bottom:1px solid #2c2c3a;--tw:44px;align-items:flex-start;justify-content:flex-start}
+  .dv-main{padding:14px 10px 0}
+  .dv-top{padding:8px 12px}
+}
+/* print: exactly the viewer's A4 pages, one sheet per printed page */
+@media print{
+  html,body{background:#fff!important;margin:0!important;padding:0!important;height:auto!important;min-height:0!important;overflow:visible!important}
+  body.dvopen > *:not(.dv){display:none!important}
+  body.dvopen .dv{position:static;display:block;background:none;height:auto;overflow:visible;color:#000}
+  body.dvopen .dv-top,body.dvopen .dv-side{display:none!important}
+  body.dvopen .dv-main{display:block;position:static;overflow:visible;padding:0;background:none;height:auto}
+  body.dvopen .dv-main::after{display:none}
+  body.dvopen .dv-main .dv-fit{display:block;width:210mm;height:296.5mm;margin:0;overflow:hidden;break-after:page;page-break-after:always}
+  body.dvopen .dv-main .dv-fit:last-child{break-after:auto;page-break-after:auto}
+  body.dvopen .dv-main .dv-sheet{transform:none;box-shadow:none;height:296.5mm}
+}
 </style>
 </head>
 <body>
@@ -777,7 +833,6 @@ if(s==='opening'||(s!=='panes'&&!q.has('view')&&!q.has('print')&&!q.has('scroll'
     <button class="mi" role="menuitem" data-act="rename"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>Rename</button>
     <button class="mi danger" role="menuitem" data-act="delete"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>Delete</button>
   </div>
-  <div class="gtoast" id="gToast" role="status" aria-live="polite" hidden></div>
 
   <!-- MIDDLE: note -->
   <section class="glass pane doc-pane" aria-label="Note editor">
@@ -1067,6 +1122,23 @@ if(s==='opening'||(s!=='panes'&&!q.has('view')&&!q.has('print')&&!q.has('scroll'
   <div class="pp-sheet" id="ppSheet" tabindex="0" aria-label="Printed pages"></div>
 </div>
 
+<div class="gtoast" id="gToast" role="status" aria-live="polite" hidden></div>
+<div class="dv" id="dv" role="dialog" aria-modal="true" aria-labelledby="dvTitle">
+  <div class="dv-top">
+    <div class="dv-ttl"><span class="dv-title" id="dvTitle"></span><span class="dv-pg" id="dvPg" aria-live="polite"></span></div>
+    <div class="dv-zoom" role="group" aria-label="Zoom">
+      <button class="dv-b dv-ico" id="dvZout" aria-label="Zoom out"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button>
+      <select class="dv-b" id="dvZsel" aria-label="Zoom level"><option value="fit">Fit width</option><option value="0.5">50%</option><option value="0.75">75%</option><option value="1">100%</option><option value="1.25">125%</option><option value="1.5">150%</option><option value="2">200%</option></select>
+      <button class="dv-b dv-ico" id="dvZin" aria-label="Zoom in"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+    </div>
+    <button class="dv-b dv-pri" id="dvPrint"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M6 14h12v7H6z"/></svg>Print</button>
+    <button class="dv-b" id="dvDown"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>Download PDF</button>
+    <button class="dv-b dv-ico" id="dvClose" aria-label="Close viewer"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+  </div>
+  <nav class="dv-side" id="dvSide" aria-label="Page thumbnails"></nav>
+  <div class="dv-main" id="dvMain" tabindex="0" aria-label="Document pages"></div>
+</div>
+
 <script type="module">
 const q = new URLSearchParams(location.search);
 history.scrollRestoration = 'manual';
@@ -1235,9 +1307,13 @@ if (!renderTex()) addEventListener('load', () => { if (!renderTex()) document.do
 
 /* ---------- print preview: white paper, same blocks as the note ---------- */
 const sheet = $('ppSheet');
-function openPrint(){
+function buildPrint(){
   const nop = body.classList.contains('nopages');
-  const src = document.querySelector(nop ? '.v-nop' : '.v-dig').cloneNode(true);
+  const orig = document.querySelector(nop ? '.v-nop' : '.v-dig');
+  /* Kakashi: KaTeX/mhchem spacer glyphs are hidden by styles that do not survive the copy; mark them first */
+  orig.querySelectorAll('.katex *').forEach(n => { if (!n.children.length && getComputedStyle(n).visibility === 'hidden') n.dataset.ph = '1'; });
+  const src = orig.cloneNode(true);
+  src.querySelectorAll('[data-ph]').forEach(n => n.style.visibility = 'hidden');
   const d = src.querySelector('.draft');
   if (d && d.classList.contains('merged') && !d.hidden) d.replaceWith(d.querySelector('ol')); else d?.remove();
   src.querySelectorAll('.title,.meta,.aside,.draft-head,.refuse,.empty-sec').forEach(n => n.remove());
@@ -1250,12 +1326,136 @@ function openPrint(){
     : '<h2>Human Digestive System</h2><div class="m">Class 6 Science, Block 15, pages 49 to 54</div>';
   if (nop) { sheet.querySelector('h2').textContent = pc.title; sheet.querySelector('.m').textContent = pc.agSub; }
   sheet.append(...src.childNodes);
+  /* Kakashi: re-draw formulas fresh in the print copy (a cloned KaTeX tree printed stray glyphs) */
+  if (window.katex) sheet.querySelectorAll('.tex[data-tex]').forEach(el => { try { katex.render(el.dataset.tex, el, { throwOnError: false, output: 'html' }); } catch (e) {} });
   sheet.querySelectorAll('.num').forEach(n => n.textContent = n.textContent + '. ');
-  body.classList.add('print'); $('ppClose').focus();
 }
-$('bPrint').onclick = openPrint;
-$('ppClose').onclick = () => { body.classList.remove('print'); const o = printOpener && document.contains(printOpener) ? printOpener : $('bPrint'); printOpener = null; o.focus(); };
-addEventListener('keydown', e => { if (e.key === 'Escape' && body.classList.contains('print')) $('ppClose').click(); });
+/* ---------- document viewer: Print opens our own full-screen A4 viewer ---------- */
+const dv = $('dv'), dvMain = $('dvMain'), dvSide = $('dvSide'), dvPg = $('dvPg'), dvSel = $('dvZsel');
+const MMPX = 96 / 25.4, DV_BODY_H = (297 - 16 - 18) * MMPX, DV_BODY_W = (210 - 32) * MMPX;
+const DV_STEPS = [0.5, 0.75, 1, 1.25, 1.5, 2];
+let dvZoom = 'fit', dvCur = 1, dvN = 0, dvOpener = null, dvInert = [], dvRaf = 0;
+const dvFixTex = root => { if (window.katex) root.querySelectorAll('.tex[data-tex]').forEach(el => { try { katex.render(el.dataset.tex, el, { throwOnError: false, output: 'html' }); } catch (e) {} }); };
+const dvUnits = host => { const out = []; for (const el of host.children) { if (el.matches('ol.q, ul.kw')) out.push(...el.children); else out.push(el); } return out; };
+const dvHead = el => el.matches('h2, h3, .m');
+function dvGroups(limit) {
+  const m = document.createElement('div'); m.className = 'pp-sheet dv-meas'; m.style.width = DV_BODY_W + 'px';
+  sheet.childNodes.forEach(n => m.appendChild(n.cloneNode(true))); body.appendChild(m); dvFixTex(m);
+  const us = dvUnits(m), groups = [[]]; let top0 = 0;
+  us.forEach(u => {
+    const t = u.offsetTop, b = t + u.offsetHeight, g = groups[groups.length - 1];
+    if (g.length && b - top0 > limit) {   // would cross the page bottom: start a new page, headings go with what follows
+      const carry = []; while (g.length > 1 && dvHead(g[g.length - 1])) carry.unshift(g.pop());
+      groups.push(carry); top0 = (carry[0] || u).offsetTop;
+    }
+    groups[groups.length - 1].push(u);
+  });
+  return { m, groups };
+}
+function dvDraw(groups) {
+  const N = groups.length, title = sheet.querySelector('h2').textContent, sub = sheet.querySelector('.m')?.textContent || '';
+  dvMain.replaceChildren(); dvSide.replaceChildren();
+  groups.forEach((g, k) => {
+    const s = document.createElement('section'); s.className = 'dv-sheet'; s.setAttribute('aria-label', `Page ${k + 1} of ${N}`);
+    if (k) { const r = document.createElement('div'); r.className = 'dv-run'; r.innerHTML = '<span></span><span></span>'; r.children[0].textContent = title; r.children[1].textContent = sub; s.appendChild(r); }
+    const b = document.createElement('div'); b.className = 'pp-sheet dv-body'; s.appendChild(b);
+    let wrap = null, from = null;
+    g.forEach(u => {
+      const p = u.parentElement;
+      if (u.tagName === 'LI' && p.matches('ol.q, ul.kw')) {   // split lists keep their numbering
+        if (from !== p) { from = p; wrap = p.cloneNode(false); if (p.tagName === 'OL') wrap.start = (p.start || 1) + [...p.children].indexOf(u); b.appendChild(wrap); }
+        wrap.appendChild(u.cloneNode(true));
+      } else { from = null; b.appendChild(u.cloneNode(true)); }
+    });
+    dvFixTex(b);
+    const f = document.createElement('div'); f.className = 'dv-foot'; f.innerHTML = '<span></span><span></span>'; f.children[0].textContent = title; f.children[1].textContent = `Page ${k + 1} of ${N}`; s.appendChild(f);
+    const fit = document.createElement('div'); fit.className = 'dv-fit'; fit.appendChild(s); dvMain.appendChild(fit);
+    const th = document.createElement('button'); th.type = 'button'; th.className = 'dv-th'; th.dataset.n = k + 1; th.setAttribute('aria-label', `Go to page ${k + 1}`);
+    const tp = document.createElement('span'); tp.className = 'dv-thp'; tp.setAttribute('aria-hidden', 'true');
+    const c = s.cloneNode(true); c.removeAttribute('aria-label'); dvFixTex(c); tp.appendChild(c);
+    const n = document.createElement('span'); n.className = 'dv-n'; n.textContent = k + 1; th.append(tp, n);
+    th.onclick = () => dvGo(k + 1, true); dvSide.appendChild(th);
+  });
+  dvN = N;
+}
+function dvBuild() {
+  buildPrint();
+  let limit = DV_BODY_H - 6;
+  for (let tries = 0; tries < 6; tries++) {
+    const { m, groups } = dvGroups(limit); m.remove(); dvDraw(groups);
+    const over = [...dvMain.querySelectorAll('.dv-body')].some(b => b.offsetHeight > DV_BODY_H + 0.5);
+    if (!over) break; limit -= 18;
+  }
+  $('dvTitle').textContent = sheet.querySelector('h2').textContent;
+  dvLayout(); dvSetCur(1);
+}
+function dvScale() { return dvZoom === 'fit' ? Math.min(1.25, Math.max(0.3, (dvMain.clientWidth - 48) / (210 * MMPX))) : +dvZoom; }
+function dvLayout() {
+  const keep = dvMain.scrollHeight ? dvMain.scrollTop / dvMain.scrollHeight : 0;
+  dvMain.style.setProperty('--s', dvScale().toFixed(4)); dvSel.value = String(dvZoom);
+  const tp = dvSide.querySelector('.dv-thp'); if (tp) dvSide.style.setProperty('--ts', (tp.clientWidth / (210 * MMPX)).toFixed(4));
+  if (keep) dvMain.scrollTop = keep * dvMain.scrollHeight;
+}
+function dvSetCur(n) {
+  dvCur = n; dvPg.textContent = `Page ${n} of ${dvN}`;
+  dvSide.querySelectorAll('.dv-th').forEach(t => { const on = +t.dataset.n === n; if (on) { t.setAttribute('aria-current', 'page'); t.scrollIntoView({ block: 'nearest', inline: 'nearest' }); } else t.removeAttribute('aria-current'); });
+}
+function dvSpy() {
+  dvRaf = 0; const fits = [...dvMain.children].filter(c => c.classList.contains('dv-fit')); if (!fits.length) return;
+  const y = dvMain.scrollTop + dvMain.clientHeight * 0.3; let n = 1;
+  fits.forEach((f, i) => { if (f.offsetTop <= y) n = i + 1; });
+  if (dvMain.scrollTop + dvMain.clientHeight >= dvMain.scrollHeight - 2) n = fits.length;
+  if (n !== dvCur) dvSetCur(n);
+}
+function dvGo(n, smooth) {
+  n = Math.max(1, Math.min(dvN, n)); const f = dvMain.children[n - 1]; if (!f) return;
+  const calm = CALM || matchMedia('(prefers-reduced-motion: reduce)').matches;
+  dvMain.scrollTo({ top: f.offsetTop - 24, behavior: smooth && !calm ? 'smooth' : 'auto' }); dvSetCur(n);
+}
+function dvZoomBy(dir) {
+  const cur = dvScale(); let next;
+  if (dir > 0) next = DV_STEPS.find(s => s > cur + 0.001); else next = [...DV_STEPS].reverse().find(s => s < cur - 0.001);
+  if (next) { dvZoom = next; dvLayout(); }
+}
+function openViewer(opener) {
+  if (body.classList.contains('dvopen')) return;
+  dvOpener = opener || document.activeElement;
+  dvZoom = 'fit'; body.classList.add('dvopen');
+  [...body.children].forEach(el => { if (el !== dv && el.id !== 'gToast' && el.tagName !== 'SCRIPT' && !el.inert) { el.inert = true; dvInert.push(el); } });
+  dvBuild(); dvMain.scrollTop = 0; dvSetCur(1);
+  if (!CALM) dv.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 160, easing: EASE });
+  $('dvPrint').focus({ preventScroll: true });
+}
+function closeViewer() {
+  if (!body.classList.contains('dvopen')) return;
+  body.classList.remove('dvopen'); dvInert.forEach(el => { el.inert = false; }); dvInert = [];
+  dvMain.replaceChildren(); dvSide.replaceChildren();
+  const o = dvOpener && document.contains(dvOpener) ? dvOpener : $('bPrint'); dvOpener = null; o.focus({ preventScroll: true });
+}
+function nativePrint() { window.print(); }   // prints exactly the viewer's A4 pages (see @media print)
+function openPrint() { openViewer($('bPrint')); }
+$('bPrint').onclick = () => openViewer($('bPrint'));
+$('dvPrint').onclick = nativePrint; $('dvClose').onclick = closeViewer;
+$('dvDown').onclick = () => toast('PDF download comes with the backend. Use Print > Save as PDF for now.');
+$('dvZin').onclick = () => dvZoomBy(1); $('dvZout').onclick = () => dvZoomBy(-1);
+dvSel.onchange = () => { dvZoom = dvSel.value === 'fit' ? 'fit' : +dvSel.value; dvLayout(); };
+dvMain.addEventListener('scroll', () => { if (!dvRaf) dvRaf = requestAnimationFrame(dvSpy); }, { passive: true });
+new ResizeObserver(() => { if (body.classList.contains('dvopen')) dvLayout(); }).observe(dvMain);
+addEventListener('keydown', e => {
+  if (!body.classList.contains('dvopen')) return;
+  if (e.key === 'Escape') { e.preventDefault(); e.stopImmediatePropagation(); closeViewer(); return; }
+  if (e.key === 'Tab') {
+    const f = [...dv.querySelectorAll('button, select, [tabindex="0"]')].filter(x => !x.disabled && x.offsetParent !== null);
+    if (!f.length) return; const a = f[0], z = f[f.length - 1];
+    if (!dv.contains(document.activeElement)) { e.preventDefault(); a.focus(); }
+    else if (e.shiftKey && document.activeElement === a) { e.preventDefault(); z.focus(); }
+    else if (!e.shiftKey && document.activeElement === z) { e.preventDefault(); a.focus(); }
+    return;
+  }
+  if (e.target.tagName === 'SELECT') return;
+  const go = { PageDown: dvCur + 1, PageUp: dvCur - 1, Home: 1, End: dvN }[e.key];
+  if (go) { e.preventDefault(); dvGo(go, true); }
+}, true);
 if (q.has('print')) addEventListener('load', () => setTimeout(openPrint, 300));
 const SCROLL = q.get('scroll');
 if (SCROLL) addEventListener('load', () => setTimeout(() => {
@@ -1690,7 +1890,7 @@ $('nlScroll').addEventListener('click', e => {
   const b = e.target.closest('[data-a]'); if (!b) return;
   const k = b.dataset.k, n = NOTE[k], a = b.dataset.a;
   if (a === 'open') { showNotes(false); setChapter(k); focusCurrentRow(); }
-  else if (a === 'print') { printOpener = b; setChapter(k); openPrint(); }
+  else if (a === 'print') { setChapter(k); openViewer(b); }
   else if (a === 'down') toast('Download is a mock: ' + CH[k].title + ' v' + n.vers[0].v + ' (PDF).');
   else if (a === 'vers') { n.open = !n.open; renderCard(k); }
   else if (a === 'restore') toast('Restore is a mock: v' + b.dataset.v + ' of ' + CH[k].title + ' stays as it is.');
