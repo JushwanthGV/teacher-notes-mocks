@@ -118,32 +118,66 @@ body.rmos .mo-note{display:block}
 .ibtn.quiet{flex:none;width:34px;height:34px;background:transparent;border-color:rgba(255,255,255,.18)}
 .ibtn.quiet:hover,.ibtn.quiet[aria-expanded="true"]{background:rgba(255,255,255,.14)}
 .ibtn.quiet svg{width:17px;height:17px;stroke:var(--ink-2)}
-.btn-new{flex:none}
-.btn-new{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;
-  background:radial-gradient(circle at 35% 30%,#b3b0ff,#6e68f0 70%);box-shadow:0 0 22px -2px rgba(140,136,255,.85),inset 0 1px 0 rgba(255,255,255,.5)}
-.btn-new svg{width:18px;height:18px;stroke:#fff;stroke-width:2.2;fill:none;stroke-linecap:round}
-.search{margin:0 18px 12px;display:flex;align-items:center;gap:10px;height:44px;padding:0 14px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--c);box-shadow:0 0 10px var(--c)}
+.search{margin:0 14px 8px;display:flex;align-items:center;gap:10px;height:42px;padding:0 14px}
+.search[hidden]{display:none}
 .search svg{width:17px;height:17px;stroke:var(--ink-3);fill:none;stroke-width:1.8;stroke-linecap:round}
 .search input{flex:1;background:none;border:0;color:#fff;font:inherit;font-size:14.5px;outline:none;min-width:0}
 .search input::placeholder{color:var(--ink-3)}
-.tree{flex:1;overflow:auto;padding:4px 12px 12px;scrollbar-width:thin;scrollbar-color:transparent transparent}
-.tree ul{list-style:none;margin:0;padding:0}
-.cls{display:flex;align-items:center;gap:8px;width:100%;padding:10px 8px 8px;font-size:14px;font-weight:600;color:#fff;text-align:left}
-.cls .chev{width:16px;height:16px;stroke:var(--ink-2);fill:none;stroke-width:2;transition:transform .25s cubic-bezier(.3,1.4,.5,1)}
-.cls[aria-expanded="false"] .chev{transform:rotate(-90deg)}
-.cls .n{margin-left:auto;font-weight:500;font-size:13px;color:var(--ink-3)}
-.subj{display:flex;align-items:center;gap:9px;padding:8px 10px 6px 14px;font-size:13.5px;font-weight:600;color:var(--ink-2)}
-.dot{width:8px;height:8px;border-radius:50%;background:var(--c);box-shadow:0 0 10px var(--c)}
-.chap{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:10px 10px;margin:2px 0 6px;border-radius:16px;
-  border:1px solid transparent;transition:background .2s,border-color .2s}
-.chap:hover{background:rgba(255,255,255,.07)}
-.chap[aria-current="page"]{background:linear-gradient(180deg,rgba(150,150,255,.30),rgba(120,120,240,.20));border-color:rgba(255,255,255,.28);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 8px 24px -12px rgba(20,10,80,.6)}
-.chap .t{font-size:14.5px;font-weight:600;line-height:1.3}
-.chap .s{font-size:12.5px;color:var(--ink-3);margin-top:2px}
-.chap .txt{min-width:0}
-.empty-note{margin:2px 10px 8px 34px;font-size:13px;color:var(--ink-3);line-height:1.45}
-.side-foot{display:flex;flex-wrap:wrap;gap:6px 8px;padding:12px 16px 14px;border-top:1px solid var(--line)}
+.search input::-webkit-search-cancel-button{display:none}
+/* top navigation rows, Claude / ChatGPT style */
+.nav{list-style:none;margin:2px 0 0;padding:0 10px;display:grid;gap:2px}
+.nav-row{display:flex;align-items:center;gap:12px;width:100%;height:42px;padding:0 12px;border-radius:12px;font-size:14.5px;font-weight:550;color:#fff;text-align:left;border:1px solid transparent;transition:background .2s,border-color .2s}
+.nav-row svg{flex:none;width:19px;height:19px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.nav-row:hover{background:rgba(255,255,255,.09)}
+.nav-row[aria-current="page"]{background:rgba(16,18,60,.40);border-color:rgba(255,255,255,.42)}
+.nav-row:focus-visible,.prof:focus-visible,.mi:focus-visible{outline-offset:-2px}
+.sec-h{margin:16px 20px 6px;font-size:13px;font-weight:600;color:var(--ink-2)}
+/* recent sessions: flat list, newest first */
+.sess{flex:1;min-height:0;overflow:auto;list-style:none;margin:0;padding:0 10px 10px;scrollbar-width:thin;scrollbar-color:transparent transparent}
+.sess:hover{scrollbar-color:rgba(255,255,255,.3) transparent}
+.s-row{position:relative;border-radius:14px;border:1px solid transparent;transition:background .2s,border-color .2s}
+.s-row:hover{background:rgba(255,255,255,.07)}
+.s-row[aria-current="true"]{background:linear-gradient(180deg,rgba(150,150,255,.30),rgba(120,120,240,.20));border-color:rgba(255,255,255,.28);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 8px 24px -12px rgba(20,10,80,.6)}
+.s-row:has(.s-main:focus-visible){outline:2px solid #fff;outline-offset:-2px}
+.s-body{padding:8px 40px 9px 12px}
+.s-main{display:block;width:100%;text-align:left;border-radius:inherit}
+.s-main:focus-visible{outline:none}
+.s-main::after{content:"";position:absolute;inset:0;border-radius:inherit}   /* the whole row opens the chapter; chip and ... sit above it */
+.s-t{display:block;font-size:14.5px;font-weight:600;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.s-meta{display:flex;align-items:center;gap:8px;margin-top:5px;min-width:0}
+.s-day{font-size:12.5px;color:var(--ink-3);white-space:nowrap}
+.cchip{position:relative;z-index:1;display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:999px;font-size:12px;font-weight:600;color:#fff;white-space:nowrap;background:rgba(16,18,60,.34);border:1px solid color-mix(in srgb,var(--cc) 55%,transparent)}
+.cchip:hover{background:rgba(255,255,255,.16)}
+.cchip .cd{width:6px;height:6px;border-radius:50%;background:var(--cc);box-shadow:0 0 6px var(--cc)}
+.cchip.sci{--cc:var(--sci)}.cchip.eng{--cc:var(--eng)}
+.s-more{position:absolute;z-index:2;right:6px;top:6px;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;opacity:0;transition:opacity .15s,background .2s}
+.s-more svg{width:17px;height:17px;fill:#fff}
+.s-row:hover .s-more,.s-more:focus-visible,.s-more[aria-expanded="true"]{opacity:1}
+.s-more:hover,.s-more[aria-expanded="true"]{background:rgba(255,255,255,.16)}
+@media (hover:none){.s-more{opacity:1}}
+.s-edit{display:block;width:100%;height:28px;font:inherit;font-size:14.5px;font-weight:600;color:#fff;background:rgba(16,18,60,.5);border:1px solid rgba(255,255,255,.5);border-radius:8px;padding:0 8px;outline:none}
+.s-empty{margin:8px 12px;font-size:13px;line-height:1.45;color:var(--ink-3)}
+/* footer: profile row */
+.side-foot{padding:10px;border-top:1px solid var(--line)}
+.prof{display:flex;align-items:center;gap:11px;width:100%;height:52px;padding:0 10px 0 8px;border-radius:14px;text-align:left;border:1px solid transparent;transition:background .2s}
+.prof:hover,.prof[aria-expanded="true"]{background:rgba(255,255,255,.09)}
+.av{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:12.5px;font-weight:700;letter-spacing:.02em;color:#fff;background:linear-gradient(160deg,#6a5ff0,#3b2fa8);border:1px solid rgba(255,255,255,.35);box-shadow:0 0 14px -3px rgba(150,140,255,.7)}
+.prof .pn{flex:1;min-width:0;font-size:14.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prof .chv{flex:none;width:17px;height:17px;stroke:var(--ink-2);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.avb{width:42px;height:42px;border-radius:50%;display:grid;place-items:center}
+.avb:hover .av,.avb[aria-expanded="true"] .av{border-color:#fff}
+/* small glass menus (profile, row actions) live at body level, outside every glass pane */
+.pmenu{position:fixed;z-index:26;min-width:210px;padding:6px;border-radius:18px;--ta1:.88;--ta2:.86}
+.pmenu[hidden]{display:none}
+.mi{display:flex;align-items:center;gap:12px;width:100%;height:42px;padding:0 12px;border-radius:12px;font-size:14.5px;font-weight:500;color:#fff;text-align:left}
+.mi:hover,.mi:focus-visible{background:rgba(255,255,255,.14)}
+.mi svg{flex:none;width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.mi.danger{color:#ffc4c4}
+.mrule{display:block;height:1px;background:var(--line);margin:4px 6px}
+/* one mock toast for the whole app */
+.gtoast{position:fixed;z-index:35;left:50%;bottom:104px;transform:translateX(-50%);max-width:min(520px,calc(100vw - 32px));padding:11px 18px;border-radius:14px;font-size:14px;font-weight:550;line-height:1.35;color:#fff;background:#1b1747;border:1px solid rgba(255,255,255,.3);box-shadow:0 14px 34px -10px rgba(8,4,40,.75)}
+.gtoast[hidden]{display:none}
 /* panel content: full list and rail are two layers inside the same glass pane (the pane is what moves) */
 .side-full{position:absolute;left:0;top:0;bottom:0;width:var(--side-full);display:flex;flex-direction:column;min-height:0}
 .rail-c{position:absolute;left:0;top:0;bottom:0;width:var(--rail-w);display:flex;visibility:hidden;pointer-events:none;flex-direction:column;align-items:center;gap:10px;padding:18px 0 16px}
@@ -164,23 +198,26 @@ body.rail .rail-c{visibility:visible;pointer-events:auto}
 .set-card .mo-note,.set-card .rt-note{margin:10px 2px 0}
 .tip{position:fixed;z-index:40;pointer-events:none;padding:6px 10px;border-radius:10px;font-size:13px;font-weight:600;line-height:1.2;white-space:nowrap;color:#fff;background:#1b1747;border:1px solid rgba(255,255,255,.3);box-shadow:0 10px 24px -8px rgba(8,4,40,.7)}
 .tip[hidden]{display:none}
-.side-foot > button{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;height:38px;font-size:13px;font-weight:500;color:var(--ink-2);border-radius:12px}
-.side-foot > button:hover{background:rgba(255,255,255,.08)}
-.side-foot svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 
 /* ---------- Middle: note ---------- */
 .doc-head{display:flex;align-items:center;gap:10px;padding:16px 16px 10px 22px;min-height:66px}
 .crumbs{display:flex;align-items:center;gap:8px;font-size:14px;color:#fff;min-width:0;flex:1;white-space:nowrap}
 .crumbs .sep{width:14px;height:14px;stroke:var(--ink-3);fill:none;stroke-width:2;flex:none}
 .crumbs b{font-weight:600;color:#fff;overflow:hidden;text-overflow:ellipsis}
-.saved{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-3);white-space:nowrap}
-.saved svg{width:17px;height:17px;stroke:var(--ink-3);fill:none;stroke-width:1.8}
+.saved{flex:none;display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-2);white-space:nowrap}
+.saved svg{width:17px;height:17px;stroke:var(--ink-2);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.saved .si-spin{display:none}
+.saved[data-s="saving"] .si-ok{display:none}
+.saved[data-s="saving"] .si-spin{display:block;animation:spin .9s linear infinite}
+body.calm .saved .si-spin{animation:none}
+@keyframes spin{to{transform:rotate(360deg)}}
 .seg{display:flex;padding:3px;border-radius:999px;background:rgba(16,18,60,.30);border:1px solid rgba(255,255,255,.16)}
 .seg button{height:28px;padding:0 11px;border-radius:999px;font-size:12.5px;font-weight:600;color:var(--ink-2)}
 .seg button[aria-pressed="true"]{background:rgba(255,255,255,.10);outline:1px solid rgba(255,255,255,.5);outline-offset:-1px;color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.3)}
 .pill{display:flex;align-items:center;gap:7px;height:36px;padding:0 14px;border-radius:999px;font-size:13.5px;font-weight:600;
-  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.22);transition:background .2s}
-.pill:hover{background:rgba(255,255,255,.2)}
+  background:rgba(16,18,60,.42);border:1px solid rgba(255,255,255,.30);box-shadow:inset 0 1px 0 rgba(255,255,255,.22);transition:background .2s}
+.pill:hover{background:rgba(70,76,156,.72)}
+@media (max-width:1699px){.crumbs .c1{display:none}#bShare{width:36px;padding:0;justify-content:center}#bShare .pl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}}
 .pill svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .toolbar{margin:0 16px 6px;display:flex;align-items:center;gap:2px;height:52px;padding:0 8px;border-radius:18px;overflow:hidden}
 .toolbar button{flex:none;white-space:nowrap;height:36px;min-width:36px;padding:0 8px;border-radius:10px;display:flex;align-items:center;gap:6px;font-size:14px;font-weight:500}
@@ -364,7 +401,7 @@ html[data-ogl="failed"] .orb-gl{border-radius:50%;background:radial-gradient(cir
   background:radial-gradient(circle at 35% 30%,#c9c6ff,#7a74f5 70%);box-shadow:0 0 26px -2px rgba(150,146,255,.95),inset 0 1px 0 rgba(255,255,255,.55)}
 .send svg{width:19px;height:19px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
-.tree:hover,.ag-body:hover{scrollbar-color:rgba(255,255,255,.3) transparent}
+.ag-body:hover{scrollbar-color:rgba(255,255,255,.3) transparent}
 /* assistant: short thread (used when it declines) */
 .thread{display:grid;gap:10px;margin:12px 0 6px}
 .msg{font-size:14.5px;line-height:1.5}
@@ -375,7 +412,8 @@ html[data-ogl="failed"] .orb-gl{border-radius:50%;background:radial-gradient(cir
 /* 1366 and narrower laptops: the tree already shows the class, so the breadcrumb drops it (fix: title no longer cut) */
 @media (max-width:1439px){ .crumbs .c1{display:none} .doc{padding:22px 30px 40px} .doc-head{gap:8px;padding-left:20px}
   /* criterion: page >= 640px at 1366. Thinner frame around the page instead of narrower side panes. */
-  .page{margin:2px 5px 5px;border-radius:23px} .toolbar{margin:0 5px 6px} }
+  .page{margin:2px 5px 5px;border-radius:23px} .toolbar{margin:0 5px 6px}
+  .doc-head{gap:6px;padding-right:12px} .doc-head .pill{padding:0 11px;gap:6px} .saved{font-size:12.5px} }
 /* English chapters in the note page use amber (subject colour stays consistent) */
 .page{--p-eng:#8a5a00;--p-eng-dot:#e0961a;--p-eng-soft:#fdf0d5}
 body.pdark .page{--p-eng:#f8cf86;--p-eng-dot:#f5bd5c;--p-eng-soft:rgba(245,189,92,.16)}
@@ -429,6 +467,43 @@ body.morphing .side{z-index:2}
 .ov-type input::placeholder{color:var(--ink-3)}
 .ov-chaps{width:100%;max-width:480px;margin-top:16px}
 .ov-chaps h2{margin:0 2px 8px;font-size:13px;font-weight:600;color:var(--ink-2)}
+
+/* ---------- MY NOTES: replaces the note pane's content; the assistant stays. Saved PDFs by Board > Class > Subject > Chapter ---------- */
+.notes-lib{display:none;position:absolute;inset:0;z-index:2;flex-direction:column;min-height:0;border-radius:inherit}
+body.mynotes .notes-lib{display:flex}
+body.mynotes .doc-pane > .doc-head,body.mynotes .doc-pane > .toolbar,body.mynotes .doc-pane > .page{visibility:hidden}   /* visibility keeps the note's scroll position */
+.nl-head{display:flex;align-items:center;gap:12px;padding:16px 18px 8px 20px;min-height:66px}
+.nl-head h2{margin:0;flex:1;font-size:24px;font-weight:700;letter-spacing:-.01em}
+.nl-scroll{flex:1;min-height:0;overflow:auto;padding:4px 22px 28px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.3) transparent}
+.nl-board{display:inline-block;margin:10px 0 0;padding:3px 11px;border-radius:999px;font-size:12.5px;font-weight:700;letter-spacing:.04em;background:rgba(16,18,60,.34);border:1px solid rgba(255,255,255,.3)}
+.nl-class{margin:12px 0 0;font-size:18px;font-weight:700;letter-spacing:-.01em}
+.nl-subj{display:flex;align-items:center;gap:9px;margin:12px 0 8px 2px;font-size:14px;font-weight:600;color:var(--ink-2)}
+.nl-subjs{display:grid;grid-template-columns:repeat(auto-fit,minmax(262px,1fr));gap:0 14px;align-items:start}
+.nl-grid{display:grid;gap:12px}
+.ncard{padding:14px 16px;border-radius:18px;background:rgba(16,18,60,.44);border:1px solid rgba(255,255,255,.2);box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+.ncard.flash{animation:nflash 1.8s ease-out}
+@keyframes nflash{0%,35%{box-shadow:0 0 0 2px #fff,0 0 26px 2px rgba(190,190,255,.7),inset 0 1px 0 rgba(255,255,255,.12)}100%{box-shadow:0 0 0 2px rgba(255,255,255,0),0 0 0 0 rgba(190,190,255,0),inset 0 1px 0 rgba(255,255,255,.12)}}
+.nc-top{display:flex;align-items:flex-start;gap:10px}
+.nc-t{margin:0;flex:1;min-width:0;font-size:16px;font-weight:650;line-height:1.3}
+.st{flex:none;height:24px;padding:0 10px;border-radius:999px;font-size:12.5px;font-weight:700;display:inline-flex;align-items:center;gap:5px}
+.st svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.st.final{background:#fff;color:#2d2380}
+.st.dr{border:1.5px dashed rgba(255,255,255,.65);color:#fff}
+.nc-tpl,.nc-saved{margin:4px 0 0;font-size:13.5px;line-height:1.4;color:var(--ink-2)}
+.nc-act{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.nbtn{height:34px;padding:0 11px;border-radius:10px;display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:600;color:#fff;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);transition:background .2s,border-color .2s}
+.nbtn:hover{background:rgba(255,255,255,.2)}
+.nbtn.main{background:linear-gradient(180deg,#6a63ee,#4a42c9);border-color:rgba(255,255,255,.45)}
+.nbtn.main:hover{background:linear-gradient(180deg,#7770f2,#554dd6)}
+.nbtn svg{width:15px;height:15px;stroke:#fff;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.nbtn[aria-expanded="true"]{background:rgba(255,255,255,.22);border-color:#fff}
+.nc-vers{list-style:none;margin:10px 0 0;padding:6px;border-radius:14px;background:rgba(16,18,60,.4);border:1px solid rgba(255,255,255,.16)}
+.nc-vers[hidden]{display:none}
+.nc-vers li{display:flex;align-items:center;gap:8px;padding:5px 5px 5px 8px;font-size:13.5px}
+.nc-vers .vn{font-weight:700;min-width:20px}
+.nc-vers .vw{flex:1;min-width:0;white-space:nowrap;color:var(--ink-2)}
+.nc-vers .st{height:22px;padding:0 8px;font-size:12px}
+.nc-vers .nbtn{height:28px;padding:0 9px;font-size:12.5px}
 
 /* ---------- mock controls ---------- */
 .mockbar{position:fixed;left:50%;bottom:6px;transform:translateX(-50%);z-index:20;display:flex;align-items:center;gap:8px;padding:5px 6px 5px 12px;border-radius:999px;
@@ -491,66 +566,32 @@ if(s==='opening'||(s!=='panes'&&!q.has('view')&&!q.has('print')&&!q.has('scroll'
   <!-- LEFT: Class > Subject > Chapter tree -->
   <nav class="glass pane side" aria-label="Classes and chapters">
     <div class="rail-c" id="rail">
-      <button class="ibtn main" id="railExpand" data-tip="Show class list" aria-label="Show class list"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M9 4v16"/><path d="m14 9 3 3-3 3"/></svg></button>
+      <button class="ibtn main" id="railExpand" data-tip="Show sidebar" aria-label="Show sidebar"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M9 4v16"/><path d="m14 9 3 3-3 3"/></svg></button>
       <span class="rule" aria-hidden="true"></span>
-      <button class="ibtn" id="railSearch" data-tip="Search" aria-label="Search"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
-      <button class="ibtn" id="railNew" data-tip="New note" aria-label="New note"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+      <button class="ibtn" id="railNew" data-tip="New session" aria-label="New session"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+      <button class="ibtn" id="railNotes" data-tip="My notes" aria-label="My notes"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></button>
+      <button class="ibtn" id="railTpl" data-tip="Templates" aria-label="Templates"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2.5"/><path d="M3 9h18M9 21V9"/></svg></button>
+      <button class="ibtn" id="railSearch" data-tip="Search sessions" aria-label="Search sessions"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
       <span class="sp"></span>
-      <button class="ibtn" id="gearRail" data-tip="Settings" aria-label="Settings" aria-haspopup="dialog" aria-expanded="false" aria-controls="setCard"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+      <button class="avb" id="profRail" data-tip="Mrs. Anita Sharma" aria-haspopup="menu" aria-expanded="false" aria-controls="profMenu" aria-label="Account menu, Mrs. Anita Sharma"><span class="av" aria-hidden="true">MS</span></button>
     </div>
     <div class="side-full">
     <div class="side-head">
-      <button class="tile" id="sideHide" style="--c:#aab0ff" data-tip="Hide class list" data-tip-pos="below" aria-label="Hide class list"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M9 4v16"/><path d="m17 9-3 3 3 3"/></svg></button>
-      <h1>My classes</h1>
-      <button class="btn-new" id="btnNew" aria-label="New note"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
-      <button class="ibtn quiet" id="gearHead" data-tip="Settings" data-tip-pos="below" aria-label="Settings" aria-haspopup="dialog" aria-expanded="false" aria-controls="setCard"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+      <button class="tile" id="sideHide" style="--c:#aab0ff" data-tip="Hide sidebar" data-tip-pos="below" aria-label="Hide sidebar"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M9 4v16"/><path d="m17 9-3 3 3 3"/></svg></button>
+      <h1>Notes</h1>
+      <button class="ibtn quiet" id="searchBtn" data-tip="Search sessions" data-tip-pos="below" aria-label="Search sessions" aria-expanded="false" aria-controls="searchBox"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
     </div>
-    <label class="search ctl"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      <span class="sr">Search chapters and notes</span><input type="search" placeholder="Search chapters and notes…"></label>
-    <div class="tree">
-      <ul>
-        <li>
-          <button class="cls" aria-expanded="true"><svg aria-hidden="true" focusable="false" class="chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>Class 6<span class="n">2 chapters</span></button>
-          <ul>
-            <li>
-              <div class="subj" style="--c:var(--sci)"><span class="dot"></span>Science</div>
-              <ul><li>
-                <button class="chap" id="chapDig" aria-current="page">
-                  <span class="tile" style="--c:var(--sci)"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10Z"/><path d="M2 21c0-3 1.9-5.4 5.1-6"/></svg></span>
-                  <span class="txt"><span class="t" style="display:block">Human Digestive System</span><span class="s" id="digStatus" style="display:block">Block 15, draft waiting</span></span>
-                </button>
-              </li></ul>
-            </li>
-            <li>
-              <div class="subj" style="--c:var(--eng)"><span class="dot"></span>English</div>
-              <ul><li>
-                <button class="chap" id="chapBak">
-                  <span class="tile" style="--c:var(--eng)"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M2 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2z"/><path d="M22 4h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"/></svg></span>
-                  <span class="txt"><span class="t" style="display:block">Bakunawa, the Moon-Eating Dragon</span><span class="s" style="display:block">Block 13, edited yesterday</span></span>
-                </button>
-              </li></ul>
-            </li>
-          </ul>
-        </li>
-        <li>
-          <button class="cls" id="cls9" aria-expanded="false"><svg aria-hidden="true" focusable="false" class="chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>Class 9<span class="n">1 chapter</span></button>
-          <ul hidden>
-            <li>
-              <div class="subj" style="--c:var(--sci)"><span class="dot"></span>Science</div>
-              <ul><li>
-                <button class="chap" id="chapMot">
-                  <span class="tile" style="--c:var(--sci)"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10Z"/><path d="M2 21c0-3 1.9-5.4 5.1-6"/></svg></span>
-                  <span class="txt"><span class="t" style="display:block">Motion</span><span class="s" style="display:block">No textbook pages yet</span></span>
-                </button>
-              </li></ul>
-            </li>
-          </ul>
-        </li>
-      </ul>
-    </div>
+    <label class="search ctl" id="searchBox" hidden><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <span class="sr">Search recent sessions</span><input id="searchIn" type="search" placeholder="Search sessions" autocomplete="off"></label>
+    <ul class="nav" aria-label="Main">
+      <li><button class="nav-row" id="navNew"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>New session</button></li>
+      <li><button class="nav-row" id="navNotes"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>My notes</button></li>
+      <li><button class="nav-row" id="navTpl"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2.5"/><path d="M3 9h18M9 21V9"/></svg>Templates</button></li>
+    </ul>
+    <h2 class="sec-h" id="secH">Recent sessions</h2>
+    <ul class="sess" id="sessList" aria-labelledby="secH"></ul>
     <div class="side-foot">
-      <button><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Note formats</button>
-      <button><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M2 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2z"/><path d="M22 4h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"/></svg>Textbooks</button>
+      <button class="prof" id="profBtn" aria-haspopup="menu" aria-expanded="false" aria-controls="profMenu" aria-label="Account menu, Mrs. Anita Sharma"><span class="av" aria-hidden="true">MS</span><span class="pn" aria-hidden="true">Mrs. Anita Sharma</span><svg aria-hidden="true" focusable="false" class="chv" viewBox="0 0 24 24"><path d="m7 15 5 5 5-5M7 9l5-5 5 5"/></svg></button>
     </div>
     </div>
   </nav>
@@ -565,6 +606,17 @@ if(s==='opening'||(s!=='panes'&&!q.has('view')&&!q.has('print')&&!q.has('scroll'
       <p class="rt-note" id="rtNote">Windows asks for less transparency. Choose Solid to follow it.</p>
   </div>
   <div class="tip" id="tip" role="presentation" hidden></div>
+  <div class="glass pmenu" id="profMenu" role="menu" aria-label="Account" hidden>
+    <button class="mi" role="menuitem" data-act="settings"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</button>
+    <button class="mi" role="menuitem" data-act="profile"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>Profile</button>
+    <span class="mrule" role="separator"></span>
+    <button class="mi" role="menuitem" data-act="signout"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>Sign out</button>
+  </div>
+  <div class="glass pmenu" id="rowMenu" role="menu" aria-label="Session actions" hidden>
+    <button class="mi" role="menuitem" data-act="rename"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>Rename</button>
+    <button class="mi danger" role="menuitem" data-act="delete"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>Delete</button>
+  </div>
+  <div class="gtoast" id="gToast" role="status" aria-live="polite" hidden></div>
 
   <!-- MIDDLE: note -->
   <section class="glass pane doc-pane" aria-label="Note editor">
@@ -574,9 +626,10 @@ if(s==='opening'||(s!=='panes'&&!q.has('view')&&!q.has('print')&&!q.has('scroll'
         <span style="display:flex;align-items:center;gap:7px"><span class="dot" id="crDot" style="--c:var(--sci)"></span><span id="crSubj">Science</span></span><svg aria-hidden="true" focusable="false" class="sep" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg>
         <b id="crChap">Human Digestive System</b>
       </div>
-      <span class="saved"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M17.5 19a4.5 4.5 0 1 0-1.4-8.8A6 6 0 0 0 4.3 12.5 3.5 3.5 0 0 0 6.5 19z"/></svg>Saved 10:24</span>
+      <span class="saved" id="saved" role="status" aria-live="polite" data-s="saved"><svg class="si-ok" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M17.5 19a4.5 4.5 0 1 0-1.4-8.8A6 6 0 0 0 4.3 12.5 3.5 3.5 0 0 0 6.5 19z"/><path d="m9.5 13.5 2 2 3.5-4"/></svg><svg class="si-spin" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-6.2-8.55"/></svg><span id="savedTxt">Saved just now</span></span>
       <button class="pill" id="bPrint"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M6 14h12v7H6z"/></svg>Print</button>
-      <button class="pill"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M17 8v6M14 11h6"/></svg>Share</button>
+      <button class="pill" id="bSavePdf"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M12 11v6M9.5 14.5 12 17l2.5-2.5"/></svg>Save PDF</button>
+      <button class="pill" id="bShare" data-tip="Share" data-tip-pos="below"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M17 8v6M14 11h6"/></svg><span class="pl">Share</span></button>
     </header>
     <div class="toolbar ctl" role="toolbar" aria-label="Formatting">
       <button aria-label="Undo"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg></button>
@@ -594,7 +647,7 @@ if(s==='opening'||(s!=='panes'&&!q.has('view')&&!q.has('print')&&!q.has('scroll'
     </div>
 
     <div class="page" id="page">
-    <article class="doc" id="doc" tabindex="0" aria-label="Note page">
+    <article class="doc" id="doc" tabindex="0" role="textbox" aria-multiline="true" aria-label="Note page" contenteditable="true" spellcheck="false">
      <div class="v-dig">
       <h2 class="title">Human Digestive System</h2>
       <div class="meta">
@@ -692,6 +745,14 @@ if(s==='opening'||(s!=='panes'&&!q.has('view')&&!q.has('print')&&!q.has('scroll'
       <button class="btn ghost" id="bUndo">Undo</button>
     </div>
     </div>
+    <!-- MY NOTES: covers the note pane (the assistant stays). Cards are built from the data in the script. -->
+    <section class="notes-lib" id="myNotes" aria-labelledby="mnT">
+      <header class="nl-head">
+        <button class="pill" id="nlBack"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></svg>Back to note</button>
+        <h2 id="mnT">My notes</h2>
+      </header>
+      <div class="nl-scroll" id="nlScroll"></div>
+    </section>
   </section>
 
   <!-- RIGHT: agent -->
@@ -842,12 +903,6 @@ bF.onclick = () => setCalm(false); bC.onclick = () => setCalm(true);
 setCalm(CALM);
 document.documentElement.dataset.rm = RM;
 
-/* tree disclosure */
-document.querySelectorAll('.cls').forEach(b => b.onclick = () => {
-  const o = b.getAttribute('aria-expanded') === 'true'; b.setAttribute('aria-expanded', !o);
-  const ul = b.nextElementSibling; if (ul) ul.hidden = o;
-});
-
 const $ = id => document.getElementById(id);
 const page = $('page'), doc = $('doc'), draft = $('draft');
 
@@ -858,16 +913,16 @@ setPage(q.get('page') === 'dark');
 
 /* ---------- draft: one decision, in the dock row under the page ---------- */
 let draftState = 'pending';            /* pending | accepted | rejected */
-const stTxt = $('stTxt'), digStatus = $('digStatus');
+const stTxt = $('stTxt');
 function syncDraft(){
   const nop = body.classList.contains('nopages');
   page.classList.toggle('show-dock', !nop && draftState === 'pending');
   page.classList.toggle('show-toast', !nop && draftState !== 'pending' && toastOn);
   draft.hidden = draftState === 'rejected';
   draft.classList.toggle('merged', draftState === 'accepted');
-  if (draftState === 'pending') { stTxt.innerHTML = '3 questions wait in the note<span>Accept or reject them there</span>'; digStatus.textContent = 'Block 15, draft waiting'; }
-  if (draftState === 'accepted') { stTxt.innerHTML = '3 questions added<span>Questions 4 to 6 are in the note</span>'; digStatus.textContent = 'Block 15, edited just now'; }
-  if (draftState === 'rejected') { stTxt.innerHTML = 'Draft rejected<span>The note did not change</span>'; digStatus.textContent = 'Block 15, no draft'; }
+  if (draftState === 'pending') { stTxt.innerHTML = '3 questions wait in the note<span>Accept or reject them there</span>'; }
+  if (draftState === 'accepted') { stTxt.innerHTML = '3 questions added<span>Questions 4 to 6 are in the note</span>'; }
+  if (draftState === 'rejected') { stTxt.innerHTML = 'Draft rejected<span>The note did not change</span>'; }
   $('bShow').hidden = draftState === 'rejected';
 }
 let toastOn = false;
@@ -877,11 +932,11 @@ function decide(s){
   toastMain.innerHTML = s === 'accepted'
     ? '3 questions added to Practice questions<small>Questions 4 to 6, from pages 49 to 54</small>'
     : 'Draft rejected. The note did not change.<small>The 3 questions are gone from the note</small>';
-  syncDraft(); $('bUndo').focus({ preventScroll: true });
+  syncDraft(); markSaving(); $('bUndo').focus({ preventScroll: true });
 }
 $('bAccept').onclick = () => decide('accepted');
 $('bReject').onclick = () => decide('rejected');
-$('bUndo').onclick = () => { draftState = 'pending'; toastOn = false; syncDraft(); $('bAccept').focus({ preventScroll: true }); };
+$('bUndo').onclick = () => { draftState = 'pending'; toastOn = false; syncDraft(); markSaving(); $('bAccept').focus({ preventScroll: true }); };
 $('bEdit').onclick = () => { const ol = draft.querySelector('ol'); ol.contentEditable = 'true'; ol.focus(); draft.scrollIntoView({ block: 'center' }); };
 if (q.has('accepted')) { draftState = 'accepted'; toastOn = true; }
 
@@ -900,6 +955,16 @@ const CH = {
   bak: { nop: true,  cls: 'Class 6', subj: 'English', sci: false, title: 'Bakunawa, the Moon-Eating Dragon', ctx: 'Block 13 Bakunawa, the Moon-Eating Dragon', agSub: 'Class 6 English', id: 'chapBak', warn: 'Not drafted yet', ask: 'Make 5 practice questions for Bakunawa.', ai: 'I can\'t write them yet. Bakunawa has no draft in this preview, and I only write from your textbook. Questions I make up could teach something your book does not say.', ref: 'Bakunawa has no draft in this preview yet. I only write from your textbook, so I did not make up any questions.' },
   mot: { nop: true,  cls: 'Class 9', subj: 'Science', sci: true,  title: 'Motion', ctx: 'Motion', agSub: 'Class 9 Science', id: 'chapMot', warn: 'No textbook pages yet', ask: 'Make 5 practice questions for Motion.', ai: 'I can\'t write them yet. Motion has no textbook pages, and I only write from your textbook. Questions I make up could teach something your book does not say.', ref: 'This chapter has no textbook pages yet. I only write from your textbook, so I did not make up any questions.' }
 };
+/* ---------- recent sessions (mock data), newest first ---------- */
+const SESS = [
+  { id: 's1', t: 'Digestive System, more MCQs', ch: 'dig', day: 'Fri' },
+  { id: 's2', t: 'Digestive System, first notes', ch: 'dig', day: 'Mon' },
+  { id: 's3', t: 'Bakunawa reading questions', ch: 'bak', day: 'Sep 26' },
+  { id: 's4', t: 'Motion, where to start', ch: 'mot', day: 'Sep 24' }
+];
+const CHIP = { dig: { c: 'sci', t: 'Sci 6 - ch 15' }, bak: { c: 'eng', t: 'Eng 6 - ch 13' }, mot: { c: 'sci', t: 'Sci 9 - ch 8' } };
+const sessList = $('sessList');
+let curSess = 's1', sessQuery = '', nowOn = false;
 let chKey = 'dig';
 function setChapter(k){
   const c = CH[k]; chKey = k;
@@ -912,14 +977,13 @@ function setChapter(k){
     $('nopChip').classList.toggle('sci', c.sci); $('nopChip').classList.toggle('eng', !c.sci); $('nopDot').classList.toggle('eng', !c.sci);
   }
   document.title = c.title + ' - ' + c.cls + ' ' + c.subj + ' - Teacher Notes (v3 target mock)';
-  for (const [kk, v] of Object.entries(CH)) { const el = $(v.id); el.toggleAttribute('aria-current', kk === k); if (kk === k) el.setAttribute('aria-current', 'page'); }
-  if (k === 'mot') { $('cls9').setAttribute('aria-expanded', 'true'); $('cls9').nextElementSibling.hidden = false; }
+  if ((SESS.find(s => s.id === curSess) || {}).ch !== k) curSess = (SESS.find(s => s.ch === k) || {}).id;
+  markCurrent();
   document.querySelectorAll('#viewSeg button').forEach(bt => bt.setAttribute('aria-pressed', bt.dataset.v === (c.nop ? 'nop' : 'dig')));
   doc.scrollTop = 0; syncDraft();
 }
 const setView = v => setChapter(v === 'nop' ? 'mot' : 'dig');
 document.querySelectorAll('#viewSeg button').forEach(bt => bt.onclick = () => setView(bt.dataset.v));
-$('chapDig').onclick = () => setChapter('dig'); $('chapBak').onclick = () => setChapter('bak'); $('chapMot').onclick = () => setChapter('mot');
 setChapter(q.get('view') === 'nopages' ? 'mot' : 'dig');
 
 /* ---------- formulas: KaTeX + mhchem (fallback text stays if the CDN fails) ---------- */
@@ -953,7 +1017,7 @@ function openPrint(){
   body.classList.add('print'); $('ppClose').focus();
 }
 $('bPrint').onclick = openPrint;
-$('ppClose').onclick = () => { body.classList.remove('print'); $('bPrint').focus(); };
+$('ppClose').onclick = () => { body.classList.remove('print'); const o = printOpener && document.contains(printOpener) ? printOpener : $('bPrint'); printOpener = null; o.focus(); };
 addEventListener('keydown', e => { if (e.key === 'Escape' && body.classList.contains('print')) $('ppClose').click(); });
 if (q.has('print')) addEventListener('load', () => setTimeout(openPrint, 300));
 const SCROLL = q.get('scroll');
@@ -1014,7 +1078,7 @@ function openChapter(k){
   body.classList.remove('opening'); body.classList.add('morphing');
   $('ovTypeBox').hidden = true; $('ovType').setAttribute('aria-pressed', 'false');
   const L = ap.getBoundingClientRect(), oL = $('orb').getBoundingClientRect();
-  const done = () => { body.classList.remove('morphing'); moving = false; $(CH[k].id).focus({ preventScroll: true }); };
+  const done = () => { body.classList.remove('morphing'); moving = false; focusCurrentRow(); };
   if (CALM) {
     [sd, dp, ap].forEach(el => el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, easing: 'ease-out' }));
     setTimeout(done, 230); return;
@@ -1037,6 +1101,205 @@ document.querySelectorAll('#openView [data-ch]').forEach(bt => bt.onclick = () =
   document.querySelectorAll('#openView [data-ch]').forEach(bt => { bt.addEventListener('pointerenter', ready, { once: true }); bt.addEventListener('focus', ready, { once: true }); });
 })();
 
+const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+/* ---------- My notes: saved PDFs, one card per chapter ---------- */
+const LIB = [{ board: 'CBSE', classes: [
+  { cls: 'Class 6', subj: [{ n: 'Science', eng: false, ch: ['dig'] }, { n: 'English', eng: true, ch: ['bak'] }] },
+  { cls: 'Class 9', subj: [{ n: 'Science', eng: false, ch: ['mot'] }] }] }];
+const NOTE = {
+  dig: { tpl: 'Science notes, Class 6 format', saved: 'Fri 4:10 pm', final: true, open: false, vers: [{ v: 2, w: 'Fri 4:10 pm', f: true }, { v: 1, w: 'Mon 9:30 am', f: false }] },
+  bak: { tpl: 'English reading notes, Class 6 format', saved: 'Sep 26 5:40 pm', final: false, open: false, vers: [{ v: 1, w: 'Sep 26 5:40 pm', f: false }] },
+  mot: { tpl: 'Science notes, Class 9 format', saved: 'Sep 24 11:05 am', final: false, open: false, vers: [{ v: 1, w: 'Sep 24 11:05 am', f: false }] }
+};
+const IC = {
+  open: '<path d="M7 17 17 7M8 7h9v9"/>',
+  print: '<path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M6 14h12v7H6z"/>',
+  down: '<path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M5 20h14"/>',
+  vers: '<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/>'
+};
+const stChip = f => f ? '<span class="st final"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Final</span>' : '<span class="st dr">Draft</span>';
+function cardHTML(k){
+  const n = NOTE[k], c = CH[k], b = (ic, label, a, extra = '') => `<button class="nbtn ${a === 'open' ? 'main' : ''}" data-a="${a}" data-k="${k}"${extra}><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24">${IC[ic]}</svg>${label}</button>`;
+  return `<article class="ncard" id="nc-${k}" aria-labelledby="nct-${k}">
+    <div class="nc-top"><h6 class="nc-t" id="nct-${k}">${esc(c.title)}</h6>${stChip(n.final)}</div>
+    <p class="nc-tpl">${esc(n.tpl)}</p><p class="nc-saved">Saved ${esc(n.saved)}</p>
+    <div class="nc-act">${b('open', 'Open', 'open')}${b('print', 'Print', 'print')}${b('down', 'Download', 'down')}${b('vers', 'Versions', 'vers', ` aria-expanded="${n.open}" aria-controls="nv-${k}"`)}</div>
+    <ul class="nc-vers" id="nv-${k}" aria-label="Versions of ${esc(c.title)}"${n.open ? '' : ' hidden'}>${n.vers.map(v => `<li><span class="vn">v${v.v}</span><span class="vw">${esc(v.w)}</span>${stChip(v.f)}<button class="nbtn" data-a="restore" data-k="${k}" data-v="${v.v}" aria-label="Restore v${v.v}">Restore</button></li>`).join('')}</ul>
+  </article>`;
+}
+function renderLib(){
+  $('nlScroll').innerHTML = LIB.map(b => `<section><h3 class="nl-board">${b.board}</h3>${b.classes.map(c => `<h4 class="nl-class">${c.cls}</h4><div class="nl-subjs">${c.subj.map(s =>
+    `<div><h5 class="nl-subj" style="--c:var(${s.eng ? '--eng' : '--sci'})"><span class="dot"></span>${s.n}</h5><div class="nl-grid">${s.ch.map(cardHTML).join('')}</div></div>`).join('')}</div>`).join('')}</section>`).join('');
+}
+function renderCard(k){ const el = $('nc-' + k); if (el) { const had = el.contains(document.activeElement) && document.activeElement.dataset; const f = had ? document.activeElement.dataset.a : null; el.outerHTML = cardHTML(k); if (f) $('nc-' + k).querySelector('[data-a="' + f + '"]')?.focus({ preventScroll: true }); } }
+renderLib();
+let printOpener = null;
+function showNotes(on){
+  nowOn = !!on; body.classList.toggle('mynotes', nowOn);
+  [$('navNotes'), $('railNotes')].forEach(b => nowOn ? b.setAttribute('aria-current', 'page') : b.removeAttribute('aria-current'));
+  markCurrent();
+}
+function openNotes(k){
+  if (body.classList.contains('opening') || body.classList.contains('morphing')) return;
+  closeMenu(false); closeSettings(false); hideTip();
+  const first = !nowOn; showNotes(true);
+  if (first) $('myNotes').animate([{ opacity: 0 }, { opacity: 1 }], { duration: CALM ? 120 : 200, easing: 'ease-out' });
+  const sc = $('nlScroll');
+  if (k && $('nc-' + k)) {
+    const c = $('nc-' + k);
+    sc.scrollTop += c.getBoundingClientRect().top - sc.getBoundingClientRect().top - 74;
+    c.classList.remove('flash'); void c.offsetWidth; c.classList.add('flash');
+    c.querySelector('[data-a="open"]').focus({ preventScroll: true });
+  } else { sc.scrollTop = 0; $('nlBack').focus({ preventScroll: true }); }
+}
+function closeNotes(){ showNotes(false); focusCurrentRow(); }
+$('nlBack').onclick = closeNotes;
+$('nlScroll').addEventListener('click', e => {
+  const b = e.target.closest('[data-a]'); if (!b) return;
+  const k = b.dataset.k, n = NOTE[k], a = b.dataset.a;
+  if (a === 'open') { showNotes(false); setChapter(k); focusCurrentRow(); }
+  else if (a === 'print') { printOpener = b; setChapter(k); openPrint(); }
+  else if (a === 'down') toast('Download is a mock: ' + CH[k].title + ' v' + n.vers[0].v + ' (PDF).');
+  else if (a === 'vers') { n.open = !n.open; renderCard(k); }
+  else if (a === 'restore') toast('Restore is a mock: v' + b.dataset.v + ' of ' + CH[k].title + ' stays as it is.');
+});
+
+/* ---------- live save indicator (fake): typing, accepting or saving a PDF flips Saving... then Saved ---------- */
+const savedEl = $('saved'), savedTxt = $('savedTxt');
+let saveT = 0, savedAt = Date.now();
+function agoText(){ const m = Math.floor((Date.now() - savedAt) / 60000); return m < 1 ? 'Saved just now' : 'Saved ' + m + ' min ago'; }
+function markSaving(){
+  savedEl.dataset.s = 'saving'; savedTxt.textContent = 'Saving...';
+  clearTimeout(saveT);
+  saveT = setTimeout(() => { savedAt = Date.now(); savedEl.dataset.s = 'saved'; savedTxt.textContent = agoText(); }, CALM ? 500 : 900);
+}
+setInterval(() => { if (savedEl.dataset.s === 'saved') savedTxt.textContent = agoText(); }, 20000);
+doc.addEventListener('input', markSaving);
+const clock = () => new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }).toLowerCase();
+/* Save PDF: marks the chapter's note final as the next version, and the My notes card updates */
+$('bSavePdf').onclick = () => {
+  const n = NOTE[chKey], nv = n.vers[0].v + 1, when = 'Today ' + clock();
+  n.vers.unshift({ v: nv, w: when, f: true }); n.saved = when; n.final = true; renderCard(chKey);
+  markSaving(); toast('Saved as v' + nv + ' (final). Find it in My notes');
+};
+
+/* ---------- toast (mock actions) ---------- */
+const gToast = $('gToast'); let toastT = 0;
+function toast(msg){
+  gToast.textContent = msg; gToast.hidden = false;
+  gToast.animate(CALM ? [{ opacity: 0 }, { opacity: 1 }] : [{ opacity: 0, transform: 'translate(-50%,8px)' }, { opacity: 1, transform: 'translate(-50%,0)' }], { duration: CALM ? 120 : 220, easing: EASE });
+  clearTimeout(toastT); toastT = setTimeout(() => { gToast.hidden = true; }, 3800);
+}
+
+/* ---------- body-level menus: one open at a time, Esc / outside click closes, arrows move ---------- */
+let menuEl = null, menuOpener = null;
+function openMenu(el, opener, place){
+  closeMenu(false); closeSettings(false); hideTip();
+  menuEl = el; menuOpener = opener; el.hidden = false; place(el);
+  opener.setAttribute('aria-expanded', 'true');
+  el.animate(CALM ? [{ opacity: 0 }, { opacity: 1 }] : [{ opacity: 0, transform: 'scale(.97) translateY(4px)' }, { opacity: 1, transform: 'none' }], { duration: CALM ? 100 : 160, easing: EASE });
+  el.querySelector('[role=menuitem]').focus({ preventScroll: true });
+}
+function closeMenu(refocus = true){
+  if (!menuEl) return;
+  menuEl.hidden = true; const o = menuOpener; menuEl = null; menuOpener = null;
+  if (o) { o.setAttribute('aria-expanded', 'false'); if (refocus && document.contains(o)) o.focus({ preventScroll: true }); }
+}
+document.addEventListener('pointerdown', e => { if (menuEl && !menuEl.contains(e.target) && !(menuOpener && menuOpener.contains(e.target))) closeMenu(false); });
+addEventListener('keydown', e => {
+  if (!menuEl) return;
+  if (e.key === 'Escape') { e.preventDefault(); e.stopImmediatePropagation(); closeMenu(); return; }
+  const items = [...menuEl.querySelectorAll('[role=menuitem]')], i = items.indexOf(document.activeElement);
+  if (e.key === 'ArrowDown') { e.preventDefault(); items[(i + 1) % items.length].focus(); }
+  else if (e.key === 'ArrowUp') { e.preventDefault(); items[(i - 1 + items.length) % items.length].focus(); }
+  else if (e.key === 'Home') { e.preventDefault(); items[0].focus(); }
+  else if (e.key === 'End') { e.preventDefault(); items[items.length - 1].focus(); }
+  else if (e.key === 'Tab') closeMenu(false);
+}, true);
+addEventListener('resize', () => closeMenu(false));
+
+/* ---------- recent sessions list ---------- */
+const DOTS = '<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>';
+function renderSess(){
+  const qq = sessQuery.trim().toLowerCase();
+  const rows = SESS.filter(s => !qq || (s.t + ' ' + CHIP[s.ch].t).toLowerCase().includes(qq));
+  sessList.innerHTML = rows.map(s => `<li class="s-row" data-id="${s.id}"><div class="s-body">
+    <button class="s-main" data-id="${s.id}"><span class="s-t">${esc(s.t)}</span></button>
+    <div class="s-meta"><button class="cchip ${CHIP[s.ch].c}" data-ch="${s.ch}" aria-label="Open ${esc(CHIP[s.ch].t)} in My notes"><span class="cd"></span>${CHIP[s.ch].t}</button><span class="s-day">${s.day}</span></div></div>
+    <button class="s-more" data-id="${s.id}" aria-label="More actions for ${esc(s.t)}" aria-haspopup="menu" aria-expanded="false" aria-controls="rowMenu">${DOTS}</button></li>`).join('')
+    || `<li class="s-empty">${SESS.length ? 'No sessions match your search.' : 'No sessions yet. Choose New session to start one.'}</li>`;
+  markCurrent();
+}
+function markCurrent(){
+  sessList.querySelectorAll('.s-row').forEach(r => { if (!nowOn && r.dataset.id === curSess) r.setAttribute('aria-current', 'true'); else r.removeAttribute('aria-current'); });
+}
+function focusCurrentRow(){ const b = sessList.querySelector('.s-row[aria-current="true"] .s-main'); if (b) b.focus({ preventScroll: true }); }
+function selectSession(id){
+  const s = SESS.find(x => x.id === id); if (!s) return;
+  curSess = id; setChapter(s.ch);
+}
+sessList.addEventListener('click', e => {
+  const chip = e.target.closest('.cchip'), more = e.target.closest('.s-more'), main = e.target.closest('.s-main');
+  if (chip) { openNotes(chip.dataset.ch); return; }
+  if (more) {
+    if (menuEl === $('rowMenu') && menuOpener === more) { closeMenu(); return; }
+    openMenu($('rowMenu'), more, m => { const r = more.getBoundingClientRect(), w = m.offsetWidth, h = m.offsetHeight;
+      m.style.left = Math.max(8, Math.min(r.right - w, innerWidth - w - 8)) + 'px'; m.style.top = Math.max(8, Math.min(r.bottom + 6, innerHeight - h - 8)) + 'px'; });
+    m_row = more.dataset.id; return;
+  }
+  if (main) { selectSession(main.dataset.id); }
+});
+let m_row = null;
+$('rowMenu').addEventListener('click', e => {
+  const it = e.target.closest('[role=menuitem]'); if (!it) return;
+  const id = m_row; closeMenu(false);
+  if (it.dataset.act === 'rename') renameSess(id);
+  if (it.dataset.act === 'delete') deleteSess(id);
+});
+function renameSess(id){
+  const s = SESS.find(x => x.id === id), row = sessList.querySelector('.s-row[data-id="' + id + '"] .s-main'); if (!s || !row) return;
+  const inp = document.createElement('input'); inp.className = 's-edit'; inp.value = s.t; inp.setAttribute('aria-label', 'Session name'); inp.maxLength = 80;
+  row.replaceWith(inp); inp.focus(); inp.select();
+  let done = false;
+  const finish = ok => { if (done) return; done = true; if (ok && inp.value.trim()) s.t = inp.value.trim(); renderSess(); const b = sessList.querySelector('.s-main[data-id="' + id + '"]'); if (b && ok) b.focus({ preventScroll: true }); };
+  inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); finish(true); } else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); finish(false); } });
+  inp.addEventListener('blur', () => finish(true));
+}
+function deleteSess(id){
+  const i = SESS.findIndex(x => x.id === id); if (i < 0) return;
+  const gone = SESS.splice(i, 1)[0];
+  renderSess();
+  toast('Deleted "' + gone.t + '". This is a mock, nothing was saved.');
+  const nxt = sessList.querySelector('.s-main'); (nxt || $('navNew')).focus({ preventScroll: true });
+}
+renderSess();
+
+/* search: the header icon opens a field that filters the list */
+const searchBox = $('searchBox'), searchIn = $('searchIn');
+function openSearch(on){
+  searchBox.hidden = !on; $('searchBtn').setAttribute('aria-expanded', on);
+  if (on) searchIn.focus({ preventScroll: true }); else { searchIn.value = ''; sessQuery = ''; renderSess(); }
+}
+$('searchBtn').onclick = () => openSearch(searchBox.hidden);
+searchIn.addEventListener('input', () => { sessQuery = searchIn.value; renderSess(); });
+searchIn.addEventListener('keydown', e => { if (e.key === 'Escape') { e.preventDefault(); if (searchIn.value) { searchIn.value = ''; sessQuery = ''; renderSess(); } else { openSearch(false); $('searchBtn').focus({ preventScroll: true }); } } });
+
+/* ---------- New session: back to the opening screen (simple fade; Part 2 replaces this with the guided flow) ---------- */
+function goOpening(){
+  if (body.classList.contains('opening') || moving) return;
+  moving = true; closeMenu(false); closeSettings(false); hideTip();
+  if (typeof showNotes === 'function') showNotes(false);
+  flowOn = false; setState('normal'); openSearch(false);
+  const ap = document.querySelector('.agent'), sd = document.querySelector('.side'), dp = document.querySelector('.doc-pane');
+  const outs = [sd, dp, ap].map(el => el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: CALM ? 120 : 260, easing: 'ease-in', fill: 'forwards' }));
+  Promise.all(outs.map(a => a.finished)).then(() => {
+    body.classList.add('opening');
+    outs.forEach(a => a.cancel());
+    ap.animate(CALM ? [{ opacity: 0 }, { opacity: 1 }] : [{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: CALM ? 160 : 420, easing: EASE });
+    moving = false; $('ovTalk').focus({ preventScroll: true });
+  }, () => { moving = false; });
+}
+
 /* ---------- left panel: collapse to a rail, Settings card, tooltips ----------
    GLASS TRAP: only the panes themselves animate (side width, note margin-left); their contents fade. No ancestor gets opacity/filter/transform. */
 const sideEl = document.querySelector('.side'), docPane = document.querySelector('.doc-pane');
@@ -1047,7 +1310,7 @@ function toggleRail(next, after){
   if (body.classList.contains('opening') || body.classList.contains('morphing') || railBusy || narrowMQ.matches) return;
   const collapse = next === undefined ? !body.classList.contains('rail') : next;
   if (collapse === body.classList.contains('rail')) { if (after) after(); return; }
-  closeSettings(false); hideTip();
+  closeSettings(false); closeMenu(false); hideTip();
   const wasIn = sideEl.contains(document.activeElement);
   const F = sideEl.getBoundingClientRect(), D = docPane.getBoundingClientRect();
   body.classList.toggle('rail', collapse);
@@ -1073,8 +1336,10 @@ function toggleRail(next, after){
 }
 $('sideHide').onclick = () => toggleRail(true);
 $('railExpand').onclick = () => toggleRail(false);
-$('railSearch').onclick = () => toggleRail(false, () => document.querySelector('.search input').focus({ preventScroll: true }));
-$('railNew').onclick = () => toggleRail(false, () => $('btnNew').click());
+$('railSearch').onclick = () => toggleRail(false, () => openSearch(true));
+$('navNew').onclick = $('railNew').onclick = () => goOpening();
+$('navTpl').onclick = $('railTpl').onclick = () => toast('Template picker comes in Part 2.');
+$('navNotes').onclick = $('railNotes').onclick = () => openNotes();
 addEventListener('keydown', e => { if (e.ctrlKey && !e.altKey && !e.metaKey && e.code === 'Backslash') { e.preventDefault(); toggleRail(); } });
 if (q.has('rail') && q.get('rail') !== '0') body.classList.add('rail');
 
@@ -1084,12 +1349,12 @@ function openSettings(btn){
   hideTip(); setOpener = btn; card.hidden = false;
   const r = btn.getBoundingClientRect(), w = card.offsetWidth, h = card.offsetHeight, fromRail = !!btn.closest('.rail-c');
   const sr = sideEl.getBoundingClientRect();
-  let left = fromRail ? r.right + 14 : sr.left + (sr.width - w) / 2, top = fromRail ? r.bottom - h : r.bottom + 10;
+  let left = fromRail ? r.right + 14 : sr.left + (sr.width - w) / 2, top = fromRail ? r.bottom - h : r.top - h - 10;   /* above the profile row, or beside the rail avatar */
   left = Math.max(8, Math.min(left, innerWidth - w - 8)); top = Math.max(8, Math.min(top, innerHeight - h - 8));
   card.style.left = left + 'px'; card.style.top = top + 'px';
-  card.style.transformOrigin = fromRail ? '0 100%' : '100% 0';
+  card.style.transformOrigin = fromRail ? '0 100%' : '50% 100%';
   btn.setAttribute('aria-expanded', 'true');
-  card.animate(CALM ? [{ opacity: 0 }, { opacity: 1 }] : [{ opacity: 0, transform: 'scale(.96) translateY(' + (fromRail ? 4 : -4) + 'px)' }, { opacity: 1, transform: 'none' }], { duration: CALM ? 120 : 180, easing: EASE });
+  card.animate(CALM ? [{ opacity: 0 }, { opacity: 1 }] : [{ opacity: 0, transform: 'scale(.96) translateY(4px)' }, { opacity: 1, transform: 'none' }], { duration: CALM ? 120 : 180, easing: EASE });
   (card.querySelector('[aria-pressed="true"]') || card).focus({ preventScroll: true });
 }
 function closeSettings(refocus = true){
@@ -1098,7 +1363,25 @@ function closeSettings(refocus = true){
   const o = setOpener; setOpener = null;
   if (o) { o.setAttribute('aria-expanded', 'false'); if (refocus) o.focus({ preventScroll: true }); }
 }
-[$('gearHead'), $('gearRail')].forEach(b => b.onclick = () => { if (!card.hidden && setOpener === b) closeSettings(); else { closeSettings(false); openSettings(b); } });
+/* profile row (and the rail avatar) opens a small glass menu: Settings, Profile, Sign out */
+function placeProf(m, btn){
+  const r = btn.getBoundingClientRect(), fromRail = !!btn.closest('.rail-c');
+  m.style.width = fromRail ? '' : r.width + 'px';
+  const w = m.offsetWidth, h = m.offsetHeight;
+  m.style.left = Math.max(8, Math.min(fromRail ? r.right + 14 : r.left, innerWidth - w - 8)) + 'px';
+  m.style.top = Math.max(8, Math.min(fromRail ? r.bottom - h : r.top - h - 8, innerHeight - h - 8)) + 'px';
+}
+[$('profBtn'), $('profRail')].forEach(b => b.onclick = () => {
+  if (!card.hidden && setOpener === b) { closeSettings(); return; }
+  if (menuEl === $('profMenu') && menuOpener === b) { closeMenu(); return; }
+  openMenu($('profMenu'), b, m => placeProf(m, b));
+});
+$('profMenu').addEventListener('click', e => {
+  const it = e.target.closest('[role=menuitem]'); if (!it) return;
+  const o = menuOpener; closeMenu(false);
+  if (it.dataset.act === 'settings') openSettings(o);
+  else { toast(it.dataset.act === 'profile' ? 'Profile is a mock in this preview.' : 'Sign out is a mock in this preview.'); o.focus({ preventScroll: true }); }
+});
 document.addEventListener('pointerdown', e => { if (!card.hidden && !card.contains(e.target) && !(setOpener && setOpener.contains(e.target))) closeSettings(false); });
 card.addEventListener('focusout', e => { if (!card.hidden && e.relatedTarget && !card.contains(e.relatedTarget) && !(setOpener && setOpener.contains(e.relatedTarget))) closeSettings(false); });
 addEventListener('keydown', e => { if (e.key === 'Escape' && !card.hidden) { e.preventDefault(); e.stopImmediatePropagation(); closeSettings(); } }, true);
