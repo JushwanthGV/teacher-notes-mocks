@@ -740,7 +740,7 @@ body.pdark .ns-a4{background:#171a3d}
 .a4-draft .draft-bar .db-t small{display:none}
 .a4-draft .draft-bar .btn{height:calc(34px * var(--bs,1));padding:0 calc(12px * var(--bs,1));font-size:inherit;border-radius:calc(10px * var(--bs,1))}
 .ns-a4 .dv-fit{position:absolute;left:50%;top:50%;margin:calc(-148.5mm * var(--s,1) + var(--py,0px)) 0 0 calc(-105mm * var(--s,1) + var(--px,0px));visibility:hidden}
-.ns-a4 .dv-fit.is-cur,.ns-a4 .dv-fit.is-leaving{visibility:visible}
+.ns-a4 .dv-fit.is-cur,.ns-a4 .dv-fit.is-leaving{visibility:inherit} /* Kakashi: follow the panel, never show through a hidden note pane */
 .ns-a4 .dv-sheet{box-shadow:0 8px 24px -10px rgba(20,12,70,.5),0 0 0 1px rgba(30,20,80,.16)}
 .pp-sheet .a4-draft{border:1.5px dashed #6d67d8;background:#f4f3ff;border-radius:6px;padding:8px 12px 2px;margin:10px 0}
 .pp-sheet .a4-dl{font-size:11px;font-weight:700;margin:0 0 6px;letter-spacing:.02em}
