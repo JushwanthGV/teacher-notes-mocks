@@ -91,8 +91,6 @@ body.solid .glass::before{opacity:.5}
 /* prefers-reduced-transparency is handled in JS so the user's Glass/Solid choice can override it */
 .rt-note{display:none;flex-basis:100%;margin:0 4px 4px;font-size:12.5px;line-height:1.4;color:var(--ink-2)}
 body.rt .rt-note{display:block}
-.mo-note{display:none;flex-basis:100%;margin:0 4px 4px;font-size:12.5px;line-height:1.4;color:var(--ink-2)}
-body.rmos .mo-note{display:block}
 
 /* inner chips/controls: translucent fill, NO nested backdrop-filter */
 .ctl{background:rgba(16,18,60,.26);border:1px solid rgba(255,255,255,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.10);border-radius:var(--r-ctl)}
@@ -196,6 +194,12 @@ body.rail .rail-c{visibility:visible;pointer-events:auto}
 .set-card .mat{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 2px 0;font-size:13.5px;color:var(--ink-2);font-weight:500}
 .set-card .seg button{height:30px}
 .set-card .mo-note,.set-card .rt-note{margin:10px 2px 0}
+.set-card .mat-ch{display:block}
+.set-card .mat-ch>span{display:block;margin-bottom:6px}
+.chars{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+.chars button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0 5px;border-radius:14px;font-size:11.5px;font-weight:600;color:var(--ink-2);background:rgba(16,18,60,.30);border:1px solid rgba(255,255,255,.16);min-width:0}
+.chars button svg{width:30px;height:30px;display:block}
+.chars button[aria-pressed="true"]{background:rgba(255,255,255,.10);outline:1px solid rgba(255,255,255,.5);outline-offset:-1px;color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.3)}
 .tip{position:fixed;z-index:40;pointer-events:none;padding:6px 10px;border-radius:10px;font-size:13px;font-weight:600;line-height:1.2;white-space:nowrap;color:#fff;background:#1b1747;border:1px solid rgba(255,255,255,.3);box-shadow:0 10px 24px -8px rgba(8,4,40,.7)}
 .tip[hidden]{display:none}
 
@@ -219,12 +223,6 @@ body.calm .saved .si-spin{animation:none}
 .pill:hover{background:rgba(70,76,156,.72)}
 @media (max-width:1699px){.crumbs .c1{display:none}#bShare{width:36px;padding:0;justify-content:center}#bShare .pl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}}
 .pill svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.toolbar{margin:0 16px 6px;display:flex;align-items:center;gap:2px;height:52px;padding:0 8px;border-radius:18px;overflow:hidden}
-.toolbar button{flex:none;white-space:nowrap;height:36px;min-width:36px;padding:0 8px;border-radius:10px;display:flex;align-items:center;gap:6px;font-size:14px;font-weight:500}
-.toolbar button:hover{background:rgba(255,255,255,.1)}
-.toolbar svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.toolbar .div{width:1px;height:22px;background:var(--line-2);margin:0 6px;flex:none}
-.toolbar .fmt{font-weight:600;font-size:14.5px}.toolbar .fmt.i{font-style:italic;font-family:Georgia,serif}.toolbar .fmt.u{text-decoration:underline}
 /* ---------- Note PAGE: always SOLID (never glass). Light is the default, Dark is an option. ---------- */
 .page,.pp-sheet{--p-bg:#fbfbfd;--p-ink:#1d1b2e;--p-ink2:#4a4766;--p-line:#e2e0ec;--p-line2:#cfcce0;
   --p-sci:#0b7a48;--p-sci-dot:#1fae6b;--p-sci-soft:#e3f6ec;--p-acc:#4f47cf;--p-acc-soft:#eceaff;
@@ -255,6 +253,7 @@ body.pdark .page .dot{box-shadow:0 0 10px var(--c)}
 .doc h3{display:flex;align-items:baseline;gap:10px;font-size:24px;font-weight:700;margin:28px 0 12px;letter-spacing:-.01em}
 .doc h3 .num{font-size:15px;font-weight:700;color:var(--p-sci);min-width:22px}
 .doc h3 .from{margin-left:auto;font-size:13px;font-weight:500;color:var(--p-ink2)}
+.doc .v-dig > h4,.doc .v-nop > h4{font-size:19px;font-weight:700;margin:20px 0 8px;letter-spacing:-.005em}
 .kw{list-style:none;padding:0;margin:0 0 16px}
 .kw li{position:relative;padding-left:26px;font-size:16.5px;line-height:1.55;margin:0 0 8px}
 .kw li::before{content:"";position:absolute;left:4px;top:.62em;width:8px;height:8px;border-radius:50%;background:var(--p-acc)}
@@ -296,17 +295,21 @@ ol.q li::marker{font-weight:700;color:var(--p-ink2)}
 .draft{position:relative;margin:18px 0 10px;border-radius:16px;padding:14px 18px 4px;background:var(--p-draft);border:1.5px dashed var(--p-draft-line);
   transition:background-color .5s,border-color .5s,padding .3s}
 .draft-head{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:600;margin-bottom:10px}
+.draft-bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;margin:2px 0 12px;font-size:14px;font-weight:600;color:var(--p-ink)}
+.draft-bar[hidden]{display:none}
+.draft-bar .db-t{flex:1 1 150px;min-width:0}
+.draft-bar .db-t small{display:block;font-size:12.5px;font-weight:500;color:var(--p-ink2)}
+.draft-bar .btn{height:34px;padding:0 12px}
 .badge{height:24px;padding:0 10px;border-radius:999px;display:inline-flex;align-items:center;font-size:12.5px;font-weight:600;background:var(--p-badge);color:var(--p-badge-ink)}
 /* after Accept: the draft becomes ordinary note text, a short green edge marks what was added */
 .draft.merged{background:transparent;border-color:transparent;padding:0 0 0 0;margin-top:0}
-.draft.merged .draft-head{display:none}
+.draft.merged .draft-head,.draft.merged .draft-bar{display:none}
 .draft.merged ol.q{box-shadow:-14px 0 0 -11px var(--p-sci-dot)}
-/* the decision dock: a row UNDER the page scroll area, so it never covers a line of the note */
+/* the Undo toast floats over the bottom of the page area (no layout jump); the Accept / Reject / Edit bar lives on the draft block itself */
 .dock{flex:none;display:none;align-items:center;gap:8px;min-height:60px;padding:10px 12px 10px 16px;background:var(--p-dock);border-top:1px solid var(--p-line)}
-.page.show-dock .dock.decide,.page.show-toast .dock.toast{display:flex}
-/* Kakashi fix (Kurenai v3b FAIL 1): decide only while the draft is in view */
-.dock.decide.away #bEdit,.dock.decide.away #bReject,.dock.decide.away #bAccept{display:none}
-.dock.decide:not(.away) #bJump{display:none}
+.page.show-toast .dock.toast{display:flex;position:absolute;left:14px;right:14px;bottom:54px;z-index:6;min-height:56px;border:1px solid var(--p-line2);border-radius:14px;box-shadow:0 12px 30px -12px rgba(20,12,70,.5)}
+.dock.toast{animation:dkIn .22s cubic-bezier(.22,1,.36,1)}
+@keyframes dkIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .dock .what{flex:1;min-width:0;display:flex;align-items:center;gap:10px;font-size:14px;font-weight:600}
 .dock .what small{display:block;font-size:12.5px;font-weight:500;color:var(--p-ink2)}
 .dock .ok{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--p-sci-soft);border:1px solid var(--p-sci)}
@@ -344,6 +347,16 @@ body.nopages .v-nop{display:revert}body.nopages .v-dig{display:none!important}
 .orb{position:absolute;inset:0;transition:transform .5s cubic-bezier(.3,1.5,.5,1)}
 .orb-gl{position:absolute;inset:-18px}
 .orb-gl canvas{display:block;width:100%;height:100%}
+/* Assistant characters (Pebble, Lumo, Floaty, Nemu): one host inside the orb, same place and size as the orb ring */
+.char-host{position:absolute;inset:-22px;display:none;pointer-events:none}
+html[data-char] .char-host{display:block}
+html[data-char] .orb-gl,html[data-char] .sphere,html[data-char] .face,html[data-char] .dots{display:none}
+html[data-char="pebble"] .mini-orb{background:radial-gradient(circle at 38% 34%,#FFE3BF 0%,#FF9A3C 40%,#F7F3ED 41%,#F7F3ED 100%);box-shadow:0 0 16px -2px rgba(255,154,60,.7)}
+html[data-char="lumo"] .mini-orb{background:radial-gradient(circle at 40% 36%,#FFF3C4 0%,#FFD666 45%,#FFB347 100%);box-shadow:0 0 18px -2px rgba(255,200,90,.85)}
+html[data-char="floaty"] .mini-orb{background:radial-gradient(circle at 35% 30%,#EBF1FF 0%,#B7D4FF 60%,#7AA5FF 100%);box-shadow:0 0 16px -2px rgba(122,165,255,.8)}
+html[data-char="nemu"] .mini-orb{background:radial-gradient(circle at 38% 34%,#E9E4FF 0%,#C7B4FF 55%,#A78BFA 100%);box-shadow:0 0 16px -2px rgba(167,139,250,.8)}
+.char-fb{position:absolute;inset:0;display:grid;place-items:center}
+.char-fb svg{width:100%;height:100%}
 /* Kakashi: CSS backup ring when the WebGL ring cannot load (esm.sh blocked, no WebGL) */
 html[data-ogl="failed"] .orb-gl{border-radius:50%;background:radial-gradient(circle,transparent 60%,rgba(150,175,255,.55) 65%,rgba(196,130,255,.42) 69%,rgba(120,220,255,.18) 72%,transparent 75%);box-shadow:0 0 34px rgba(140,120,255,.28)}
 .sphere{position:absolute;inset:29px;border-radius:50%;overflow:hidden;
@@ -412,7 +425,7 @@ html[data-ogl="failed"] .orb-gl{border-radius:50%;background:radial-gradient(cir
 /* 1366 and narrower laptops: the tree already shows the class, so the breadcrumb drops it (fix: title no longer cut) */
 @media (max-width:1439px){ .crumbs .c1{display:none} .doc{padding:22px 30px 40px} .doc-head{gap:8px;padding-left:20px}
   /* criterion: page >= 640px at 1366. Thinner frame around the page instead of narrower side panes. */
-  .page{margin:2px 5px 5px;border-radius:23px} .toolbar{margin:0 5px 6px}
+  .page{margin:2px 5px 5px;border-radius:23px}
   .doc-head{gap:6px;padding-right:12px} .doc-head .pill{padding:0 11px;gap:6px} .saved{font-size:12.5px} }
 /* English chapters in the note page use amber (subject colour stays consistent) */
 .page{--p-eng:#8a5a00;--p-eng-dot:#e0961a;--p-eng-soft:#fdf0d5}
@@ -471,7 +484,7 @@ body.morphing .side{z-index:2}
 /* ---------- MY NOTES: replaces the note pane's content; the assistant stays. Saved PDFs by Board > Class > Subject > Chapter ---------- */
 .notes-lib{display:none;position:absolute;inset:0;z-index:2;flex-direction:column;min-height:0;border-radius:inherit}
 body.mynotes .notes-lib{display:flex}
-body.mynotes .doc-pane > .doc-head,body.mynotes .doc-pane > .toolbar,body.mynotes .doc-pane > .page{visibility:hidden}   /* visibility keeps the note's scroll position */
+body.mynotes .doc-pane > .doc-head,body.mynotes .doc-pane > .fltb,body.mynotes .doc-pane > .page{visibility:hidden}   /* visibility keeps the note's scroll position */
 .nl-head{display:flex;align-items:center;gap:12px;padding:16px 18px 8px 20px;min-height:66px}
 .nl-head h2{margin:0;flex:1;font-size:24px;font-weight:700;letter-spacing:-.01em}
 .nl-scroll{flex:1;min-height:0;overflow:auto;padding:4px 22px 28px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.3) transparent}
@@ -673,6 +686,7 @@ body.print .pp{display:grid}
 .pp-sheet mark{background:#fff1a8;box-shadow:none}
 .pp-sheet .from{display:block;font-size:12px;font-weight:400;color:#555!important;margin:2px 0 0}
 .pp-sheet h3{display:block}
+.pp-sheet h4{font-size:14.5px;font-weight:700;margin:14px 0 6px}
 .pp-sheet .kw li{font-size:14px}.pp-sheet .kw li::before{background:#1d1b2e;box-shadow:none;width:5px;height:5px}
 .pp-sheet ol.q{list-style:decimal;padding-left:22px}.pp-sheet ol.q li{font-size:14px;margin-bottom:8px}.pp-sheet ol.q li::marker{color:#1d1b2e}
 .pp-sheet .opts{font-size:13.5px}.pp-sheet .num{color:#1d1b2e!important}
@@ -691,13 +705,10 @@ body.print .pp{display:grid}
   .pane{max-height:none}
   .side{height:auto}.doc-pane{height:80vh}.agent{height:auto}
   .side-full{position:static;width:auto}body.rail .side-full{visibility:visible;pointer-events:auto}.rail-c{display:none!important}#sideHide{display:none}
-  .toolbar{overflow-x:auto}
   .saved{display:none}
 }
 
 /* Kakashi: manual edit mode. Toolbar hidden while reviewing; pencil on the page corner turns editing on. */
-.toolbar{transition:height .32s cubic-bezier(.22,1,.36,1),margin .32s cubic-bezier(.22,1,.36,1),opacity .22s ease-out}
-body:not(.editing) .toolbar{height:0;margin-top:0;margin-bottom:0;border-width:0;opacity:0;pointer-events:none}
 .page{position:relative}
 .edit-btn{position:absolute;top:14px;right:18px;z-index:4;height:38px;min-width:38px;padding:0 12px;border-radius:999px;display:flex;align-items:center;gap:7px;
   background:var(--p-btn,#fff);color:var(--p-ink,#1d2340);border:1px solid var(--p-line2,rgba(29,35,64,.22));box-shadow:0 4px 14px -6px rgba(20,24,60,.35);font-size:14px;font-weight:600;cursor:pointer;transition:background .2s,transform .2s}
@@ -707,7 +718,130 @@ body:not(.editing) .toolbar{height:0;margin-top:0;margin-bottom:0;border-width:0
 body.editing .edit-btn{background:#4a42c9;color:#fff;border-color:rgba(255,255,255,.4)}
 body.editing .edit-btn .eb-l{display:inline}
 body.editing .doc{outline:2px solid rgba(90,82,230,.35);outline-offset:-2px}
-body.calm .toolbar{transition:none}
+/* ---------- no-scroll note: the middle pane never scrolls (?note=pages | a4) ---------- */
+.ns-area{flex:1;min-height:0;position:relative;display:flex;flex-direction:column}
+.page .doc{overflow:hidden;padding:54px 40px 0;scroll-behavior:auto;display:flex;flex-direction:column}
+@media (max-width:1439px){ .page .doc{padding:52px 30px 0} }
+.ns-stage{flex:1;min-height:0;position:relative;overflow:hidden}
+.ns-view{position:absolute;inset:0;overflow:hidden}
+.ns-track{position:relative}
+.ns-off{visibility:hidden!important}
+.ns-ghost{pointer-events:none}
+.ns-a4{position:absolute;inset:0;overflow:hidden;background:#ebeaf3;display:none}
+body.ns-isa4 .ns-a4{display:block}
+body.ns-isa4 .page .doc{visibility:hidden}
+body.pdark .ns-a4{background:#171a3d}
+.ns-a4.zoomed{cursor:grab;touch-action:none}
+.ns-a4.zoomed.dragging{cursor:grabbing}
+.ns-a4.zoomed button{cursor:pointer}
+/* the draft bar keeps a readable size on screen: it is laid out at the fit scale (--bs) and shrinks back when the sheet is zoomed in (--z) */
+.a4-draft .draft-bar{font-size:calc(14px * var(--bs,1));gap:calc(8px * var(--bs,1)) calc(10px * var(--bs,1));margin:calc(2px * var(--bs,1)) 0 calc(8px * var(--bs,1));transform-origin:0 0;transform:scale(calc(1 / max(var(--z,1), 1)))}
+.a4-draft .draft-bar .db-t{flex:0 0 auto;white-space:nowrap}
+.a4-draft .draft-bar .db-t small{display:none}
+.a4-draft .draft-bar .btn{height:calc(34px * var(--bs,1));padding:0 calc(12px * var(--bs,1));font-size:inherit;border-radius:calc(10px * var(--bs,1))}
+.ns-a4 .dv-fit{position:absolute;left:50%;top:50%;margin:calc(-148.5mm * var(--s,1) + var(--py,0px)) 0 0 calc(-105mm * var(--s,1) + var(--px,0px));visibility:hidden}
+.ns-a4 .dv-fit.is-cur,.ns-a4 .dv-fit.is-leaving{visibility:visible}
+.ns-a4 .dv-sheet{box-shadow:0 8px 24px -10px rgba(20,12,70,.5),0 0 0 1px rgba(30,20,80,.16)}
+.pp-sheet .a4-draft{border:1.5px dashed #6d67d8;background:#f4f3ff;border-radius:6px;padding:8px 12px 2px;margin:10px 0}
+.pp-sheet .a4-dl{font-size:11px;font-weight:700;margin:0 0 6px;letter-spacing:.02em}
+.ns-pager{flex:none;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:0 10px;min-height:46px;padding:0 12px;color:var(--p-ink2)}
+.ns-zoom{display:flex;align-items:center;gap:6px}
+.ns-zv{min-width:3.4em;text-align:center;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--p-ink2)}
+.ns-fit{height:34px;padding:0 12px;border-radius:99px;background:var(--p-btn);color:var(--p-ink);border:1px solid var(--p-line2);font-size:13px;font-weight:600;cursor:pointer}
+.ns-fit:hover:not(:disabled){background:var(--p-acc-soft)}
+.ns-fit:disabled{opacity:.4;cursor:default}
+.ns-fit:focus-visible{outline:2px solid var(--p-acc);outline-offset:2px}
+.ns-sep{width:1px;height:22px;background:var(--p-line2);margin:0 6px}
+body:not(.ns-isa4) .ns-zoom,body:not(.ns-isa4) .ns-sep{display:none}
+.ns-b{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;padding:0;background:var(--p-btn);color:var(--p-ink);border:1px solid var(--p-line2);cursor:pointer}
+.ns-b:hover:not(:disabled){background:var(--p-acc-soft)}
+.ns-b:disabled{opacity:.4;cursor:default}
+.ns-b svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.ns-b:focus-visible,.ns-dots button:focus-visible{outline:2px solid var(--p-acc);outline-offset:2px}
+.ns-dots{display:flex;gap:0}
+.ns-dots button{width:22px;height:34px;display:grid;place-items:center;background:none;border:0;padding:0;cursor:pointer}
+.ns-dots button::before{content:"";width:8px;height:8px;border-radius:99px;background:var(--p-ink2);opacity:.55;transition:width .2s,opacity .2s,background .2s}
+.ns-dots button[aria-current=page]::before{width:20px;background:var(--p-acc);opacity:1}
+body.calm .ns-dots button::before{transition:none}
+.ns-count{min-width:5.6em;text-align:center;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--p-ink2)}
+#nsThread[hidden]{display:none}
+/* ---------- Canva-style editing on the A4 sheet ---------- */
+body.editing .ns-a4 .dv-body{cursor:text;caret-color:#4a42c9;outline:none}
+body.editing .ns-a4 .dv-body [contenteditable]:focus{outline:none}
+body.editing .ns-a4 .dv-body > .blk{cursor:pointer}
+body.editing .ns-a4 .dv-body > .blk:hover{outline:1.5px solid rgba(90,82,230,.6);outline-offset:3px}
+body.editing .ns-a4 .dv-body ::selection{background:rgba(90,82,230,.3)}
+body.editing .ns-a4 .dv-body td,body.editing .ns-a4 .dv-body th,body.editing .ns-a4 .dv-body .blk-cap,body.editing .ns-a4 .dv-body .flow li b,body.editing .ns-a4 .dv-body .flow li > span:not(.node){cursor:text}
+.pp-sheet .blk.blk-img{padding:0;border:1.5px dashed #b9b6d8;background:#f4f3fb;aspect-ratio:16/9;overflow:hidden;display:block}
+.blk-img .ph{width:100%;height:100%;display:grid;place-content:center;justify-items:center;gap:8px;color:#5d5a73}
+.blk-img .ph svg{width:34px;height:34px;stroke:#6d67d8;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.blk-img .ph span{font-size:13px;font-weight:600}
+.ns-sel{position:absolute;z-index:3;border:2px solid #5a52e6;border-radius:4px;pointer-events:none;box-shadow:0 0 0 1px rgba(255,255,255,.7)}
+.ns-sel[hidden],.ns-drop[hidden]{display:none}
+.sel-h{position:absolute;width:12px;height:12px;border-radius:3px;background:#fff;border:2px solid #5a52e6;pointer-events:auto;touch-action:none;margin:-7px 0 0 -7px}
+.sel-h[data-c=nw]{left:0;top:0;cursor:nwse-resize}.sel-h[data-c=ne]{left:100%;top:0;cursor:nesw-resize}.sel-h[data-c=sw]{left:0;top:100%;cursor:nesw-resize}.sel-h[data-c=se]{left:100%;top:100%;cursor:nwse-resize}
+.ns-drop{position:absolute;z-index:3;height:3px;border-radius:3px;background:#5a52e6;pointer-events:none}
+.fltb,.slmenu{position:fixed;z-index:36;color:#fff;background:#1b1747;border:1px solid rgba(255,255,255,.3);box-shadow:0 14px 34px -10px rgba(8,4,40,.75)}
+.fltb[hidden],.slmenu[hidden]{display:none}
+.fltb{display:flex;align-items:center;gap:2px;padding:5px;border-radius:14px}
+/* r24 (user): the text tools are a FIXED strip at the top of the middle panel, above the page area; the page area shrinks to make room */
+.fltb.edbar{position:relative;z-index:3;flex:none;height:52px;box-sizing:border-box;margin:0 12px 4px;padding:0 8px;border-radius:18px;gap:2px;color:#fff;
+  background:rgba(16,18,60,.26);border:1px solid rgba(255,255,255,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.10);animation:none}   /* r25: the old glass toolbar look (.ctl), not the navy strip */
+.fltb.edbar button{height:36px;border-radius:10px}
+.fltb.edbar button:disabled{opacity:.35}
+.fltb.edbar .sep{height:22px;margin:0 6px;background:rgba(255,255,255,.2)}
+@media (max-width:1439px){.fltb.edbar{margin:0 5px 4px;padding:0 6px}.fltb.edbar button{width:31px}.fltb.edbar .stbtn{min-width:96px}.fltb.edbar .sep{margin:0 3px}}
+.fltb:not([hidden]),.slmenu:not([hidden]){animation:neIn .14s ease-out}
+@keyframes neIn{from{opacity:0;transform:translateY(4px)}}
+body.calm .fltb,body.calm .slmenu{animation:none}
+.fltb button{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;color:#fff;font-size:13.5px;font-weight:700;cursor:pointer}
+.fltb button:hover:not(:disabled){background:rgba(255,255,255,.16)}
+.fltb button:disabled{opacity:.4;cursor:default}
+.fltb button[aria-pressed=true]{background:rgba(143,140,255,.42)}
+.fltb button:focus-visible,.slmenu button:focus-visible{outline:2px solid #b9b7ff;outline-offset:1px}
+.fltb svg{width:17px;height:17px;stroke:#fff;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.fltb .u{text-decoration:underline}.fltb .i{font-style:italic;font-family:Georgia,serif}
+.fltb .sep{width:1px;height:22px;background:rgba(255,255,255,.28);margin:0 4px;flex:none}
+.fltb [data-cmd=sizeS]{font-size:11px}.fltb [data-cmd=sizeL]{font-size:17px}
+.stwrap{position:relative;display:flex}
+.fltb .stbtn{width:auto;min-width:108px;padding:0 8px 0 11px;gap:6px;display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:650}
+.fltb .stbtn svg{width:13px;height:13px;stroke-width:2.2;flex:none}
+.stmenu{position:absolute;left:0;top:calc(100% + 12px);min-width:172px;padding:5px;border-radius:12px;background:#1b1747;border:1px solid rgba(255,255,255,.3);box-shadow:0 14px 34px -10px rgba(8,4,40,.75);display:flex;flex-direction:column;gap:2px;z-index:2}
+.stmenu[hidden]{display:none}
+.fltb.up .stmenu{top:auto;bottom:calc(100% + 12px)}
+.fltb .stmenu button{width:auto;height:38px;justify-content:flex-start;padding:0 11px;border-radius:8px;font-weight:600;text-align:left;display:flex;align-items:center}
+.fltb .stmenu button[aria-checked=true]{background:rgba(143,140,255,.42)}
+.fltb .stmenu [data-style=h3]{font-size:17px;font-weight:700}.fltb .stmenu [data-style=h4]{font-size:14.5px;font-weight:700}
+.blkbar{gap:6px;padding:5px 6px}
+.blkbar button{width:auto;height:32px;padding:0 13px;border-radius:99px;background:rgba(255,255,255,.1);font-size:13px;font-weight:650}
+.nepop{position:fixed;z-index:37;width:min(360px,calc(100vw - 16px));color:#fff;background:#1b1747;border:1px solid rgba(255,255,255,.3);border-radius:14px;padding:12px;box-shadow:0 14px 34px -10px rgba(8,4,40,.75)}
+.nepop[hidden]{display:none}
+.nepop:not([hidden]){animation:neIn .14s ease-out}
+body.calm .nepop{animation:none}
+.nepop .np-t{font-size:14.5px;font-weight:650;margin:0 0 10px}
+.nepop .np-btns{display:flex;gap:8px;justify-content:flex-end}
+.nepop button{height:34px;padding:0 15px;border-radius:99px;background:rgba(255,255,255,.12);color:#fff;font-size:13.5px;font-weight:650;cursor:pointer}
+.nepop button:hover{background:rgba(255,255,255,.2)}
+.nepop button.np-main{background:#8f8cff;color:#14113a}
+.nepop button.np-main:hover{background:#a3a1ff}
+.nepop button:focus-visible,.nepop input:focus-visible{outline:2px solid #b9b7ff;outline-offset:1px}
+.nepop .np-row{display:grid;gap:5px;margin:0 0 11px}
+.nepop label{font-size:12px;font-weight:600;color:#cfcdf2}
+.nepop input{width:100%;height:36px;border-radius:9px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.08);color:#fff;font:13px ui-monospace,Consolas,monospace;padding:0 10px}
+.nepop input[aria-invalid=true]{border-color:#ffb4a8}
+.nepop .np-pv{min-height:34px;display:flex;align-items:center;padding:4px 10px;border-radius:9px;background:#fff;color:#1d1b2e;font-size:15px;overflow:auto}
+.nepop .np-pv.bad{background:rgba(255,180,168,.16);color:#ffd2ca;font-size:12.5px;font-weight:600}
+.nepop .np-hint{font-size:12px;color:#cfcdf2;margin:0 0 10px}
+.pp-sheet .ph-btn{margin-top:4px;height:32px;padding:0 14px;border-radius:99px;border:1.5px solid #5a52e6;background:#fff;font:inherit;font-size:13px;font-weight:650;cursor:pointer}
+.pp-sheet .ph-btn:hover{background:#ecebff}
+body:not(.editing) .pp-sheet .ph-btn{display:none}
+.pp-sheet .blk.blk-img.has-img{aspect-ratio:auto;border:0;background:none;overflow:visible}
+.blk-img > img{display:block;width:100%;height:auto;max-height:520px;object-fit:contain;border-radius:4px}
+.slmenu{width:272px;padding:6px;border-radius:14px;display:flex;flex-direction:column;gap:2px}
+.slmenu button{display:flex;align-items:center;gap:11px;height:40px;padding:0 10px;border-radius:9px;color:#fff;font-size:14px;font-weight:550;text-align:left;cursor:pointer}
+.slmenu button[aria-selected=true],.slmenu button:hover{background:rgba(143,140,255,.34)}
+.slmenu svg{width:18px;height:18px;flex:none;stroke:#fff;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.slmenu .sl-t{padding:4px 10px 6px;font-size:12px;font-weight:600;color:#cfcdf2}
 /* ---------- document viewer (Print): solid dark, no glass ---------- */
 @page{size:A4;margin:0}
 .dv{position:fixed;inset:0;z-index:45;display:none;grid-template-columns:188px minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);background:#14141b;color:#ececf6}
@@ -763,6 +897,26 @@ select.dv-b{padding:0 8px;appearance:auto}
   body.dvopen .dv-main .dv-fit:last-child{break-after:auto;page-break-after:auto}
   body.dvopen .dv-main .dv-sheet{transform:none;box-shadow:none;height:296.5mm}
 }
+/* Kakashi fix 7f: the A4 sheet layer must not show through My notes */
+body.mynotes .ns-a4,body.mynotes .ns-a4 *{display:none!important}
+/* Kakashi round 22 (user): no 'questions wait' card and no 'Next for this chapter' list in the assistant pane */
+.agent #status,.agent #sh,.agent ul.sugg[aria-labelledby="sh"]{display:none!important}
+/* Kakashi round 24 (user): assistant pane. Empty = orb + question centred between header and composer; first message = greeting fades, orb moves up and shrinks, messages stack from the bottom up */
+body:not(.opening) .agent .ag-body{display:flex;flex-direction:column;justify-content:center;overflow:hidden;position:relative}
+body:not(.opening) .agent .stage,body:not(.opening) .agent .hello{flex:none}
+.agent .chatbox{display:none}
+body:not(.opening) .agent.agchat .ag-body{justify-content:flex-start}
+/* r25 (user): the orb keeps its full size in chat; it only moves up. Ready is hidden while chatting (Listening / Thinking / Speaking still show) */
+html[data-ostate=normal] .agent.agchat .state-line{visibility:hidden}
+body:not(.opening) .agent.agchat .hello{display:none}
+body:not(.opening) .agent.agchat .chatbox{display:flex;flex-direction:column;flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.3) transparent;padding:0 2px}
+.agent .chatbox::before{content:"";margin-top:auto}   /* pushes short chats to the bottom without clipping the top of long ones */
+.agent .chatbox > *{flex:none}
+body:not(.opening) .agent.agchat .chatbox{-webkit-mask-image:linear-gradient(transparent,#000 16px);mask-image:linear-gradient(transparent,#000 16px)}
+.agent .chatbox .thread{margin:6px 0 4px}
+.agent .chatbox .msg{overflow-wrap:anywhere}
+.agent .chatbox #nsThread{margin:4px 0}
+.agent .chatbox #nsThread .msg.ai{padding-bottom:8px}
 </style>
 </head>
 <body>
@@ -818,8 +972,7 @@ if(s==='opening'||(s!=='panes'&&!q.has('view')&&!q.has('print')&&!q.has('scroll'
     <h2>Settings</h2>
       <div class="mat"><span>Panes</span><div class="seg gs" role="group" aria-label="Pane material"><button id="bGlass" aria-pressed="true">Glass</button><button id="bSolid" aria-pressed="false">Solid</button></div></div>
       <div class="mat"><span>Page</span><div class="seg gs" role="group" aria-label="Note page colour"><button id="bLight" aria-pressed="true">Light</button><button id="bDark" aria-pressed="false">Dark</button></div></div>
-      <div class="mat"><span>Motion</span><div class="seg gs" role="group" aria-label="Orb motion"><button id="bFull" aria-pressed="true">Full</button><button id="bCalm" aria-pressed="false">Calm</button></div></div>
-      <p class="mo-note" id="moNote">Your system asks for less motion. The orb still moves here. Choose Calm to follow it.</p>
+      <div class="mat mat-ch"><span id="chLbl">Assistant</span><div class="chars" role="group" aria-labelledby="chLbl" id="charBtns"><button type="button" data-char="orb" aria-pressed="true" aria-label="Orb"><svg aria-hidden="true" focusable="false" viewBox="0 0 30 30"><defs><radialGradient id="swO" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#e9e6ff"/><stop offset=".55" stop-color="#7d74ff"/><stop offset="1" stop-color="#3c2aa8"/></radialGradient></defs><circle cx="15" cy="15" r="11" fill="url(#swO)"/></svg><span>Orb</span></button><button type="button" data-char="pebble" aria-pressed="false" aria-label="Pebble"><svg aria-hidden="true" focusable="false" viewBox="0 0 30 30"><path d="M12 4c6-2 13 2 13 9 0 3-1 4-.5 6 .8 3-2 7-8 7-6 .5-10-3-10-9 0-5 2-11 5.500-13z" fill="#F7F3ED"/><circle cx="17" cy="13" r="3.6" fill="#FF9A3C"/><circle cx="26" cy="19" r="2" fill="#FF9A3C"/></svg><span>Pebble</span></button><button type="button" data-char="lumo" aria-pressed="false" aria-label="Lumo"><svg aria-hidden="true" focusable="false" viewBox="0 0 30 30"><ellipse cx="10.500" cy="6" rx="2.200" ry="5" fill="#FFB347"/><ellipse cx="19.500" cy="6" rx="2.200" ry="5" fill="#FFB347"/><circle cx="15" cy="17" r="9" fill="#FFD666"/><circle cx="15" cy="17" r="4" fill="#FFF3C4"/></svg><span>Lumo</span></button><button type="button" data-char="floaty" aria-pressed="false" aria-label="Floaty"><svg aria-hidden="true" focusable="false" viewBox="0 0 30 30"><g fill="#B7D4FF"><circle cx="15" cy="16" r="7"/><circle cx="8.500" cy="17" r="5"/><circle cx="21.500" cy="17" r="5.500"/><circle cx="12" cy="11" r="5"/><circle cx="18.500" cy="11" r="4.500"/></g><circle cx="4" cy="8" r="1.800" fill="#7AA5FF"/><circle cx="27" cy="9" r="1.500" fill="#7AA5FF"/></svg><span>Floaty</span></button><button type="button" data-char="nemu" aria-pressed="false" aria-label="Nemu"><svg aria-hidden="true" focusable="false" viewBox="0 0 30 30"><path d="M5 22c0-6 4-11 10-11s10 5 10 11c0 2-2 3-4 3H9c-2 0-4-1-4-3z" fill="#C7B4FF"/><path d="M7 13 6 6l5 4zM23 13l1-7-5 4z" fill="#A78BFA"/><path d="M10.500 17.500q1.500 1 3 0M16.500 17.500q1.500 1 3 0" stroke="#5b4a9e" stroke-width="1.200" fill="none" stroke-linecap="round"/></svg><span>Nemu</span></button></div></div>
       <p class="rt-note" id="rtNote">Windows asks for less transparency. Choose Solid to follow it.</p>
   </div>
   <div class="tip" id="tip" role="presentation" hidden></div>
@@ -847,24 +1000,27 @@ if(s==='opening'||(s!=='panes'&&!q.has('view')&&!q.has('print')&&!q.has('scroll'
       <button class="pill" id="bSavePdf"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M12 11v6M9.5 14.5 12 17l2.5-2.5"/></svg>Save PDF</button>
       <button class="pill" id="bShare" data-tip="Share" data-tip-pos="below"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M17 8v6M14 11h6"/></svg><span class="pl">Share</span></button>
     </header>
-    <div class="toolbar ctl" id="fmtBar" role="toolbar" aria-label="Formatting" inert>
-      <button aria-label="Undo"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg></button>
-      <span class="div"></span>
-      <button>Heading 1<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" style="width:14px;height:14px"><path d="m6 9 6 6 6-6"/></svg></button>
-      <span class="div"></span>
-      <button class="fmt" aria-label="Bold">B</button><button class="fmt i" aria-label="Italic">I</button><button class="fmt u" aria-label="Underline">U</button>
-      <span class="div"></span>
-      <button aria-label="Bullet list"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r=".8"/><circle cx="4.5" cy="12" r=".8"/><circle cx="4.5" cy="18" r=".8"/></svg></button>
-      <button aria-label="Numbered list"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M10 6h10M10 12h10M10 18h10M4 5l1.5-1v5M3.5 14.5a1.5 1.5 0 1 1 2.6 1L3.5 18.5h3"/></svg></button>
-      <span class="div"></span>
-      <button aria-label="Table"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 4v16"/></svg></button>
-      <button aria-label="Image"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/></svg></button>
-      <button aria-label="Chemical or maths formula"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M4 18 11 6M4 6l7 12"/><path d="M15 8.5a2 2 0 1 1 3.4 1.4L15 13h4"/></svg>Formula</button>
-    </div>
-
+    <div class="fltb edbar ctl" id="flTb" role="toolbar" aria-label="Text formatting" hidden>
+  <button type="button" data-cmd="undo" aria-label="Undo" data-tip="Undo (Ctrl+Z)"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg></button>
+  <button type="button" data-cmd="redo" aria-label="Redo" data-tip="Redo (Ctrl+Y)"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="m15 14 5-5-5-5"/><path d="M20 9H9a5 5 0 0 0 0 10h3"/></svg></button>
+  <span class="sep"></span>
+  <span class="stwrap"><button type="button" class="stbtn" data-cmd="style" aria-haspopup="menu" aria-expanded="false" aria-label="Text style"><span class="stl">Normal</span><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
+    <div class="stmenu" role="menu" aria-label="Text style" hidden><button type="button" role="menuitemradio" aria-checked="true" data-style="p">Normal</button><button type="button" role="menuitemradio" aria-checked="false" data-style="h3">Heading</button><button type="button" role="menuitemradio" aria-checked="false" data-style="h4">Subheading</button></div></span>
+  <span class="sep"></span>
+  <button type="button" data-cmd="bold" aria-label="Bold" aria-pressed="false">B</button><button type="button" data-cmd="italic" class="i" aria-label="Italic" aria-pressed="false">I</button><button type="button" data-cmd="underline" class="u" aria-label="Underline" aria-pressed="false">U</button>
+  <span class="sep"></span>
+  <button type="button" data-cmd="sizeS" aria-label="Small text">S</button><button type="button" data-cmd="sizeM" aria-label="Normal text size">M</button><button type="button" data-cmd="sizeL" aria-label="Large text">L</button>
+  <span class="sep"></span>
+  <button type="button" data-cmd="ul" aria-label="Bullet list" aria-pressed="false"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r=".8"/><circle cx="4.5" cy="12" r=".8"/><circle cx="4.5" cy="18" r=".8"/></svg></button>
+  <button type="button" data-cmd="ol" aria-label="Numbered list" aria-pressed="false"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M10 6h10M10 12h10M10 18h10M4 5l1.5-1v5M3.5 14.5a1.5 1.5 0 1 1 2.6 1L3.5 18.5h3"/></svg></button>
+  <span class="sep"></span>
+  <button type="button" data-cmd="hl" aria-label="Highlight"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="m4 20 1-4 9-9 3 3-9 9z"/><path d="m13 6 3-3 5 5-3 3"/></svg></button>
+</div>
     <div class="page" id="page">
     <button class="edit-btn" id="bEditMode" aria-pressed="false" aria-label="Edit this note" data-tip="Edit this note"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></svg><span class="eb-l">Edit</span></button>
+    <div class="ns-area" id="nsArea">
     <article class="doc" id="doc" tabindex="0" role="textbox" aria-multiline="true" aria-label="Note page" contenteditable="false" spellcheck="false">
+     <div class="ns-stage" id="nsStage"><div class="ns-view" id="nsView"><div class="ns-track" id="nsTrack">
      <div class="v-dig">
       <h2 class="title">Human Digestive System</h2>
       <div class="meta">
@@ -929,6 +1085,12 @@ if(s==='opening'||(s!=='panes'&&!q.has('view')&&!q.has('print')&&!q.has('scroll'
           <li>Why can an enzyme that breaks down proteins not break down starch?</li>
           <li>Name the juice made by the pancreas and the one made by the liver.</li>
         </ol>
+        <div class="draft-bar" role="group" aria-label="Decide on the 3 new questions">
+          <span class="db-t">3 new questions<small>Nothing changes until you accept.</small></span>
+          <button type="button" class="btn ghost" data-act="edit">Edit first</button>
+          <button type="button" class="btn ghost" data-act="reject">Reject</button>
+          <button type="button" class="btn primary" data-act="accept">Accept</button>
+        </div>
       </section>
      </div>
 
@@ -950,15 +1112,24 @@ if(s==='opening'||(s!=='panes'&&!q.has('view')&&!q.has('print')&&!q.has('scroll'
         <div class="acts"><button class="btn primary">Add textbook pages</button><button class="btn ghost">Write my own</button></div>
       </div>
      </div>
+     </div></div></div>
     </article>
-    <!-- ONE decision per draft. It sits in its own row under the scroll area, so it covers no text. -->
-    <div class="dock decide" id="dockDecide" role="region" aria-label="Draft decision">
-      <div class="what"><span class="badge">Draft</span><span>3 questions<small>Nothing changes until you accept.</small></span></div>
-      <button class="btn primary" id="bJump">Show the 3 questions</button>
-      <button class="btn ghost" id="bEdit">Edit first</button>
-      <button class="btn ghost" id="bReject">Reject</button>
-      <button class="btn primary" id="bAccept">Accept</button>
+    <div class="ns-a4" id="nsA4" aria-label="A4 page"></div>
+    <div class="ns-sel" id="nsSel" hidden><i class="sel-h" data-c="nw"></i><i class="sel-h" data-c="ne"></i><i class="sel-h" data-c="sw"></i><i class="sel-h" data-c="se"></i></div><div class="ns-drop" id="nsDrop" hidden></div>
     </div>
+    <nav class="ns-pager" id="nsPager" aria-label="Note pages">
+      <div class="ns-zoom" id="nsZoom" role="group" aria-label="Zoom">
+        <button type="button" class="ns-b" id="nsZout" aria-label="Zoom out"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M6 12h12"/></svg></button>
+        <span class="ns-zv" id="nsZv">100%</span>
+        <button type="button" class="ns-b" id="nsZin" aria-label="Zoom in"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 6v12M6 12h12"/></svg></button>
+        <button type="button" class="ns-fit" id="nsFit" aria-label="Fit page to the pane">Fit</button>
+      </div>
+      <span class="ns-sep" aria-hidden="true"></span>
+      <button type="button" class="ns-b" id="nsPrev" aria-label="Previous page"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></svg></button>
+      <div class="ns-dots" id="nsDots"></div>
+      <span class="ns-count" id="nsCount" aria-live="polite">1 / 1</span>
+      <button type="button" class="ns-b" id="nsNext" aria-label="Next page"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button>
+    </nav>
     <div class="dock toast" id="dockToast" role="status" aria-live="polite">
       <div class="what"><span class="ok" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><span>3 questions added to Practice questions<small>Questions 4 to 6, from pages 49 to 54</small></span></div>
       <button class="btn ghost" id="bUndo">Undo</button>
@@ -1000,6 +1171,7 @@ if(s==='opening'||(s!=='panes'&&!q.has('view')&&!q.has('print')&&!q.has('scroll'
         <div class="orb-sc" id="orbSc"><div class="float">
           <div class="orb" id="orb" data-state="normal">
             <div class="orb-gl" id="orbGl"></div>
+            <div class="char-host" id="charHost" aria-hidden="true"></div>
             <div class="sphere"><div class="swirl" id="swirl"></div></div>
             <div class="face" id="face">
               <div class="eye l" id="eyeL"></div><div class="eye r" id="eyeR"></div>
@@ -1019,6 +1191,7 @@ if(s==='opening'||(s!=='panes'&&!q.has('view')&&!q.has('print')&&!q.has('scroll'
         <div class="txt" id="stTxt">3 questions wait in the note<span>Accept or reject them there</span></div>
         <button id="bShow">Show</button>
       </div>
+      <div class="chatbox" id="chatBox">
       <div class="v-nop">
         <div class="thread">
           <div class="msg me" id="nopMe">Make 5 practice questions for Motion.</div>
@@ -1028,6 +1201,8 @@ if(s==='opening'||(s!=='panes'&&!q.has('view')&&!q.has('print')&&!q.has('scroll'
             <div class="acts"><button class="btn primary">Add textbook pages</button><button class="btn ghost">Write my own</button></div>
           </div>
         </div>
+      </div>
+      <div class="thread" id="nsThread" hidden aria-live="polite"></div>
       </div>
       <div class="sugg-h v-dig" id="sh">Next for this chapter</div>
       <ul class="sugg v-dig" aria-labelledby="sh">
@@ -1075,6 +1250,8 @@ if(s==='opening'||(s!=='panes'&&!q.has('view')&&!q.has('print')&&!q.has('scroll'
   <div class="seg" id="stateSeg"><button data-s="normal" aria-pressed="true">Normal</button><button data-s="listening" aria-pressed="false">Listening</button><button data-s="thinking" aria-pressed="false">Thinking</button><button data-s="speaking" aria-pressed="false">Speaking</button></div>
   <span class="lbl">Chapter</span>
   <div class="seg" id="viewSeg"><button data-v="dig" aria-pressed="true">With pages</button><button data-v="nop" aria-pressed="false">No pages</button></div>
+  <span class="lbl" hidden style="display:none">Note</span>
+  <div class="seg" id="noteSeg" hidden style="display:none"><button data-n="pages" aria-pressed="true">Pages</button><button data-n="a4" aria-pressed="false">A4</button></div>
 </aside>
 
 <!-- Template ring lives here while unused; the script moves it into the opening panel or the Templates overlay -->
@@ -1123,6 +1300,18 @@ if(s==='opening'||(s!=='panes'&&!q.has('view')&&!q.has('print')&&!q.has('scroll'
 </div>
 
 <div class="gtoast" id="gToast" role="status" aria-live="polite" hidden></div>
+<div class="fltb blkbar" id="blkBar" role="toolbar" aria-label="Block options" hidden></div>
+<div class="nepop" id="delPop" role="alertdialog" aria-labelledby="delQ" hidden><p class="np-t" id="delQ">Remove this table?</p><div class="np-btns"><button type="button" class="np-main" data-do="remove">Remove</button><button type="button" data-do="cancel">Cancel</button></div></div>
+<div class="nepop" id="fxPop" role="dialog" aria-label="Edit formula" hidden><p class="np-t">Edit formula</p><div id="fxRows"></div><p class="np-hint">Enter applies. Esc cancels.</p><div class="np-btns"><button type="button" class="np-main" data-do="apply">Apply</button><button type="button" data-do="cancel">Cancel</button></div></div>
+<input type="file" id="picFile" accept="image/*" hidden>
+<div class="slmenu" id="slMenu" role="menu" aria-label="Insert" hidden>
+  <div class="sl-t">Insert</div>
+  <button type="button" role="menuitem" data-item="table"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M3 4h18v16H3zM3 10h18M9 4v16"/></svg>Table</button>
+  <button type="button" role="menuitem" data-item="diagram"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><circle cx="5" cy="12" r="2.5"/><circle cx="19" cy="12" r="2.5"/><path d="M7.5 12h9M13.5 9l3 3-3 3"/></svg>Diagram</button>
+  <button type="button" role="menuitem" data-item="formula"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M4 18 11 6M4 6l7 12"/><path d="M15 8.5a2 2 0 1 1 3.4 1.4L15 13h4"/></svg>Formula</button>
+  <button type="button" role="menuitem" data-item="image"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/></svg>Image</button>
+  <button type="button" role="menuitem" data-item="ask"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="m12 3 1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/><path d="M19 15v4M17 17h4"/></svg>Ask assistant to rewrite</button>
+</div>
 <div class="dv" id="dv" role="dialog" aria-modal="true" aria-labelledby="dvTitle">
   <div class="dv-top">
     <div class="dv-ttl"><span class="dv-title" id="dvTitle"></span><span class="dv-pg" id="dvPg" aria-live="polite"></span></div>
@@ -1147,7 +1336,6 @@ const body = document.body;
 const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const STILL = q.has('still');
 const T0 = parseFloat(q.get('t') || '0');
-if (RM) body.classList.add('rmos');   // the OS asks for less motion: only shows a hint, the orb still follows the Motion switch
 if (STILL) body.classList.add('still');
 if (q.has('clean')) body.classList.add('clean');
 if (q.has('stress')) body.classList.add('stress');
@@ -1168,12 +1356,10 @@ if (RT && !q.has('clean')) body.classList.add('rt');
 if (q.has('solid') || (RT && q.has('respect'))) setSolid(true);
 document.documentElement.dataset.rt = RT;
 
-/* Motion: Full / Calm. Full is the default even when the OS asks for less motion (user decision, round 6). ?calm=1 starts Calm. */
-const bF = document.getElementById('bFull'), bC = document.getElementById('bCalm');
+/* Motion is always Full. ?calm=1 is a hidden test flag only (no setting for it). */
 const calmHooks = [];
 let CALM = q.has('calm') && q.get('calm') !== '0';
-function setCalm(c){ CALM = c; body.classList.toggle('calm', c); bF.setAttribute('aria-pressed', !c); bC.setAttribute('aria-pressed', c); document.documentElement.dataset.motion = c ? 'calm' : 'full'; calmHooks.forEach(f => f()); }
-bF.onclick = () => setCalm(false); bC.onclick = () => setCalm(true);
+function setCalm(c){ CALM = c; body.classList.toggle('calm', c); document.documentElement.dataset.motion = c ? 'calm' : 'full'; calmHooks.forEach(f => f()); }
 setCalm(CALM);
 document.documentElement.dataset.rm = RM;
 
@@ -1185,15 +1371,17 @@ function setPage(dark){ body.classList.toggle('pdark', dark); $('bLight').setAtt
 $('bLight').onclick = () => setPage(false); $('bDark').onclick = () => setPage(true);
 setPage(q.get('page') === 'dark');
 
-/* ---------- draft: one decision, in the dock row under the page ---------- */
+/* ---------- draft: one decision, in a bar on the draft block itself (so only what is on screen can be accepted) ---------- */
 let draftState = 'pending';            /* pending | accepted | rejected */
 const stTxt = $('stTxt');
 function syncDraft(){
   const nop = body.classList.contains('nopages');
-  page.classList.toggle('show-dock', !nop && draftState === 'pending');
   page.classList.toggle('show-toast', !nop && draftState !== 'pending' && toastOn);
   draft.hidden = draftState === 'rejected';
+  document.querySelectorAll('.draft-bar').forEach(b => b.hidden = draftState !== 'pending');
+  if (nsReady) nsSched();
   draft.classList.toggle('merged', draftState === 'accepted');
+  document.querySelectorAll('#doc .v-dig, #doc .v-nop').forEach(renumber);
   if (draftState === 'pending') { stTxt.innerHTML = '3 questions wait in the note<span>Accept or reject them there</span>'; }
   if (draftState === 'accepted') { stTxt.innerHTML = '3 questions added<span>Questions 4 to 6 are in the note</span>'; }
   if (draftState === 'rejected') { stTxt.innerHTML = 'Draft rejected<span>The note did not change</span>'; }
@@ -1207,21 +1395,32 @@ function decide(s){
     ? '3 questions added to Practice questions<small>Questions 4 to 6, from pages 49 to 54</small>'
     : 'Draft rejected. The note did not change.<small>The 3 questions are gone from the note</small>';
   syncDraft(); markSaving(); $('bUndo').focus({ preventScroll: true });
+  clearTimeout(undoT); undoT = setTimeout(() => { toastOn = false; syncDraft(); }, 10000);    // the floating Undo toast leaves by itself
 }
-$('bAccept').onclick = () => decide('accepted');
-$('bReject').onclick = () => decide('rejected');
-$('bUndo').onclick = () => { draftState = 'pending'; toastOn = false; syncDraft(); markSaving(); $('bAccept').focus({ preventScroll: true }); };
-$('bEdit').onclick = () => { const ol = draft.querySelector('ol'); ol.contentEditable = 'true'; ol.focus(); draft.scrollIntoView({ block: 'center' }); };
+let undoT = 0;
+function undoDecision() { clearTimeout(undoT); draftState = 'pending'; toastOn = false; syncDraft(); markSaving(); requestAnimationFrame(() => requestAnimationFrame(() => { const a = document.querySelector('.ns-a4 [data-act="accept"], .draft [data-act="accept"]'); if (a && a.offsetParent) a.focus({ preventScroll: true }); })); }
+$('bUndo').onclick = undoDecision;
+function draftEdit() {
+  if (nsReady && nsVar === 'a4') {                                  // A4: the draft's questions are edited right on the sheet
+    if (!body.classList.contains('editing')) window.__setEdit(true);
+    nsToDraft();
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      const el = nsA4.querySelector('.dv-fit.is-cur .a4-draft > ol, .dv-fit.is-cur ol li[data-nsd]'), li = el && (el.matches('li') ? el : el.querySelector('li'));
+      if (li) { li.closest('.dv-body').focus({ preventScroll: true }); const r = document.createRange(); r.selectNodeContents(li); r.collapse(false); const sl = getSelection(); sl.removeAllRanges(); sl.addRange(r); }
+    }));
+    return;
+  }
+  const ol = draft.querySelector('ol'); ol.contentEditable = 'true'; ol.focus({ preventScroll: true }); if (nsReady) nsToDraft(); else draft.scrollIntoView({ block: 'center' }); }
+/* the bar exists twice (real note + A4 copy, copies have no ids), so the clicks are delegated */
+document.addEventListener('click', e => {
+  const b = e.target.closest && e.target.closest('.draft-bar [data-act]'); if (!b) return;
+  const a = b.dataset.act;
+  if (a === 'accept') decide('accepted'); else if (a === 'reject') decide('rejected'); else if (a === 'edit') draftEdit();
+});
 if (q.has('accepted')) { draftState = 'accepted'; toastOn = true; }
 
-/* Kakashi fix: Accept/Reject/Edit appear only when the draft is on screen */
-const dockDecide = $('dockDecide');
-new IntersectionObserver(es => { es.forEach(e => dockDecide.classList.toggle('away', e.intersectionRatio < 0.5)); }, { root: doc, threshold: [0, 0.5, 1] }).observe(draft);
-dockDecide.classList.add('away');
-$('bJump').onclick = () => { draft.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'center' }); };
-
 /* show draft (agent status button) */
-$('bShow').onclick = () => draft.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'center' });
+$('bShow').onclick = () => { if (nsReady) nsToDraft(); else draft.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'center' }); };
 
 /* ---------- chapters: Digestive (with pages), Bakunawa and Motion (existing empty-chapter treatment) ---------- */
 const CH = {
@@ -1270,8 +1469,9 @@ const sessList = $('sessList');
 let curSess = 's1', sessQuery = '', nowOn = false;
 let chKey = 'dig';
 function setChapter(k){
+  if (window.__neOff) window.__neOff();            // leaving the note ends editing (and saves)
   const c = CH[k]; chKey = k;
-  body.classList.toggle('nopages', c.nop);
+  body.classList.toggle('nopages', c.nop); agReset();
   $('crClass').textContent = c.cls; $('crSubj').textContent = c.subj; $('crChap').textContent = c.title;
   $('crDot').style.setProperty('--c', c.sci ? 'var(--sci)' : 'var(--eng)');
   $('agSub').textContent = c.agSub; $('ctxName').textContent = c.ctx;
@@ -1284,7 +1484,7 @@ function setChapter(k){
   if ((SESS.find(s => s.id === curSess) || {}).ch !== k) curSess = (SESS.find(s => s.ch === k) || {}).id;
   markCurrent();
   document.querySelectorAll('#viewSeg button').forEach(bt => bt.setAttribute('aria-pressed', bt.dataset.v === (c.nop ? 'nop' : 'dig')));
-  doc.scrollTop = 0; syncDraft();
+  doc.scrollTop = 0; syncDraft(); if (nsReady) nsChapterChanged();
 }
 function applyChip(k){
   const c = CH[k], tn = TPL[k] ? TPLS.find(x => x.id === TPL[k]).name : null;
@@ -1307,24 +1507,37 @@ if (!renderTex()) addEventListener('load', () => { if (!renderTex()) document.do
 
 /* ---------- print preview: white paper, same blocks as the note ---------- */
 const sheet = $('ppSheet');
-function buildPrint(){
+/* r23: section headings (the h3 of a note) are numbered 1, 2, 3 in page order, whatever was inserted, deleted, moved or restyled */
+function renumber(host) {
+  if (!host) return;
+  let n = 0;
+  [...host.children].forEach(h => {
+    if (h.tagName !== 'H3') return;
+    n++; let sp = h.querySelector(':scope > .num');
+    if (!sp) { sp = document.createElement('span'); sp.className = 'num'; h.insertBefore(sp, h.firstChild); }
+    if (sp.textContent !== String(n)) sp.textContent = String(n);
+  });
+}
+function buildPrint(keepDraft){
   const nop = body.classList.contains('nopages');
   const orig = document.querySelector(nop ? '.v-nop' : '.v-dig');
+  neTag(orig); renumber(orig);
   /* Kakashi: KaTeX/mhchem spacer glyphs are hidden by styles that do not survive the copy; mark them first */
   orig.querySelectorAll('.katex *').forEach(n => { if (!n.children.length && getComputedStyle(n).visibility === 'hidden') n.dataset.ph = '1'; });
   const src = orig.cloneNode(true);
   src.querySelectorAll('[data-ph]').forEach(n => n.style.visibility = 'hidden');
   const d = src.querySelector('.draft');
-  if (d && d.classList.contains('merged') && !d.hidden) d.replaceWith(d.querySelector('ol')); else d?.remove();
-  src.querySelectorAll('.title,.meta,.aside,.draft-head,.refuse,.empty-sec').forEach(n => n.remove());
+  if (d && d.classList.contains('merged') && !d.hidden) { const ol = d.querySelector('ol'); ol.querySelector('li').dataset.nsd = '1'; ol.dataset.src = d.dataset.src; d.replaceWith(ol); }
+  else if (d && keepDraft && !d.hidden) { const w = document.createElement('div'); w.className = 'a4-draft'; w.dataset.nsd = '1'; w.dataset.src = d.dataset.src; w.innerHTML = '<p class="a4-dl">Draft, not accepted yet</p>'; w.appendChild(d.querySelector('ol')); const db = d.querySelector('.draft-bar'); if (db) w.appendChild(db); d.replaceWith(w); }
+  else d?.remove();
+  src.querySelectorAll('.title,.meta,.draft-head,.refuse,.empty-sec').forEach(n => n.remove());
   if (nop) src.querySelector('p')?.remove();
-  src.querySelectorAll('[id]').forEach(n => n.removeAttribute('id'));
-  src.querySelectorAll('[aria-labelledby]').forEach(n => n.removeAttribute('aria-labelledby'));
+  src.querySelectorAll('[id]').forEach(n => { n.dataset.id = n.id; n.removeAttribute('id'); });                     // the copy must not repeat ids; edit mode puts them back
+  src.querySelectorAll('[aria-labelledby]').forEach(n => { n.dataset.lb = n.getAttribute('aria-labelledby'); n.removeAttribute('aria-labelledby'); });
   const pc = CH[chKey];
-  sheet.innerHTML = nop
-    ? '<h2></h2><div class="m"></div>'
-    : '<h2>Human Digestive System</h2><div class="m">Class 6 Science, Block 15, pages 49 to 54</div>';
-  if (nop) { sheet.querySelector('h2').textContent = pc.title; sheet.querySelector('.m').textContent = pc.agSub; }
+  sheet.innerHTML = '<h2 data-keep="title"></h2><div class="m" data-keep="meta"></div>';
+  sheet.querySelector('h2').innerHTML = (orig.querySelector(':scope > .title') || {}).innerHTML || pc.title;
+  sheet.querySelector('.m').textContent = nop ? pc.agSub : 'Class 6 Science, Block 15, pages 49 to 54';
   sheet.append(...src.childNodes);
   /* Kakashi: re-draw formulas fresh in the print copy (a cloned KaTeX tree printed stray glyphs) */
   if (window.katex) sheet.querySelectorAll('.tex[data-tex]').forEach(el => { try { katex.render(el.dataset.tex, el, { throwOnError: false, output: 'html' }); } catch (e) {} });
@@ -1337,24 +1550,49 @@ const DV_STEPS = [0.5, 0.75, 1, 1.25, 1.5, 2];
 let dvZoom = 'fit', dvCur = 1, dvN = 0, dvOpener = null, dvInert = [], dvRaf = 0;
 const dvFixTex = root => { if (window.katex) root.querySelectorAll('.tex[data-tex]').forEach(el => { try { katex.render(el.dataset.tex, el, { throwOnError: false, output: 'html' }); } catch (e) {} }); };
 const dvUnits = host => { const out = []; for (const el of host.children) { if (el.matches('ol.q, ul.kw')) out.push(...el.children); else out.push(el); } return out; };
-const dvHead = el => el.matches('h2, h3, .m');
+const dvHead = el => el.matches('h2, h3, h4, .m');
 function dvGroups(limit) {
   const m = document.createElement('div'); m.className = 'pp-sheet dv-meas'; m.style.width = DV_BODY_W + 'px';
   sheet.childNodes.forEach(n => m.appendChild(n.cloneNode(true))); body.appendChild(m); dvFixTex(m);
   const us = dvUnits(m), groups = [[]]; let top0 = 0;
-  us.forEach(u => {
-    const t = u.offsetTop, b = t + u.offsetHeight, g = groups[groups.length - 1];
-    if (g.length && b - top0 > limit) {   // would cross the page bottom: start a new page, headings go with what follows
-      const carry = []; while (g.length > 1 && dvHead(g[g.length - 1])) carry.unshift(g.pop());
+  for (let i = 0; i < us.length; i++) {
+    const u = us[i];
+    for (let pass = 0; pass < 2; pass++) {
+      const g = groups[groups.length - 1];
+      if (u.offsetTop + u.offsetHeight - top0 <= limit) break;
+      if (u.tagName === 'P' && u.offsetHeight > limit) {                     // only a paragraph taller than a whole page is split (at the last line that fits); any other paragraph moves whole to the next page
+        const tail = dvSplitP(m, u, m.getBoundingClientRect().top + top0 + limit); if (tail) { us.splice(i + 1, 0, tail); break; }
+      }
+      if (!g.length) break;
+      const carry = []; while (g.length > 1 && dvHead(g[g.length - 1])) carry.unshift(g.pop());   // would cross the page bottom: start a new page, headings go with what follows
       groups.push(carry); top0 = (carry[0] || u).offsetTop;
     }
     groups[groups.length - 1].push(u);
-  });
+  }
   return { m, groups };
 }
-function dvDraw(groups) {
+/* split paragraph u (inside the measuring box) so its first part ends on the last line above yLim; the rest becomes a copy with data-cont = piece number.
+   Edit mode joins the pieces again when it reads the sheets back. Returns the new piece, or null when it should simply move whole. */
+function dvSplitP(m, u, yLim) {
+  const lh = parseFloat(getComputedStyle(u).lineHeight) || 22, top = u.getBoundingClientRect().top;
+  if (yLim - top < lh * 2 - 1 || u.offsetHeight < lh * 4 - 1) return null;                // fewer than 2 lines fit, or the paragraph is short: move it whole
+  const tw = document.createTreeWalker(u, NodeFilter.SHOW_TEXT), nodes = []; let tot = 0, n;
+  while ((n = tw.nextNode())) { if (n.parentElement.closest('.katex')) continue; nodes.push({ n, s: tot }); tot += n.length; }
+  if (tot < 40) return null;
+  const at = k => { for (const x of nodes) if (x.s + x.n.length > k) return [x.n, k - x.s]; const l = nodes[nodes.length - 1]; return [l.n, l.n.length]; };
+  const rg = document.createRange();
+  const fits = k => { const [nd, off] = at(k - 1); rg.setStart(nd, off); rg.setEnd(nd, Math.min(nd.length, off + 1)); return rg.getBoundingClientRect().bottom <= yLim + 0.5; };
+  let lo = 0, hi = tot; while (lo < hi) { const mid = (lo + hi + 1) >> 1; if (fits(mid)) lo = mid; else hi = mid - 1; }
+  if (lo < 12 || lo >= tot) return null;
+  const text = nodes.map(x => x.n.data).join(''); let k = lo; while (k > 0 && k > lo - 48 && !/\s/.test(text[k - 1])) k--;
+  if (k > 0 && k > lo - 48) lo = k;
+  const [sn, so] = at(lo), r2 = document.createRange(); r2.setStart(sn, so); r2.setEnd(u, u.childNodes.length);
+  const tail = u.cloneNode(false); tail.dataset.cont = String((+u.dataset.cont || 0) + 1); tail.appendChild(r2.extractContents()); u.after(tail);
+  return tail;
+}
+function dvDraw(groups, main = dvMain, side = dvSide) {
   const N = groups.length, title = sheet.querySelector('h2').textContent, sub = sheet.querySelector('.m')?.textContent || '';
-  dvMain.replaceChildren(); dvSide.replaceChildren();
+  main.replaceChildren(); if (side) side.replaceChildren();
   groups.forEach((g, k) => {
     const s = document.createElement('section'); s.className = 'dv-sheet'; s.setAttribute('aria-label', `Page ${k + 1} of ${N}`);
     if (k) { const r = document.createElement('div'); r.className = 'dv-run'; r.innerHTML = '<span></span><span></span>'; r.children[0].textContent = title; r.children[1].textContent = sub; s.appendChild(r); }
@@ -1369,14 +1607,15 @@ function dvDraw(groups) {
     });
     dvFixTex(b);
     const f = document.createElement('div'); f.className = 'dv-foot'; f.innerHTML = '<span></span><span></span>'; f.children[0].textContent = title; f.children[1].textContent = `Page ${k + 1} of ${N}`; s.appendChild(f);
-    const fit = document.createElement('div'); fit.className = 'dv-fit'; fit.appendChild(s); dvMain.appendChild(fit);
+    const fit = document.createElement('div'); fit.className = 'dv-fit'; fit.appendChild(s); main.appendChild(fit);
+    if (!side) return;
     const th = document.createElement('button'); th.type = 'button'; th.className = 'dv-th'; th.dataset.n = k + 1; th.setAttribute('aria-label', `Go to page ${k + 1}`);
     const tp = document.createElement('span'); tp.className = 'dv-thp'; tp.setAttribute('aria-hidden', 'true');
     const c = s.cloneNode(true); c.removeAttribute('aria-label'); dvFixTex(c); tp.appendChild(c);
     const n = document.createElement('span'); n.className = 'dv-n'; n.textContent = k + 1; th.append(tp, n);
     th.onclick = () => dvGo(k + 1, true); dvSide.appendChild(th);
   });
-  dvN = N;
+  if (main === dvMain) dvN = N;
 }
 function dvBuild() {
   buildPrint();
@@ -1464,21 +1703,967 @@ if (SCROLL) addEventListener('load', () => setTimeout(() => {
   else { const el = $(SCROLL); if (el) doc.scrollTop += el.getBoundingClientRect().top - doc.getBoundingClientRect().top - 16; }
 }, 350));
 
+/* ---------- NO-SCROLL NOTE (?note=pages | a4): the middle pane never scrolls ---------- */
+var nsReady = false;
+const nsStage = $('nsStage'), nsView = $('nsView'), nsTrack = $('nsTrack'), nsA4 = $('nsA4'), nsArea = $('nsArea');
+const nsCount = $('nsCount'), nsDots = $('nsDots'), nsPrev = $('nsPrev'), nsNext = $('nsNext');
+const NS_EASE = 'cubic-bezier(.22,1,.36,1)';
+let nsVar = q.get('note') === 'pages' ? 'pages' : 'a4';   // A4 is the default; the pages variant stays reachable with ?note=pages
+const NE = { on: false, dirty: new Set(), pending: false, t: 0, hist: [], hi: 0, selId: null, reg: new Map(), nid: 1, menu: false, touched: false, skip: false, slI: 0, slBlock: null, focusAfter: null, space: false, selRaf: 0, pop: null, selVia: '' };   // canva-style sheet editing state
+window.__ne = NE;   // test hook
+const NS = { pages: [], cur: 0, host: null, mode: '', raf: 0, lock: 0, lastAbs: 0, a4n: 0, s: 1, sig: '' };
+const nsEff = () => nsVar === 'a4' ? 'a4' : 'pages';           // editing happens on the sheets themselves, there is no view switch
+const nsHost = () => nsTrack.querySelector(body.classList.contains('nopages') ? '.v-nop' : '.v-dig');
+const nsTotal = () => nsEff() === 'a4' ? NS.a4n : NS.pages.length;
+const nsHead = el => el.matches('h2, h3, h4, .meta');
+const nsUnits = host => { const out = []; for (const el of host.children) { if (el.matches('ul.kw, ol.q')) out.push(...el.children); else out.push(el); } return out; };
+const nsSched = () => { if (!NS.raf) NS.raf = requestAnimationFrame(nsRefresh); };
+
+/* the pane has no scroll position: if the browser tries to scroll it (focus, scrollIntoView), put it back */
+[doc, nsStage, nsView, nsArea, nsA4].forEach(el => el.addEventListener('scroll', () => { el.scrollTop = 0; el.scrollLeft = 0; }));
+
+/* V1: split the visible chapter into pages that exactly fit the page area, never cutting a block */
+function nsPaginate() {
+  const host = nsHost(), viewH = nsView.clientHeight;
+  if (!host || viewH < 80) return;
+  const prevHost = NS.host, keepEl = prevHost === host && NS.pages[NS.cur] ? NS.pages[NS.cur].us[0] : null;
+  nsTrack.style.transform = 'none';
+  const us = nsUnits(host).filter(u => u.tagName !== 'SCRIPT');
+  us.forEach(u => { u.style.zoom = ''; u.classList.remove('ns-off'); });
+  us.forEach(u => { if (!u.getClientRects().length) return; const h = u.getBoundingClientRect().height; if (h > viewH - 4) u.style.zoom = ((viewH - 6) / h).toFixed(4); });   // a block taller than a page is scaled to fit
+  const T = nsTrack.getBoundingClientRect().top;
+  const R = us.filter(u => u.getClientRects().length).map(u => { const r = u.getBoundingClientRect(); return { u, t: r.top - T, b: r.bottom - T }; });
+  const pages = []; let cur = [], start = 0;
+  R.forEach(x => {
+    if (!cur.length) start = x.t;
+    else if (x.b - start > viewH + 0.5) {                                   // would cross the page bottom: start a new page, headings go with what follows
+      const carry = []; while (cur.length > 1 && nsHead(cur[cur.length - 1].u)) carry.unshift(cur.pop());
+      if (carry.length && x.b - carry[0].t > viewH + 0.5) { cur.push(...carry); carry.length = 0; }
+      pages.push(cur); cur = carry; start = (carry[0] || x).t;
+    }
+    cur.push(x);
+  });
+  if (cur.length) pages.push(cur);
+  NS.pages = pages.map(g => ({ us: g.map(x => x.u), off: Math.round(g[0].t) }));
+  NS.host = host;
+  let idx = prevHost === host ? Math.min(NS.cur, NS.pages.length - 1) : 0;
+  if (keepEl) { const k = NS.pages.findIndex(p => p.us.includes(keepEl)); if (k >= 0) idx = k; }
+  if (body.classList.contains('editing')) {                                 // while editing, follow the caret's page
+    const sel = getSelection(), n = sel && sel.anchorNode;
+    if (n && doc.contains(n)) { const k = NS.pages.findIndex(p => p.us.some(u => u.contains(n))); if (k >= 0) idx = k; }
+  }
+  nsApply(Math.max(0, idx));
+}
+function nsApply(i) {
+  const pg = NS.pages[i]; if (!pg) return;
+  NS.cur = i;
+  NS.pages.forEach((p, k) => p.us.forEach(u => u.classList.toggle('ns-off', k !== i)));
+  nsTrack.style.transform = 'translateY(' + (-pg.off) + 'px)';
+}
+
+/* V2: one real A4 page at a time, from the print viewer's paginator, scaled to fit the pane */
+function nsBuildA4() {
+  if (NE.on && !NE.skip) neHarvest();              // read back any typing first (also keeps the caret through a resize)
+  NE.skip = false;                                 // undo / redo restore the note first and must not be overwritten by the old sheets
+  nsA4Scale();                                    // the fit scale first: the draft bar is laid out with it
+  buildPrint(true);
+  let limit = DV_BODY_H - 6;
+  for (let t = 0; t < 6; t++) {
+    const { m, groups } = dvGroups(limit); m.remove(); dvDraw(groups, nsA4, null);
+    if (![...nsA4.querySelectorAll('.dv-body')].some(b => b.offsetHeight > DV_BODY_H + 0.5)) break; limit -= 18;
+  }
+  const fits = [...nsA4.querySelectorAll('.dv-fit')]; NS.a4n = fits.length;
+  nsA4Scale();
+  if (NE.on) { const mk = nsA4.querySelector('[data-cm="s"]'), k = mk ? fits.findIndex(f => f.contains(mk)) : -1; if (k >= 0) NS.cur = k; }   // the caret decides which sheet is shown
+  NS.cur = Math.max(0, Math.min(NS.cur, fits.length - 1));
+  fits.forEach((f, k) => f.classList.toggle('is-cur', k === NS.cur));
+  if (NE.on) neAfterBuild();
+}
+/* zoom: NS.z is the zoom relative to Fit (1 = whole sheet fits the pane), NS.zt its target; NS.px / NS.py move the sheet from the pane centre */
+const NS_ZMIN = 0.5, NS_ZMAX = 3;
+Object.assign(NS, { fit: 1, z: 1, zt: 1, px: 0, py: 0, rpx: 0, rpy: 0, anc: null, zraf: 0, hover: false });
+const nsClamp = (v, a, b) => Math.max(a, Math.min(b, v));
+function nsA4Scale() {
+  const H = nsA4.clientHeight, W = nsA4.clientWidth; if (H < 60) return;
+  NS.fit = Math.max(0.2, Math.min(1.25, (H - 28) / (297 * MMPX), (W - 28) / (210 * MMPX)));
+  body.style.setProperty('--bs', nsClamp(1 / NS.fit, 1, 3).toFixed(3));        // the draft bar is laid out at this size, so it stays readable on screen
+  nsView2();
+}
+function nsLimits(s) { const W = nsA4.clientWidth, H = nsA4.clientHeight; return { mx: Math.max(0, (210 * MMPX * s - W) / 2 + 14), my: Math.max(0, (297 * MMPX * s - H) / 2 + 14) }; }
+function nsView2() {
+  const W = nsA4.clientWidth, H = nsA4.clientHeight; if (H < 60) return;
+  NS.s = NS.fit * NS.z;
+  if (NS.anc) { NS.rpx = NS.px = NS.anc.ax - W / 2 - NS.anc.ux * NS.s; NS.rpy = NS.py = NS.anc.ay - H / 2 - NS.anc.uy * NS.s; }   // rp* = where the sheet would be without the edge clamp, so a later zoom step keeps its anchor
+  const L = nsLimits(NS.s); NS.px = nsClamp(NS.px, -L.mx, L.mx); NS.py = nsClamp(NS.py, -L.my, L.my);
+  if (!NS.anc) { NS.rpx = NS.px; NS.rpy = NS.py; }
+  nsA4.style.setProperty('--s', NS.s.toFixed(4)); nsA4.style.setProperty('--z', NS.z.toFixed(4));
+  nsA4.style.setProperty('--px', NS.px.toFixed(1) + 'px'); nsA4.style.setProperty('--py', NS.py.toFixed(1) + 'px');
+  nsA4.classList.toggle('zoomed', NS.zt > 1.001);
+  $('nsZv').textContent = Math.round(NS.zt * 100) + '%';
+  $('nsZin').disabled = NS.zt >= NS_ZMAX - 0.001; $('nsZout').disabled = NS.zt <= NS_ZMIN + 0.001;
+  $('nsFit').disabled = Math.abs(NS.zt - 1) < 0.001 && Math.abs(NS.px) < 0.5 && Math.abs(NS.py) < 0.5;
+  if (NE.on) { nePlaceSel(); neTbUpdate(); }
+}
+function nsZStep(now) {
+  NS.zraf = 0;
+  const dt = Math.min(120, Math.max(1, now - (NS.zlast || now - 16))); NS.zlast = now;      // time-based, so a slow frame rate does not slow the zoom down
+  const d = NS.zt - NS.z, k = CALM ? 1 : 1 - Math.exp(-dt / 55);
+  NS.z = Math.abs(d) < 0.002 ? NS.zt : NS.z + d * k;
+  if (!NS.anc) { NS.px *= (1 - k); NS.py *= (1 - k); if (Math.abs(NS.px) < 0.3) NS.px = 0; if (Math.abs(NS.py) < 0.3) NS.py = 0; }
+  nsView2();
+  if (NS.z !== NS.zt || (!NS.anc && (NS.px || NS.py))) NS.zraf = requestAnimationFrame(nsZStep); else NS.zlast = 0;
+}
+/* zoom to `z` (relative to Fit) around a point of the pane; no point = keep the pane centre, and Fit also re-centres the sheet */
+function nsZoomTo(z, at, recentre) {
+  const W = nsA4.clientWidth, H = nsA4.clientHeight, s = NS.fit * NS.z;
+  NS.zt = nsClamp(z, NS_ZMIN, NS_ZMAX);
+  if (recentre) NS.anc = null;
+  else { const ax = at ? at.x : W / 2, ay = at ? at.y : H / 2; NS.anc = { ax, ay, ux: (ax - W / 2 - NS.rpx) / s, uy: (ay - H / 2 - NS.rpy) / s }; }
+  if (!NS.zraf) { NS.zlast = 0; NS.zraf = requestAnimationFrame(nsZStep); }
+}
+function nsPanBy(dx, dy) {                       // direct move, no animation; a running zoom is finished first
+  if (NS.zraf) { cancelAnimationFrame(NS.zraf); NS.zraf = 0; NS.z = NS.zt; }
+  NS.anc = null; NS.px += dx; NS.py += dy; nsView2();
+}
+const nsPt = e => { const r = nsA4.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+
+function nsRefresh() {
+  NS.raf = 0; if (!nsReady) return;
+  const eff = nsEff();
+  body.classList.toggle('ns-isa4', eff === 'a4');
+  if (NS.mode !== eff) { NS.cur = 0; NS.host = null; NS.mode = eff; }
+  if (eff === 'pages') nsPaginate(); else nsBuildA4();
+  nsUI();
+}
+function nsDraftPage() {
+  if (draft.hidden) return -1;
+  if (nsEff() === 'a4') return [...nsA4.querySelectorAll('.dv-fit')].findIndex(f => f.querySelector('[data-nsd]'));
+  return NS.pages.findIndex(p => p.us.some(u => u === draft || u.contains(draft)));
+}
+function nsUI() {
+  const n = nsTotal(), eff = nsEff();
+  if (nsDots.children.length !== n) {
+    nsDots.replaceChildren();
+    for (let k = 0; k < n; k++) { const b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', 'Page ' + (k + 1)); b.onclick = () => nsGo(k); nsDots.appendChild(b); }
+  }
+  [...nsDots.children].forEach((b, k) => { if (k === NS.cur) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
+  nsCount.textContent = eff === 'a4' ? 'Page ' + (NS.cur + 1) + ' of ' + n : (NS.cur + 1) + ' / ' + n;
+  nsView2();
+  nsPrev.disabled = NS.cur <= 0; nsNext.disabled = NS.cur >= n - 1;
+}
+function nsGo(i, o = {}) {
+  const eff = nsEff(), n = nsTotal(); i = Math.max(0, Math.min(n - 1, i));
+  if (i === NS.cur && !o.force) { nsUI(); return false; }
+  const hadCaret = NE.on && neTyping();
+  const dir = i > NS.cur ? 1 : -1, old = NS.cur, anim = o.anim !== false && !CALM && n > 1, D = 280;
+  if (eff === 'pages') {
+    nsStage.querySelectorAll('.ns-ghost').forEach(g => g.remove());
+    nsView.getAnimations().forEach(a => a.cancel());
+    let ghost = null;
+    if (anim) { ghost = nsView.cloneNode(true); ghost.removeAttribute('id'); ghost.querySelectorAll('[id]').forEach(e => e.removeAttribute('id')); ghost.classList.add('ns-ghost'); ghost.setAttribute('aria-hidden', 'true'); ghost.inert = true; nsStage.appendChild(ghost); }
+    nsApply(i);
+    if (ghost) {
+      const W = nsStage.clientWidth;
+      ghost.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(' + (-dir * W) + 'px)' }], { duration: D, easing: NS_EASE, fill: 'forwards' }).finished.then(() => ghost.remove(), () => ghost.remove());
+      nsView.animate([{ transform: 'translateX(' + (dir * W) + 'px)' }, { transform: 'translateX(0)' }], { duration: D, easing: NS_EASE });
+    }
+  } else {
+    const fits = [...nsA4.querySelectorAll('.dv-fit')], a = fits[old], b = fits[i]; if (!b) return false;
+    fits.forEach(f => f.getAnimations().forEach(x => x.cancel()));
+    fits.forEach(f => f.classList.remove('is-leaving'));
+    NS.cur = i; fits.forEach((f, k) => f.classList.toggle('is-cur', k === i));
+    if (NS.zraf) { cancelAnimationFrame(NS.zraf); NS.zraf = 0; NS.z = NS.zt; }
+    NS.anc = null; NS.px = 0; NS.py = 1e6; nsView2();      // zoom is kept; the new sheet opens at its top
+    if (anim && a) {
+      const W = nsA4.clientWidth; a.classList.add('is-leaving');
+      a.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(' + (-dir * W) + 'px)' }], { duration: D, easing: NS_EASE, fill: 'forwards' }).finished.then(() => { a.classList.remove('is-leaving'); a.getAnimations().forEach(x => x.cancel()); }, () => {});
+      b.animate([{ transform: 'translateX(' + (dir * W) + 'px)' }, { transform: 'translateX(0)' }], { duration: D, easing: NS_EASE });
+    }
+  }
+  nsUI(); if (NE.on && eff === 'a4') neAfterGo(hadCaret);
+  return true;
+}
+function nsToDraft() { const k = nsDraftPage(); if (k >= 0) nsGo(k); }
+function nsChapterChanged() { NS.cur = 0; NS.host = null; nsSched(); }
+
+/* pager, wheel, keys */
+nsPrev.onclick = () => nsGo(NS.cur - 1); nsNext.onclick = () => nsGo(NS.cur + 1);
+page.addEventListener('wheel', e => {
+  if (!nsReady) return;
+  const a4 = nsEff() === 'a4';
+  if (e.ctrlKey) {                                // pinch on a touchpad arrives as a ctrl+wheel; the browser must not zoom the app
+    if (!a4 || body.classList.contains('dvopen')) return;
+    e.preventDefault();
+    const dy = nsClamp((e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY), -25, 25);
+    nsZoomTo(NS.zt * Math.exp(-dy * 0.01), nsPt(e));
+    return;
+  }
+  e.preventDefault();
+  if (a4 && NS.zt > 1.001) {                      // zoomed in: the wheel moves the sheet, it does not flip
+    const m = e.deltaMode === 1 ? 16 : 1;
+    nsPanBy(-e.deltaX * m, -e.deltaY * m); return;
+  }
+  const a = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX, ab = Math.abs(a), now = performance.now();
+  if (ab < 2) return;
+  if (now < NS.lock) { if (ab <= NS.lastAbs + 1) NS.lock = Math.max(NS.lock, now + 140); NS.lastAbs = ab; return; }   // one notch = one page; trackpad momentum is ignored
+  NS.lastAbs = ab; NS.lock = now + 480; nsGo(NS.cur + (a > 0 ? 1 : -1));
+}, { passive: false });
+addEventListener('keydown', e => {
+  if (!nsReady || e.defaultPrevented || e.ctrlKey || e.metaKey || e.altKey) return;
+  const d = { ArrowRight: 1, PageDown: 1, ArrowLeft: -1, PageUp: -1, Home: 'first', End: 'last' }[e.key]; if (d === undefined) return;
+  if (['dvopen', 'mynotes', 'opening', 'morphing'].some(c => body.classList.contains(c))) return;
+  const t = e.target, typing = t.closest && t.closest('input, textarea, select, [contenteditable="true"]');
+  if (typing && !(e.key === 'PageDown' || e.key === 'PageUp')) return;
+  if (!typing && !(t === body || t === document.documentElement || page.contains(t))) return;
+  if (t.closest && t.closest('.seg, [role=menu]')) return;
+  e.preventDefault();
+  nsGo(d === 'first' ? 0 : d === 'last' ? nsTotal() - 1 : NS.cur + d);
+});
+
+/* zoom controls: buttons, Ctrl + / - / 0 over the note, drag to move, double-click */
+$('nsZin').onclick = () => nsZoomTo(Math.round(NS.zt * 1.25 * 100) / 100);
+$('nsZout').onclick = () => nsZoomTo(Math.round(NS.zt / 1.25 * 100) / 100);
+$('nsFit').onclick = () => nsZoomTo(1, null, true);
+page.addEventListener('pointerenter', () => NS.hover = true); page.addEventListener('pointerleave', () => NS.hover = false);
+addEventListener('keydown', e => {
+  if (!nsReady || nsEff() !== 'a4' || !(e.ctrlKey || e.metaKey) || e.altKey) return;
+  const act = (e.key === '=' || e.key === '+') ? 'in' : (e.key === '-' || e.key === '_') ? 'out' : e.key === '0' ? 'fit' : null; if (!act) return;
+  if (['dvopen', 'mynotes', 'opening', 'morphing'].some(c => body.classList.contains(c))) return;
+  if (!(NS.hover || page.contains(document.activeElement))) return;
+  e.preventDefault();
+  if (act === 'fit') nsZoomTo(1, null, true); else nsZoomTo(Math.round(NS.zt * (act === 'in' ? 1.25 : 1 / 1.25) * 100) / 100);
+}, true);
+{ let drag = null, bd = null;
+  const isMedia = t => t.closest ? t.closest('.dv-body > .blk') : null;
+  const inIsland = (t, blk) => { const ed = t.closest('[contenteditable="true"]'); return !!(ed && ed !== blk && blk.contains(ed)); };
+  const startPan = e => { drag = { id: e.pointerId, x: e.clientX, y: e.clientY }; nsA4.setPointerCapture(e.pointerId); nsA4.classList.add('dragging'); e.preventDefault(); };
+  nsA4.addEventListener('mousedown', e => {
+    if (!NE.on) return;
+    if (e.button === 1) { e.preventDefault(); return; }
+    const blk = e.button === 0 && !e.target.closest('button, a') && isMedia(e.target);
+    if (blk && !inIsland(e.target, blk)) e.preventDefault();          // a click on a picture / diagram selects it, it does not start a text selection
+  });
+  nsA4.addEventListener('pointerdown', e => {
+    if (e.target.closest('button, a')) return;
+    if (NE.on) {                                                          // editing: text keeps the mouse; blocks select / move; empty space and the middle button pan
+      const inBody = !!e.target.closest('.dv-body'), blk = inBody && e.button === 0 ? isMedia(e.target) : null;
+      if (blk && !inIsland(e.target, blk)) { neSelect(blk); bd = { id: e.pointerId, x: e.clientX, y: e.clientY, el: blk, moved: false }; nsA4.setPointerCapture(e.pointerId); return; }
+      if (e.button === 0) { if (blk && neKind(blk) === 'table') { NE.selId = blk.dataset.src; NE.selVia = 'caret'; nePlaceSel(); } else neDeselect(); }
+      if (NS.zt <= 1.001) return;
+      if (e.button === 1 || (e.button === 0 && !inBody) || (e.button === 0 && NE.space && !neTyping())) startPan(e);
+      return;
+    }
+    if (e.button !== 0 || NS.zt <= 1.001 || e.target.closest('[contenteditable="true"]')) return;
+    startPan(e);
+  });
+  nsA4.addEventListener('pointermove', e => {
+    if (drag && e.pointerId === drag.id) { nsPanBy(e.clientX - drag.x, e.clientY - drag.y); drag.x = e.clientX; drag.y = e.clientY; }
+    if (bd && e.pointerId === bd.id) { const dy = e.clientY - bd.y; if (!bd.moved && Math.abs(dy) < 5 && Math.abs(e.clientX - bd.x) < 5) return; bd.moved = true; neDragMove(bd, dy); }
+  });
+  const end = e => {
+    if (drag && e.pointerId === drag.id) { drag = null; nsA4.classList.remove('dragging'); }
+    if (bd && e.pointerId === bd.id) { const b = bd; bd = null; if (b.moved) neDragEnd(b); }
+  };
+  nsA4.addEventListener('pointerup', end); nsA4.addEventListener('pointercancel', end);
+  nsA4.addEventListener('dblclick', e => { if (NE.on || e.target.closest('button, a')) return; if (NS.zt > 1.01) nsZoomTo(1, null, true); else nsZoomTo(1.5, nsPt(e)); });
+}
+
+
+/* ---------- CANVA-STYLE EDITING ON THE A4 SHEET ----------
+   The pencil makes the sheets themselves editable. Every ~400 ms after typing (or at once when a page overflows) the sheets are read back
+   into the source note (blocks matched by data-src), re-paginated, and the caret is put back from two marker spans.
+   Undo / redo are our own snapshots of the source note, because re-pagination rewrites the sheet DOM and the browser's undo stack cannot survive that. */
+const NE_MARK = /<span data-cm="[se]"><\/span>/g;
+const neSelEl = () => (NE.on && NE.selId) ? nsA4.querySelector('.dv-fit.is-cur .dv-body > [data-src="' + NE.selId + '"]') : null;
+const neTop = n => { let e = n && (n.nodeType === 1 ? n : n.parentElement); while (e && !(e.parentElement && e.parentElement.classList.contains('dv-body'))) e = e.parentElement; return e; };
+const neTyping = () => { const a = document.activeElement; return !!(a && a.closest && a.closest('#nsA4 [contenteditable="true"]') && a.isContentEditable && getSelection().rangeCount && nsA4.contains(getSelection().anchorNode)); };
+function neTag(host) { [...host.children].forEach(c => { if (c.tagName === 'SCRIPT') return; if (!c.dataset.src) c.dataset.src = 's' + NE.nid++; NE.reg.set(c.dataset.src, c); }); }
+function neSnap(host) { return [...host.children].filter(c => c.tagName !== 'SCRIPT').map(c => ({ id: c.dataset.src, tag: c.tagName, html: c.innerHTML, style: c.getAttribute('style') || '', cls: c.className })); }
+function neRestore(snap) {
+  const host = nsHost(), keep = [];
+  snap.forEach(s => {
+    let el = NE.reg.get(s.id);
+    if (!el) { el = document.createElement(s.tag); el.dataset.src = s.id; NE.reg.set(s.id, el); }
+    if (el.innerHTML !== s.html) el.innerHTML = s.html;
+    if (s.style) el.setAttribute('style', s.style); else el.removeAttribute('style');
+    el.className = s.cls; keep.push(el);
+  });
+  [...host.children].forEach(c => { if (c.tagName !== 'SCRIPT' && !keep.includes(c)) c.remove(); });
+  host.append(...keep); renderTex(); syncDraft();
+}
+function neClean(n) {
+  [n, ...n.querySelectorAll('*')].forEach(e => {
+    e.removeAttribute('contenteditable'); e.removeAttribute('spellcheck'); e.removeAttribute('data-cont'); e.removeAttribute('role'); e.removeAttribute('aria-multiline');
+    if (e.classList && !e.classList.length && e.hasAttribute('class')) e.removeAttribute('class');
+    if (e.dataset && e.dataset.nsd) delete e.dataset.nsd;
+    if (e.dataset && e.dataset.id) { e.id = e.dataset.id; delete e.dataset.id; }
+    if (e.dataset && e.dataset.lb) { e.setAttribute('aria-labelledby', e.dataset.lb); delete e.dataset.lb; }
+  });
+  n.style.transform = ''; n.style.opacity = ''; n.style.zIndex = ''; n.style.position = ''; n.style.boxShadow = ''; if (!n.getAttribute('style')) n.removeAttribute('style');
+  n.querySelectorAll('.num').forEach(x => { x.textContent = x.textContent.replace(/\.\s*$/, ''); });
+  n.querySelectorAll('.tex[data-tex]').forEach(x => { x.textContent = ''; });
+}
+/* nearest text position for a selection end that sits on an element boundary (a triple-click ends at the start of the next block) */
+function neNearText(node, off, forward) {
+  const pt = document.createRange(); pt.setStart(node, off); pt.collapse(true);
+  const w = document.createTreeWalker(nsA4, NodeFilter.SHOW_TEXT); let n, last = null;
+  while ((n = w.nextNode())) {
+    if (!n.parentElement.closest('.dv-body') || n.parentElement.closest('[data-cm]')) continue;
+    const c = pt.comparePoint(n, 0);
+    if (forward) { if (c >= 0) return [n, 0]; } else if (c < 0) last = n; else break;
+  }
+  return last ? [last, last.length] : null;
+}
+function neMarkSel(bodies) {
+  const s = getSelection(); if (!s.rangeCount) return;
+  const r = s.getRangeAt(0), valid = c => c.nodeType === 3 && c.parentElement && c.parentElement.closest('#nsA4 .dv-body') || (c.nodeType === 1 && nsA4.contains(c) && /^(P|LI|H2|H3|TD|TH|B|I|U|SPAN|MARK|SUB|SUP|STRONG|EM)$/.test(c.tagName));
+  if (!nsA4.contains(r.startContainer) && !nsA4.contains(r.endContainer)) return;
+  let sc = r.startContainer, so = r.startOffset, ec = r.endContainer, eo = r.endOffset;
+  if (!valid(ec)) { const t = neNearText(ec, eo, false); if (!t) return; [ec, eo] = t; }
+  if (!valid(sc)) { const t = neNearText(sc, so, true); if (!t) return; [sc, so] = t; }
+  const mk = k => { const e = document.createElement('span'); e.dataset.cm = k; return e; };
+  const re = document.createRange(); re.setStart(ec, eo); re.collapse(true); re.insertNode(mk('e'));
+  const rs = document.createRange(); rs.setStart(sc, so); rs.collapse(true); rs.insertNode(mk('s'));
+  const t = neTop(nsA4.querySelector('[data-cm="s"]')); if (t && t.dataset.src) NE.dirty.add(t.dataset.src);
+  const t2 = neTop(nsA4.querySelector('[data-cm="e"]')); if (t2 && t2.dataset.src) NE.dirty.add(t2.dataset.src);
+}
+function neDirtyFromSel() {
+  const s = getSelection(); if (!s.rangeCount) return;
+  const r = s.getRangeAt(0), b = (r.startContainer.nodeType === 1 ? r.startContainer : r.startContainer.parentElement); const bd = b && b.closest('#nsA4 .dv-body'); if (!bd) return;
+  [...bd.children].forEach(ch => { if (ch.dataset.src && r.intersectsNode(ch)) NE.dirty.add(ch.dataset.src); });
+}
+/* read the sheets back into the source note, keep a snapshot for undo */
+/* the browser may put a list (or a paragraph) inside a paragraph; hoist such blocks so every block of the note is a direct child again */
+const NE_BLOCK = /^(UL|OL|P|DIV|H[1-6]|TABLE|FIGURE)$/;
+function neFlat(ch) {
+  if (ch.tagName !== 'P' || ![...ch.children].some(c => NE_BLOCK.test(c.tagName))) return [ch];
+  const out = []; let run = null;
+  for (const n of [...ch.childNodes]) {
+    if (n.nodeType === 1 && NE_BLOCK.test(n.tagName)) { run = null; out.push(n); }
+    else { if (!run) { run = ch.cloneNode(false); out.push(run); } run.appendChild(n.cloneNode(true)); }
+  }
+  return out.filter(x => x.nodeType !== 1 || x.textContent.trim() || x.querySelector('img, svg, hr'));
+}
+function neHarvest() {
+  NE.pending = false; clearTimeout(NE.t); NE.t = 0;
+  const host = nsHost(), bodies = [...nsA4.querySelectorAll('.dv-body')];
+  if (!host || !bodies.length) return;
+  neTag(host); neMarkSel(bodies);
+  const blocks = [];
+  bodies.forEach(b => [...b.children].forEach(ch0 => neFlat(ch0).forEach(ch => {
+    if (ch.dataset.cm) return;
+    const src = ch.dataset.src || '', last = blocks[blocks.length - 1], isList = ch.matches('ul, ol');
+    if (isList && last && last.list && last.node.tagName === ch.tagName && src && last.src === src) { last.node.append(...ch.cloneNode(true).childNodes); return; }   // a list split over two pages is one list again
+    if (ch.dataset.cont && last && !last.list && last.src === src && last.node.tagName === ch.tagName && +ch.dataset.cont === last.expect) { last.node.append(...ch.cloneNode(true).childNodes); last.expect++; return; }   // a paragraph split over pages is one paragraph again
+    blocks.push({ src, node: ch.cloneNode(true), list: isList, expect: 1 });
+  })));
+  const titleEl = host.querySelector(':scope > .title'), draftEl = host.querySelector(':scope > .draft'), dsrc = draftEl && draftEl.dataset.src;
+  const intro = host.classList.contains('v-nop') ? host.querySelector(':scope > p') : null;
+  const out = [], present = new Set(), seen = new Set();
+  for (const bl of blocks) {
+    const n = bl.node; neClean(n);
+    if (n.dataset.keep === 'title') { if (titleEl) titleEl.innerHTML = n.innerHTML; continue; }
+    if (n.dataset.keep) continue;
+    let src = bl.src; if (src && seen.has(src)) src = ''; if (src) seen.add(src);
+    const el = src ? NE.reg.get(src) : null;
+    if (el && src === dsrc) {                                     // the draft: only its question list is editable
+      const ol = n.matches('.a4-draft') ? n.querySelector('ol') : n;
+      if (ol && NE.dirty.has(src)) { draftEl.querySelector('ol').innerHTML = ol.innerHTML; }
+      present.add(src); out.push(el); continue;
+    }
+    if (el && el.tagName === n.tagName) {
+      if (NE.dirty.has(src)) { el.innerHTML = n.innerHTML; const st = n.getAttribute('style'); if (st) el.setAttribute('style', st); else el.removeAttribute('style'); el.className = n.className; }
+      present.add(src); out.push(el);
+    } else {
+      const id = (src && !NE.reg.has(src)) ? src : 's' + NE.nid++;
+      n.dataset.src = id; NE.reg.set(id, n); present.add(id); out.push(n);
+    }
+  }
+  neTitleSync(titleEl);
+  const orig = [...host.children].filter(c => c.tagName !== 'SCRIPT');
+  const perm = c => c === titleEl || c === intro || c.matches('.meta, .refuse, .empty-sec') || (c === draftEl && !present.has(dsrc));
+  const groups = new Map();
+  orig.forEach((c, i) => {
+    if (!perm(c)) return;
+    let j = i - 1; while (j >= 0 && (perm(orig[j]) || !present.has(orig[j].dataset.src))) j--;
+    const key = j >= 0 ? orig[j].dataset.src : '';
+    if (!groups.has(key)) groups.set(key, []); groups.get(key).push(c);
+  });
+  const fin = [...(groups.get('') || [])];
+  out.forEach(el => { fin.push(el); fin.push(...(groups.get(el.dataset.src) || [])); });
+  orig.forEach(c => { if (!fin.includes(c)) c.remove(); });
+  if (fin.some((e, i) => host.children[i] !== e)) host.append(...fin);
+  renumber(host); NE.dirty.clear(); renderTex();
+  const touched = NE.touched; NE.touched = false;
+  const snap = neSnap(host), key = JSON.stringify(snap).replace(/<span data-cm=\\"[se]\\"><\/span>/g, '');
+  if (touched && (!NE.hist[NE.hi] || NE.hist[NE.hi].key !== key)) { NE.hist.length = NE.hi + 1; NE.hist.push({ snap, key }); NE.hi = NE.hist.length - 1; if (NE.hist.length > 80) { NE.hist.shift(); NE.hi--; } }
+}
+/* a title edited on the sheet follows into the breadcrumb, the page title, the current session row ("<new title>, <rest>") and the My notes card; the print viewer reads it fresh */
+function neTitleSync(titleEl) {
+  if (!titleEl) return;
+  const name = titleEl.textContent.replace(/\s+/g, ' ').trim(), c = CH[chKey];
+  if (!name || name === c.title) return;
+  c.title = name;
+  $('crChap').textContent = name;
+  document.title = name + ' - ' + c.cls + ' ' + c.subj + ' - Teacher Notes (v3 target mock)';
+  SESS.filter(x => x.ch === chKey).forEach(ss => { if (ss.rest === undefined) { const i = ss.t.indexOf(','); ss.rest = i >= 0 ? ss.t.slice(i + 1).trim() : ''; } ss.t = ss.rest ? name + ', ' + ss.rest : name; });
+  renderSess();
+  renderCard(chKey);
+}
+function neCommit() { if (!NE.on) return; neHarvest(); nsRefresh(); }
+function neSched(now) { NE.pending = true; NE.touched = true; clearTimeout(NE.t); if ((NE.menu || NE.pop) && !now) return; NE.t = setTimeout(neCommit, now ? 0 : 400); }   // the page is not rebuilt under an open menu
+function neUndo() { if (!NE.on) return; if (NE.pending) neHarvest(); if (NE.hi <= 0) return; NE.hi--; neApply(); }
+function neRedo() { if (!NE.on) return; if (NE.pending) neHarvest(); if (NE.hi >= NE.hist.length - 1) return; NE.hi++; neApply(); }
+function neApply() { NE.selId = null; NE.dirty.clear(); NE.touched = false; neRestore(NE.hist[NE.hi].snap); markSaving(); NE.skip = true; nsRefresh(); }
+
+function neMakeEditable() {
+  nsA4.querySelectorAll('.dv-body').forEach((b, k) => { b.contentEditable = 'true'; b.spellcheck = false; b.setAttribute('role', 'textbox'); b.setAttribute('aria-multiline', 'true'); b.setAttribute('aria-label', 'Note text, page ' + (k + 1)); });
+  nsA4.querySelectorAll('.dv-body .blk, .dv-body .a4-draft, .dv-body .draft-bar, .dv-body .num, .dv-body .m, .dv-body .from').forEach(e => { e.contentEditable = 'false'; });
+  nsA4.querySelectorAll('.dv-body .blk td, .dv-body .blk th, .dv-body .blk .blk-cap, .dv-body .flow li b, .dv-body .flow li > span:not(.node), .dv-body .a4-draft > ol').forEach(e => { e.contentEditable = 'true'; });
+}
+/* runs after every sheet rebuild while editing: editable flags, caret, selected block, toolbar */
+function neAfterBuild() {
+  neMakeEditable();
+  const host = nsHost(), s = nsA4.querySelector('[data-cm="s"]'), e = nsA4.querySelector('[data-cm="e"]');
+  if (s && e && s.closest('.dv-fit')) {
+    const bd = s.closest('.dv-body'), r = document.createRange(); r.setStartAfter(s); r.setEndBefore(e);
+    bd.focus({ preventScroll: true }); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+  }
+  const blk = nsA4.querySelectorAll('[data-cm]'); const parents = [...blk].map(m => m.parentNode);
+  blk.forEach(m => m.remove()); parents.forEach(pn => pn && pn.normalize && pn.normalize());
+  if (host) host.querySelectorAll('[data-cm]').forEach(m => m.remove());
+  if (NE.focusAfter) {
+    const fa = NE.focusAfter; NE.focusAfter = null; let f = nsA4.querySelector('.dv-fit.is-cur [data-src="' + fa.id + '"] ' + fa.sel);
+    if (f && fa.rc && f.rows) f = (f.rows[fa.rc[0]] && f.rows[fa.rc[0]].cells[fa.rc[1]]) || f;
+    if (f) { f.focus({ preventScroll: true }); const r = document.createRange(); r.selectNodeContents(f); r.collapse(true); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); }
+  }
+  nePlaceSel(); neTbUpdate(); neReveal();
+}
+function neStart() {
+  const host = nsHost(); neTag(host);
+  NE.on = true; neBarShow(true); NE.hist = [{ snap: neSnap(host), key: JSON.stringify(neSnap(host)) }]; NE.hi = 0; NE.dirty.clear(); NE.pending = false; NE.selId = null;
+  try { document.execCommand('defaultParagraphSeparator', false, 'p'); } catch (x) {}
+  neMakeEditable();
+  const b = nsA4.querySelector('.dv-fit.is-cur .dv-body'), p = b && (b.querySelector('p') || b);
+  if (p) { b.focus({ preventScroll: true }); const r = document.createRange(); r.selectNodeContents(p); r.collapse(false); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+
+}
+function neStop() {
+  if (!NE.on) return;
+  neHarvest(); NE.on = false; NE.selId = null;
+  neBarShow(false); neStClose(); nePopClose(false); $('blkBar').hidden = true; neSlClose(); $('nsSel').hidden = true; $('nsDrop').hidden = true;
+  getSelection().removeAllRanges(); if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
+  nsRefresh(); markSaving();
+}
+window.__neOff = () => { if (NE.on) { const b = $('bEditMode'); b.click(); } };
+
+/* selected picture / diagram / formula / table block: outline + 4 corner handles drawn in screen pixels over the pane */
+function nePlaceSel() {
+  const o = $('nsSel'), el = neSelEl();
+  if (!el) { o.hidden = true; neBarPlace(); return; }
+  const a = nsArea.getBoundingClientRect(), r = el.getBoundingClientRect();
+  o.hidden = false; o.style.left = (r.left - a.left) + 'px'; o.style.top = (r.top - a.top) + 'px'; o.style.width = r.width + 'px'; o.style.height = r.height + 'px';
+  neBarPlace();
+}
+function neSelect(el) { NE.selId = el.dataset.src; NE.selVia = 'click'; getSelection().removeAllRanges(); neStClose(); nsA4.tabIndex = -1; nsA4.focus({ preventScroll: true }); nePlaceSel(); }
+function neDeselect() { if (!NE.selId) return; NE.selId = null; NE.selVia = ''; $('nsSel').hidden = true; neBarPlace(); }
+const neKind = el => el.querySelector('table') ? 'table' : el.classList.contains('blk-img') ? 'picture' : el.querySelector('.fx') ? 'formula' : el.classList.contains('flow') ? 'diagram' : 'block';
+/* Delete on a picked block asks first: "Remove this table? Remove / Cancel" */
+function neDelete() {
+  const el = neSelEl(); if (!el || NE.pop) return;
+  const k = neKind(el); $('delQ').textContent = 'Remove this ' + k + '?';
+  nePopOpen('del', $('delPop'), el); $('delPop').querySelector('[data-do="remove"]').focus({ preventScroll: true });
+}
+function neDoDelete() { const el = neSelEl(); nePopClose(false); if (!el) return; el.remove(); NE.selId = null; $('nsSel').hidden = true; neBarPlace(); neSched(true); }
+/* small popovers (remove / edit formula) sit just below the block, or above it when there is no room */
+function nePopPlace(pop, el) {
+  const r = el.getBoundingClientRect(), w = pop.offsetWidth, h = pop.offsetHeight;
+  let top = r.bottom + 10; if (top + h > innerHeight - 8) top = Math.max(8, r.top - h - 10);
+  if (top + h > innerHeight - 8) top = Math.max(8, innerHeight - h - 8);
+  pop.style.top = Math.round(top) + 'px'; pop.style.left = Math.round(nsClamp(r.left + r.width / 2 - w / 2, 8, innerWidth - w - 8)) + 'px';
+}
+function nePopOpen(kind, pop, el) {
+  NE.pop = kind; clearTimeout(NE.t); NE.t = 0; neStClose(); $('blkBar').hidden = true;
+  pop.hidden = false; nePopPlace(pop, el);
+}
+function nePopClose(refocus) {
+  const was = NE.pop; NE.pop = null; $('delPop').hidden = true; $('fxPop').hidden = true;
+  if (!was) return;
+  if (refocus && NE.selId) nsA4.focus({ preventScroll: true });
+  if (NE.pending) neSched(false);
+  neTbUpdate(); neBarPlace();
+}
+document.addEventListener('pointerdown', e => { if (NE.pop && !e.target.closest('.nepop')) nePopClose(false); if (!e.target.closest('#flTb')) neStClose(); }, true);
+$('delPop').addEventListener('click', e => { const b = e.target.closest('[data-do]'); if (!b) return; if (b.dataset.do === 'remove') neDoDelete(); else nePopClose(true); });
+
+/* chip bar above a picked table (rows / columns) or formula (edit) */
+function neCell(tbl) {
+  const s = getSelection(), n = s.rangeCount && s.anchorNode, e = n && (n.nodeType === 1 ? n : n.parentElement), c = e && e.closest('td, th');
+  if (c && tbl.contains(c)) return c;
+  return tbl.querySelector('tbody tr:last-child td:last-child') || tbl.querySelector('tr:last-child > :last-child');
+}
+function neBarPlace() {
+  const bar = $('blkBar'), el = neSelEl(), kind = el ? neKind(el) : '';
+  if (!NE.on || !el || NE.menu || NE.pop || body.classList.contains('mynotes') || (kind !== 'table' && kind !== 'formula')) { bar.hidden = true; return; }
+  if (bar.dataset.kind !== kind) {
+    bar.dataset.kind = kind;
+    bar.innerHTML = kind === 'table'
+      ? '<button type="button" data-op="row+">+ Row</button><button type="button" data-op="row-">- Row</button><button type="button" data-op="col+">+ Column</button><button type="button" data-op="col-">- Column</button>'
+      : '<button type="button" data-op="fx">Edit formula</button>';
+  }
+  bar.hidden = false;
+  if (kind === 'table') {
+    const tbl = el.querySelector('table'), cell = neCell(tbl), row = cell.parentElement;
+    bar.querySelector('[data-op="row-"]').disabled = row.parentElement.tagName === 'THEAD' || tbl.tBodies[0].rows.length <= 1;
+    bar.querySelector('[data-op="col-"]').disabled = tbl.rows[0].cells.length <= 1;
+  }
+  const r = el.getBoundingClientRect(), a = nsA4.getBoundingClientRect(), w = bar.offsetWidth, h = bar.offsetHeight;
+  let top = r.top - h - 8; if (top < Math.max(6, a.top + 2)) top = r.bottom + 8;
+  const left = nsClamp(r.left, 8, innerWidth - w - 8);
+  top = nsClamp(top, 6, innerHeight - h - 6);
+  bar.style.top = Math.round(top) + 'px'; bar.style.left = Math.round(left) + 'px';
+}
+function neTable(op) {
+  const el = neSelEl(), tbl = el && el.querySelector('table'); if (!tbl) return;
+  const cell = neCell(tbl), row = cell.parentElement, ci = cell.cellIndex, ri = row.rowIndex, inHead = row.parentElement.tagName === 'THEAD', ncols = tbl.rows[0].cells.length;
+  const mk = (tag, txt) => { const c = document.createElement(tag); if (tag === 'th') c.scope = 'col'; if (txt) c.textContent = txt; else c.innerHTML = '<br>'; return c; };
+  let rc = [ri, ci];
+  if (op === 'row+') {
+    const nr = document.createElement('tr'); for (let i = 0; i < ncols; i++) nr.appendChild(mk('td'));
+    if (inHead) tbl.tBodies[0].prepend(nr); else row.after(nr);
+    rc = [nr.rowIndex, Math.min(ci, ncols - 1)];
+  } else if (op === 'row-') {
+    if (inHead || tbl.tBodies[0].rows.length <= 1) return;
+    row.remove(); rc = [Math.max(1, Math.min(ri, tbl.rows.length - 1)), ci];
+  } else if (op === 'col+') {
+    [...tbl.rows].forEach(r => { const c = r.parentElement.tagName === 'THEAD' ? mk('th', 'Heading') : mk('td'); r.cells[ci].after(c); });
+    rc = [ri, ci + 1];
+  } else if (op === 'col-') {
+    if (ncols <= 1) return;
+    [...tbl.rows].forEach(r => r.cells[ci].remove()); rc = [ri, Math.min(ci, ncols - 2)];
+  }
+  NE.dirty.add(el.dataset.src); NE.focusAfter = { id: el.dataset.src, sel: 'table', rc }; markSaving(); neSched(true);
+}
+/* formula: a text box per formula row with live preview; Enter applies, Esc cancels */
+function neFxOpen() {
+  const el = neSelEl(); if (!el) return;
+  const texs = [...el.querySelectorAll('.tex[data-tex]')]; if (!texs.length) return;
+  const rows = $('fxRows'); rows.replaceChildren();
+  texs.forEach((t, i) => {
+    const lbl = (t.parentElement.querySelector('.lbl') || {}).textContent || ('Formula ' + (i + 1));
+    const d = document.createElement('div'); d.className = 'np-row';
+    d.innerHTML = '<label for="fxIn' + i + '"></label><input id="fxIn' + i + '" type="text" spellcheck="false" autocomplete="off"><div class="np-pv" aria-live="polite"></div>';
+    d.querySelector('label').textContent = lbl; const inp = d.querySelector('input'); inp.value = t.dataset.tex; rows.appendChild(d);
+    inp.addEventListener('input', () => neFxPreview(inp));
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.isComposing) { e.preventDefault(); neFxApply(); } });
+    neFxPreview(inp);
+  });
+  NE.fxId = el.dataset.src; nePopOpen('fx', $('fxPop'), el); rows.querySelector('input').focus({ preventScroll: true });
+  nePopPlace($('fxPop'), el);
+}
+function neFxPreview(inp) {
+  const pv = inp.parentElement.querySelector('.np-pv'); pv.classList.remove('bad'); inp.removeAttribute('aria-invalid'); pv.replaceChildren();
+  if (!inp.value.trim()) { pv.classList.add('bad'); pv.textContent = 'Type a formula'; inp.setAttribute('aria-invalid', 'true'); return false; }
+  if (!window.katex) { pv.textContent = inp.value; return true; }
+  try { katex.render(inp.value, pv, { throwOnError: true, output: 'html' }); return true; }
+  catch (x) { pv.replaceChildren(); pv.classList.add('bad'); pv.textContent = 'Not a valid formula yet'; inp.setAttribute('aria-invalid', 'true'); return false; }
+}
+function neFxApply() {
+  const ins = [...$('fxRows').querySelectorAll('input')], bad = ins.filter(i => !neFxPreview(i)); if (bad.length) { bad[0].focus(); return; }
+  const el = nsA4.querySelector('[data-src="' + NE.fxId + '"]'), texs = el ? [...el.querySelectorAll('.tex[data-tex]')] : [];
+  texs.forEach((t, i) => {
+    if (!ins[i] || ins[i].value === t.dataset.tex) return;
+    t.dataset.tex = ins[i].value; NE.dirty.add(NE.fxId);
+    if (window.katex) { try { katex.render(ins[i].value, t, { throwOnError: false, output: 'html' }); } catch (x) {} } else t.textContent = ins[i].value;
+  });
+  nePopClose(true); markSaving(); neSched(true);
+}
+$('fxPop').addEventListener('click', e => { const b = e.target.closest('[data-do]'); if (!b) return; if (b.dataset.do === 'apply') neFxApply(); else nePopClose(true); });
+$('blkBar').addEventListener('mousedown', e => e.preventDefault());
+$('blkBar').addEventListener('click', e => { const b = e.target.closest('[data-op]'); if (!b || b.disabled) return; if (b.dataset.op === 'fx') neFxOpen(); else neTable(b.dataset.op); });
+
+/* r24: the text tools are a fixed bar above the page (shown by neBarShow); this keeps its buttons in step with the selection */
+function neBarShow(on) {
+  const tb = $('flTb'); if (tb.anim) { tb.anim.cancel(); tb.anim = null; }
+  if (on) { tb.hidden = false; if (!CALM) tb.anim = tb.animate([{ opacity: 0, transform: 'translateY(-100%)' }, { opacity: 1, transform: 'none' }], { duration: 260, easing: EASE }); }
+  else if (!tb.hidden) {
+    if (CALM) tb.hidden = true;
+    else { const a = tb.anim = tb.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(-100%)' }], { duration: 180, easing: 'ease-in' }); a.onfinish = () => { if (tb.anim === a) { tb.anim = null; tb.hidden = true; } }; }
+  }
+}
+function neTbUpdate() {
+  const tb = $('flTb'); if (!NE.on) return;
+  const s = getSelection(); let c = null, live = false;
+  if (s.rangeCount) {
+    const r = s.getRangeAt(0); c = r.commonAncestorContainer; const el = c.nodeType === 1 ? c : c.parentElement, bd = el && el.closest('#nsA4 .dv-body');
+    live = !!bd && !!bd.closest('.dv-fit.is-cur');
+  }
+  tb.querySelectorAll('button').forEach(b => { if (b.dataset.cmd !== 'undo' && b.dataset.cmd !== 'redo') b.disabled = !live; });
+  tb.querySelector('[data-cmd="undo"]').disabled = NE.hi <= 0 && !NE.pending; tb.querySelector('[data-cmd="redo"]').disabled = NE.hi >= NE.hist.length - 1;
+  if (!live) { neStClose(); tb.querySelectorAll('[aria-pressed]').forEach(b => b.setAttribute('aria-pressed', 'false')); neBarPlace(); return; }
+  const st = c2 => { try { return document.queryCommandState(c2); } catch (x) { return false; } };
+  tb.querySelector('[data-cmd="bold"]').setAttribute('aria-pressed', st('bold')); tb.querySelector('[data-cmd="italic"]').setAttribute('aria-pressed', st('italic')); tb.querySelector('[data-cmd="underline"]').setAttribute('aria-pressed', st('underline'));
+  tb.querySelector('[data-cmd="ul"]').setAttribute('aria-pressed', st('insertUnorderedList')); tb.querySelector('[data-cmd="ol"]').setAttribute('aria-pressed', st('insertOrderedList'));
+  const top0 = neTop(s.anchorNode), tg = top0 ? top0.tagName : 'P', sb = tb.querySelector('.stbtn');
+  const can = !!top0 && /^(P|H3|H4)$/.test(tg) && !top0.dataset.keep, cur = { P: 'Normal', H3: 'Heading', H4: 'Subheading', H2: 'Title', UL: 'List', OL: 'List' }[tg] || 'Text';
+  sb.querySelector('.stl').textContent = cur; sb.disabled = !can; if (!can) neStClose();
+  tb.querySelectorAll('[data-style]').forEach(b => b.setAttribute('aria-checked', b.dataset.style === tg.toLowerCase()));
+  neBarPlace();
+}
+function neStClose() { const m = $('flTb').querySelector('.stmenu'); if (m && !m.hidden) { m.hidden = true; $('flTb').querySelector('.stbtn').setAttribute('aria-expanded', 'false'); } }
+function neStToggle() { const m = $('flTb').querySelector('.stmenu'), b = $('flTb').querySelector('.stbtn'); if (b.disabled) return; m.hidden = !m.hidden; b.setAttribute('aria-expanded', String(!m.hidden)); }
+/* Normal / Heading / Subheading: turns the text block the caret is in (or every block the selection touches) into a paragraph, section heading (h3) or subheading (h4) */
+function neStyle(tag) {
+  neStClose();
+  const s = getSelection(); if (!s.rangeCount) return;
+  const r = s.getRangeAt(0), bd = (r.startContainer.nodeType === 1 ? r.startContainer : r.startContainer.parentElement).closest('#nsA4 .dv-body'); if (!bd) return;
+  const okb = ch => /^(P|H3|H4)$/.test(ch.tagName) && !ch.dataset.keep;
+  let blocks = s.isCollapsed ? [neTop(s.anchorNode)] : [...bd.children].filter(ch => r.intersectsNode(ch));
+  blocks = blocks.filter(x => x && okb(x) && x.tagName.toLowerCase() !== tag); if (!blocks.length) return;
+  const A = [s.anchorNode, s.anchorOffset, s.focusNode, s.focusOffset], map = new Map();
+  blocks.forEach(x => {
+    const nb = document.createElement(tag); if (x.dataset.src) nb.dataset.src = x.dataset.src;
+    x.querySelectorAll('.num, .from').forEach(y => y.remove());
+    while (x.firstChild) nb.appendChild(x.firstChild);
+    x.replaceWith(nb); map.set(x, nb); if (nb.dataset.src) NE.dirty.add(nb.dataset.src);
+  });
+  const m = n => map.get(n) || n; try { s.setBaseAndExtent(m(A[0]), A[1], m(A[2]), A[3]); } catch (x) {}
+  markSaving(); neSched(true);
+}
+function neSize(k) {
+  document.execCommand('fontSize', false, '7');
+  const s = getSelection(), A = [s.anchorNode, s.anchorOffset, s.focusNode, s.focusOffset];
+  nsA4.querySelectorAll('font[size="7"]').forEach(f => {
+    const sp = document.createElement('span'); while (f.firstChild) sp.appendChild(f.firstChild); f.replaceWith(sp);
+    const blk = sp.parentElement.closest('p, li, h2, h3, td, th, [contenteditable="true"]'), base = parseFloat(getComputedStyle(blk || sp.parentElement).fontSize), par = parseFloat(getComputedStyle(sp.parentElement).fontSize);
+    sp.style.fontSize = (base * { s: 0.85, m: 1, l: 1.3 }[k] / par).toFixed(3) + 'em';
+  });
+  if (A[0] && A[0].isConnected && A[2].isConnected) s.setBaseAndExtent(...A);
+}
+/* a triple-click ends at the start of the next block; commands refuse to run across that (and across non-editable blocks), so pull the end back into the text */
+function neFixSel() {
+  const s = getSelection(); if (!s.rangeCount || s.isCollapsed) return;
+  const r = s.getRangeAt(0), ec = r.endContainer;
+  if (ec.nodeType === 1 && (r.endOffset === 0 || ec.classList.contains('dv-body'))) { const t = neNearText(ec, r.endOffset, false); if (t) { const r2 = r.cloneRange(); r2.setEnd(t[0], t[1]); s.removeAllRanges(); s.addRange(r2); } }
+}
+function neCmd(c) {
+  const ex = (n, v) => document.execCommand(n, false, v);
+  if (c === 'undo') return neUndo(); if (c === 'redo') return neRedo();
+  if (c === 'style') return neStToggle();
+  neStClose(); neFixSel();
+  if (c === 'bold') ex('bold'); else if (c === 'italic') ex('italic'); else if (c === 'underline') ex('underline');
+  else if (c === 'ul') ex('insertUnorderedList'); else if (c === 'ol') ex('insertOrderedList');
+  else if (c === 'sizeS') neSize('s'); else if (c === 'sizeM') neSize('m'); else if (c === 'sizeL') neSize('l');
+  else if (c === 'hl') { let v = ''; try { v = document.queryCommandValue('hiliteColor') || document.queryCommandValue('backColor'); } catch (x) {} ex('hiliteColor', v === 'rgb(255, 241, 168)' ? 'transparent' : '#fff1a8'); }
+  neTbUpdate();
+}
+$('flTb').addEventListener('mousedown', e => e.preventDefault());
+$('flTb').addEventListener('click', e => { const st = e.target.closest('[data-style]'); if (st) { neStyle(st.dataset.style); return; } const b = e.target.closest('[data-cmd]'); if (b && !b.disabled) neCmd(b.dataset.cmd); });
+
+/* "/" quick menu */
+const neSlM = $('slMenu');
+function neSlClose() { const was = NE.menu; NE.menu = false; neSlM.hidden = true; if (was && NE.pending) neSched(false); }
+function neSlOpen() {
+  const s = getSelection(), r = s.getRangeAt(0); NE.slBlock = neTop(r.startContainer);
+  const rc = [...r.getClientRects()][0] || (NE.slBlock && NE.slBlock.getBoundingClientRect()) || nsA4.getBoundingClientRect();
+  NE.menu = true; clearTimeout(NE.t); NE.t = 0; neSlM.hidden = false;       // a commit waiting from the Enter just before must not rebuild the page under the menu
+  const w = neSlM.offsetWidth, h = neSlM.offsetHeight; let top = rc.bottom + 6; if (top + h > innerHeight - 8) top = Math.max(8, rc.top - h - 6);
+  neSlM.style.top = Math.round(top) + 'px'; neSlM.style.left = Math.round(nsClamp(rc.left, 8, innerWidth - w - 8)) + 'px';
+  neSlSet(0);
+}
+function neSlSet(i) { const it = [...neSlM.querySelectorAll('[data-item]')]; NE.slI = (i + it.length) % it.length; it.forEach((b, k) => b.setAttribute('aria-selected', k === NE.slI)); }
+const NE_IC = {
+  tbl: '<path d="M3 4h18v16H3zM3 10h18M9 4v16"/>', flow: '<circle cx="5" cy="12" r="2.5"/><circle cx="19" cy="12" r="2.5"/><path d="M7.5 12h9M13.5 9l3 3-3 3"/>', fx: '<path d="M4 18 11 6M4 6l7 12"/><path d="M15 8.5a2 2 0 1 1 3.4 1.4L15 13h4"/>', img: '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/>'
+};
+const neTile = k => '<span class="tile sm"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24">' + NE_IC[k] + '</svg></span>';
+const NE_NEW = {
+  table: () => '<div class="blk">' + '<div class="blk-head">' + neTile('tbl') + 'New table</div><table><thead><tr><th scope="col">Heading 1</th><th scope="col">Heading 2</th><th scope="col">Heading 3</th></tr></thead><tbody><tr><td>Text</td><td>Text</td><td>Text</td></tr><tr><td>Text</td><td>Text</td><td>Text</td></tr></tbody></table></div>',
+  diagram: () => '<figure class="blk flow"><figcaption class="blk-head">' + neTile('flow') + '<span>New diagram</span><span class="aside">Drawn from text. Click a box to edit.</span></figcaption><ol style="grid-template-columns:repeat(3,minmax(0,1fr))">' +
+    [1, 2, 3].map(n => '<li><span class="node" aria-hidden="true">' + n + '</span><b>Step ' + n + '</b><span>Describe this step.</span>' + (n < 3 ? '<svg class="ah" viewBox="0 0 9 12" aria-hidden="true"><path d="M0 0 9 6 0 12z"/></svg>' : '') + '</li>').join('') + '</ol></figure>',
+  formula: () => '<figure class="blk"><figcaption class="blk-head">' + neTile('fx') + '<span>New formula</span><span class="aside">Typed as a formula, not a picture</span></figcaption><div class="fx"><div class="row"><span class="lbl">As a formula</span><span class="tex" data-tex="\\ce{2H2 + O2 -> 2H2O}">2H2 + O2 gives 2H2O</span></div></div><p class="blk-cap">Add a short note about this formula.</p></figure>',
+  image: () => '<figure class="blk blk-img" style="width:62%;margin-left:auto;margin-right:auto"><div class="ph"><svg viewBox="0 0 24 24" aria-hidden="true">' + NE_IC.img + '</svg><span>Picture goes here</span><button type="button" class="ph-btn">Choose picture</button></div></figure>'
+};
+function neSlPick(item) {
+  let cb = NE.slBlock; neSlClose();
+  if (item !== 'ask' && (!cb || !cb.isConnected)) { const sn = getSelection().anchorNode; cb = sn && nsA4.contains(sn) ? neTop(sn) : null; }   // the page was rebuilt while the menu was open
+  if (item === 'ask') {
+    toast('In the real app the assistant rewrites this paragraph'); flowOn = false; setState('thinking'); setTimeout(() => { if (state === 'thinking') setState('normal'); }, 2200); return;
+  }
+  if (!cb || !cb.isConnected) return;
+  const t = document.createElement('template'); t.innerHTML = NE_NEW[item]().trim(); const el = t.content.firstElementChild;
+  el.dataset.src = 's' + NE.nid++; NE.dirty.add(el.dataset.src);
+  const empty = cb.tagName === 'P' && !cb.textContent.replace(/[​\s]/g, '') && !cb.querySelector('img, svg');
+  if (empty) cb.replaceWith(el); else cb.after(el);
+  if (!el.nextElementSibling) { const p = document.createElement('p'); p.innerHTML = '<br>'; el.after(p); }
+  if (item === 'table') NE.focusAfter = { id: el.dataset.src, sel: 'th' }; else NE.selId = el.dataset.src;
+  neSched(true);
+}
+/* picture: the file stays on this computer (object URL), nothing is uploaded */
+nsA4.addEventListener('click', e => { const b = e.target.closest('.ph-btn'); if (!b || !NE.on) return; const blk = b.closest('.blk'); if (!blk) return; NE.picFor = blk.dataset.src; $('picFile').value = ''; $('picFile').click(); });
+$('picFile').addEventListener('change', () => {
+  const f = $('picFile').files[0]; if (!f || !NE.on) return;
+  if (!/^image\//.test(f.type)) { toast('Choose a picture file, such as PNG or JPG.'); return; }
+  const url = URL.createObjectURL(f), img = new Image();
+  img.alt = f.name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ');
+  img.onerror = () => { URL.revokeObjectURL(url); toast('That file could not be shown as a picture.'); };
+  img.onload = () => {
+    const el = nsA4.querySelector('[data-src="' + NE.picFor + '"]'); if (!el) return;
+    const ph = el.querySelector('.ph'); if (ph) ph.replaceWith(img); else el.appendChild(img);
+    el.classList.add('has-img'); NE.dirty.add(NE.picFor); NE.selId = NE.picFor; NE.selVia = 'click'; markSaving(); neSched(true);
+  };
+  img.src = url;
+});
+neSlM.addEventListener('mousedown', e => e.preventDefault());
+neSlM.addEventListener('click', e => { const b = e.target.closest('[data-item]'); if (b) neSlPick(b.dataset.item); });
+
+/* keep the caret on screen while zoomed in */
+function neReveal() {
+  if (!NE.on || NS.zt <= 1.001) return;
+  const s = getSelection(); if (!s.rangeCount || !s.isCollapsed || !nsA4.contains(s.anchorNode)) return;
+  const r = s.getRangeAt(0); const rc = [...r.getClientRects()][0] || (neTop(s.anchorNode) || nsA4).getBoundingClientRect(), a = nsA4.getBoundingClientRect(), m = 48;
+  let dx = 0, dy = 0; if (rc.bottom > a.bottom - m) dy = a.bottom - m - rc.bottom; else if (rc.top < a.top + m) dy = a.top + m - rc.top;
+  if (rc.right > a.right - m) dx = a.right - m - rc.right; else if (rc.left < a.left + m) dx = a.left + m - rc.left;
+  if (dx || dy) nsPanBy(dx, dy);
+}
+/* after a page flip the caret follows to the new page */
+function neAfterGo(had) {
+  neDeselect(); neSlClose();
+  if (!had) return;
+  const b = nsA4.querySelector('.dv-fit.is-cur .dv-body'); if (!b) return;
+  const p = b.querySelector('p, li, h3') || b; b.focus({ preventScroll: true });
+  const r = document.createRange(); r.selectNodeContents(p); r.collapse(true); const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+  nePlaceSel(); neTbUpdate();
+}
+
+/* text events on the sheets */
+nsA4.addEventListener('beforeinput', e => {
+  if (!NE.on) return;
+  if (e.inputType === 'historyUndo') { e.preventDefault(); neUndo(); return; }
+  if (e.inputType === 'historyRedo') { e.preventDefault(); neRedo(); return; }
+  neDirtyFromSel();
+});
+nsA4.addEventListener('input', () => {
+  if (!NE.on) return;
+  neDirtyFromSel(); markSaving();
+  const over = [...nsA4.querySelectorAll('.dv-body')].some(b => b.offsetHeight > DV_BODY_H + 0.5);
+  neSched(over);
+  neTbUpdate(); neReveal();
+});
+nsA4.addEventListener('paste', e => {
+  if (!NE.on) return;
+  const t = e.clipboardData && e.clipboardData.getData('text/plain'); e.preventDefault();
+  if (t) document.execCommand('insertText', false, t.replace(/\r/g, ''));
+});
+nsA4.addEventListener('scroll', e => { if (e.target !== nsA4 && e.target.scrollTop) e.target.scrollTop = 0; }, true);   // a sheet is clipped, never scrolled by the caret
+document.addEventListener('selectionchange', () => { if (!NE.on) return; if (!NE.selRaf) NE.selRaf = requestAnimationFrame(() => { NE.selRaf = 0; if (NE.selId && NE.selVia === 'caret') { const el = neSelEl(), sl = getSelection(); if (!el || !sl.rangeCount || !el.contains(sl.anchorNode)) neDeselect(); else nePlaceSel(); } neTbUpdate(); }); });
+addEventListener('resize', () => { if (NE.on) neTbUpdate(); });
+document.addEventListener('keydown', e => {
+  if (!NE.on) return;
+  if (NE.pop) {
+    if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); nePopClose(true); return; }
+    if (NE.pop === 'del' && (e.key === 'Delete' || e.key === 'Backspace')) { e.preventDefault(); return; }   // a second press must not confirm
+  }
+  if (e.key === 'Escape' && !$('flTb').querySelector('.stmenu').hidden) { e.preventDefault(); e.stopPropagation(); neStClose(); return; }
+  const t = e.target, inChat = t.closest && t.closest('input, textarea, select') ;
+  const inSheet = nsA4.contains(t) || t === document.body || t === nsA4 || page.contains(t);
+  if (e.key === 'Escape') {
+    if (NE.menu) { e.preventDefault(); e.stopPropagation(); neSlClose(); return; }
+    if (NE.selId) { e.preventDefault(); e.stopPropagation(); neDeselect(); return; }
+    if (inSheet) { e.preventDefault(); e.stopPropagation(); $('bEditMode').click(); $('bEditMode').focus(); }
+    return;
+  }
+  if (inChat || !inSheet) return;
+  if (e.key === 'Enter') { const sl = getSelection(), tt = sl.rangeCount && sl.anchorNode && neTop(sl.anchorNode); if (tt && tt.dataset.keep === 'title') { e.preventDefault(); return; } }   // the title is one line
+  if (NE.menu) {
+    if (e.key === 'ArrowDown') { e.preventDefault(); neSlSet(NE.slI + 1); return; }
+    if (e.key === 'ArrowUp') { e.preventDefault(); neSlSet(NE.slI - 1); return; }
+    if (e.key === 'Enter') { e.preventDefault(); neSlPick(neSlM.querySelectorAll('[data-item]')[NE.slI].dataset.item); return; }
+    neSlClose();                                  // any other key closes the menu and then types normally
+  }
+  const mod = e.ctrlKey || e.metaKey;
+  if (mod && !e.altKey && (e.key === 'z' || e.key === 'Z')) { e.preventDefault(); e.shiftKey ? neRedo() : neUndo(); return; }
+  if (mod && !e.altKey && (e.key === 'y' || e.key === 'Y')) { e.preventDefault(); neRedo(); return; }
+  if (e.key === '/' && !mod && !e.altKey && t.closest && t.closest('#nsA4 .dv-body')) {
+    const s = getSelection();
+    if (s.rangeCount && s.isCollapsed && nsA4.contains(s.anchorNode) && !t.closest('.blk') ) {
+      const top = neTop(s.anchorNode);
+      if (top && /^(P|H3|LI|UL|OL)$/.test(top.tagName) && !(s.anchorNode.nodeType === 1 && s.anchorNode.classList && s.anchorNode.classList.contains('dv-body'))) {
+        const pre = document.createRange(); pre.selectNodeContents(top); pre.setEnd(s.anchorNode, s.anchorOffset);
+        const before = pre.toString().replace(/​/g, '');
+        const li = s.anchorNode.nodeType === 1 ? s.anchorNode : s.anchorNode.parentElement; const lineEl = li.closest('li, p, h3, td, th') || top;
+        const pl = document.createRange(); pl.selectNodeContents(lineEl); pl.setEnd(s.anchorNode, s.anchorOffset);
+        const lb = pl.toString().replace(/​/g, '');
+        if (lb === '' || /\s$/.test(lb)) { e.preventDefault(); neSlOpen(); return; }
+      }
+    }
+  }
+  if ((e.key === 'Delete' || e.key === 'Backspace') && NE.selId && !neTyping()) { e.preventDefault(); neDelete(); return; }
+  if (e.key === ' ' && !neTyping()) { NE.space = true; }
+}, true);
+document.addEventListener('keyup', e => { if (e.key === ' ') NE.space = false; });
+
+/* resize handles */
+{ let rs = null;
+  $('nsSel').addEventListener('pointerdown', e => {
+    const h = e.target.closest('.sel-h'), el = neSelEl(); if (!h || !el) return;
+    e.preventDefault(); e.stopPropagation();
+    const r = el.getBoundingClientRect(), bw = el.parentElement.getBoundingClientRect().width;
+    rs = { id: e.pointerId, x: e.clientX, w: r.width, bw, dir: h.dataset.c.includes('w') ? -1 : 1, el };
+    h.setPointerCapture(e.pointerId);
+  });
+  $('nsSel').addEventListener('pointermove', e => {
+    if (!rs || e.pointerId !== rs.id) return;
+    const pct = nsClamp((rs.w + 2 * rs.dir * (e.clientX - rs.x)) / rs.bw * 100, 25, 100);
+    rs.el.style.width = pct.toFixed(1) + '%'; rs.el.style.marginLeft = rs.el.style.marginRight = 'auto'; nePlaceSel();
+  });
+  const end = e => { if (!rs || e.pointerId !== rs.id) return; NE.dirty.add(rs.el.dataset.src); rs = null; neSched(true); };
+  $('nsSel').addEventListener('pointerup', end); $('nsSel').addEventListener('pointercancel', end);
+}
+/* drag a selected block up / down between the text blocks of its page */
+function neDragMove(bd, dy) {
+  const el = bd.el; el.style.position = 'relative'; el.style.zIndex = '3'; el.style.opacity = '.88'; el.style.boxShadow = '0 8px 24px -8px rgba(30,20,80,.5)';
+  el.style.transform = 'translateY(' + (dy / NS.s) + 'px)';
+  const t = neDropTarget(el), a = nsArea.getBoundingClientRect(), drop = $('nsDrop');
+  const r = el.getBoundingClientRect();
+  let y; if (t.ref) y = t.ref.getBoundingClientRect().top - 3; else { const l = [...el.parentElement.children].filter(c => c !== el).pop(); y = l ? l.getBoundingClientRect().bottom + 3 : r.top; }
+  const br = el.parentElement.getBoundingClientRect();
+  drop.hidden = false; drop.style.left = (br.left - a.left) + 'px'; drop.style.width = br.width + 'px'; drop.style.top = (y - a.top - 1.5) + 'px';
+  nePlaceSel();
+}
+function neDropTarget(el) {
+  const c = el.getBoundingClientRect(), cy = c.top + c.height / 2;
+  const sibs = [...el.parentElement.children].filter(x => x !== el && !x.dataset.cm);
+  for (const s of sibs) { if (s.dataset.keep) continue; const r = s.getBoundingClientRect(); if (r.top + r.height / 2 > cy) return { ref: s }; }
+  return { ref: null };
+}
+function neDragEnd(bd) {
+  const el = bd.el, t = neDropTarget(el); $('nsDrop').hidden = true;
+  el.style.transform = el.style.opacity = el.style.zIndex = el.style.position = el.style.boxShadow = '';
+  if (!el.getAttribute('style')) el.removeAttribute('style');
+  if (t.ref) t.ref.before(el); else el.parentElement.append(el);
+  neSched(true);
+}
+
+/* typed commands in the assistant chat (mock): next page, previous page, page 2, go to practice questions */
+const nsThread = $('nsThread'), askEl = $('ask');
+const NS_NUM = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6 };
+const NS_ALIAS = [['table', 'enzymes and what they digest'], ['diagram', 'path of food'], ['flow', 'path of food'], ['formula', 'starch to maltose'], ['equation', 'starch to maltose'], ['draft', 'draft'], ['new questions', 'draft'], ['3 questions', 'draft'], ['three questions', 'draft']];
+const nsClean = el => [...el.childNodes].filter(n => n.nodeType === 3 || (n.nodeType === 1 && !n.matches('.tile, .num, .from, .aside, svg, small'))).map(n => n.textContent).join('').replace(/\s+/g, ' ').trim();
+function nsItems() {
+  const out = [];
+  if (nsEff() === 'a4') {
+    [...nsA4.querySelectorAll('.dv-fit')].forEach((f, k) => {
+      f.querySelectorAll('h3, .blk-head').forEach(h => out.push({ name: nsClean(h), page: k }));
+      if (f.querySelector('[data-nsd]')) out.push({ name: 'draft', page: k });
+    });
+  } else {
+    nsHost().querySelectorAll('h3, .blk-head, .draft').forEach(h => {
+      const k = NS.pages.findIndex(p => p.us.some(u => u === h || u.contains(h)));
+      out.push({ name: h.classList.contains('draft') ? 'draft' : nsClean(h), page: k });
+    });
+  }
+  return out.filter(x => x.page >= 0 && x.name);
+}
+function nsFindSection(x) {
+  const items = nsItems(); let want = x;
+  const al = NS_ALIAS.find(a => x.includes(a[0])); if (al) want = al[1];
+  const toks = want.split(' ').filter(w => w.length > 1 && !['the', 'my', 'page', 'section', 'of', 'me', 'to', 'please', 'part'].includes(w));
+  if (!toks.length) return null;
+  return items.find(it => { const l = it.name.toLowerCase(); return toks.every(w => l.includes(w.replace(/s$/, ''))); }) || null;
+}
+function nsCommand(raw) {
+  const t = raw.toLowerCase().replace(/[.!?,"']/g, ' ').replace(/\s+/g, ' ').trim(), n = nsTotal(), at = () => 'Page ' + (NS.cur + 1) + ' of ' + n + '.';
+  let m;
+  if ((m = t.match(/\bpage (\d+|one|two|three|four|five|six)\b/) || t.match(/\b(\d+|one|two|three|four|five|six)(?:st|nd|rd|th)? page\b/))) {
+    const k = isNaN(+m[1]) ? NS_NUM[m[1]] : +m[1];
+    if (k < 1 || k > n) return 'This note has ' + n + (n === 1 ? ' page.' : ' pages.');
+    nsGo(k - 1); return 'Showing page ' + k + ' of ' + n + '.';
+  }
+  if (/\b(first page|beginning|start of the note)\b/.test(t)) { nsGo(0); return 'Back at the first page. ' + at(); }
+  if (/\b(last page|final page)\b/.test(t)) { nsGo(n - 1); return 'Showing the last page. ' + at(); }
+  if (/\b(next|forward)\b/.test(t) && (/\bpage\b/.test(t) || /^(go )?(next|forward)$/.test(t))) {
+    if (NS.cur >= n - 1) return 'You are on the last page already. ' + at(); nsGo(NS.cur + 1); return 'Next page. ' + at();
+  }
+  if (/\b(previous|prev|back)\b/.test(t) && (/\bpage\b/.test(t) || /^(go )?(back|previous|prev)$/.test(t))) {
+    if (NS.cur <= 0) return 'You are on the first page already. ' + at(); nsGo(NS.cur - 1); return 'Previous page. ' + at();
+  }
+  const sec = (t.match(/^(?:please )?(?:go to|goto|show me|show|open|take me to|jump to|find)\s+(.+)$/) || [])[1] || t;
+  const asks = /^(what|why|how|who|when|where|which|explain|tell|describe|define|can|could|is|are|do|does|did|give|make|write|create)\b/.test(t) || t.split(' ').length > 4;
+  const hit = (sec !== t || !asks) ? nsFindSection(sec) : null;
+  if (hit) { nsGo(hit.page); return 'Showing "' + hit.name + '" on page ' + (hit.page + 1) + ' of ' + n + '.'; }
+  return /^(go to|goto|show|open|take me to|jump to|find)\b/.test(t) ? 'I could not find that in this note. Try a heading, such as "practice questions".' : "In the real app I'd answer from " + ((CH[chKey].ctx.match(/^Block \d+/) || [CH[chKey].ctx])[0]) + ', using only your textbook pages. In this mock I follow page commands: "next page", "page 2", "go to practice questions".';
+}
+/* r24: chat state. agChat(true, animate) = greeting fades (200 ms), orb moves up and shrinks; messages stack from the bottom. agReset = back to the centred empty state, no animation. */
+function agAdd(role, text) {
+  const t = $('nsThread'), m = document.createElement('div'); m.className = 'msg ' + role;
+  if (role === 'ai') { const p = document.createElement('p'); p.textContent = text; m.appendChild(p); } else m.textContent = text;
+  t.hidden = false; t.appendChild(m);
+  const cb = $('chatBox'); cb.scrollTop = cb.scrollHeight;
+  if (!CALM && m.animate) m.animate([{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { duration: 220, easing: EASE });
+  return m;
+}
+function agChat(on, animate) {
+  const ag = document.querySelector('.agent'); if (ag.classList.contains('agchat') === on) return;
+  if (!on || !animate || CALM || body.classList.contains('opening') || body.classList.contains('morphing')) { ag.classList.toggle('agchat', on); return; }
+  const stg = document.querySelector('.agent .stage'), hel = document.querySelector('.agent .hello'), bodyEl = document.querySelector('.ag-body');
+  const o0 = stg.getBoundingClientRect(), h0 = hel.getBoundingClientRect(), b0 = bodyEl.getBoundingClientRect();
+  const ghost = hel.cloneNode(true); ghost.setAttribute('aria-hidden', 'true');
+  ghost.style.cssText = 'position:absolute;left:' + (h0.left - b0.left) + 'px;top:' + (h0.top - b0.top + bodyEl.scrollTop) + 'px;width:' + h0.width + 'px;pointer-events:none;margin:0';
+  bodyEl.appendChild(ghost);
+  ghost.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 200, easing: 'ease-out', fill: 'forwards' }).finished.then(() => ghost.remove(), () => ghost.remove());
+  ag.classList.add('agchat');
+  const o1 = stg.getBoundingClientRect();
+  stg.animate([{ transform: 'translateY(' + (o0.top - o1.top) + 'px)' }, { transform: 'none' }], { duration: 460, easing: EASE });   // translate only: same size
+}
+function agReset() {
+  const t = $('nsThread'); if (t) { t.replaceChildren(); t.hidden = true; }
+  const ag = document.querySelector('.agent'); if (ag) ag.classList.toggle('agchat', body.classList.contains('nopages'));   // chapters without pages start in chat state: their thread is the first messages
+}
+function agVoice(role) { agChat(true, true); agAdd(role, role === 'me' ? 'Make three more questions from page 50.' : SAY); }
+function nsSubmit() {
+  const v = askEl.value.trim(); if (!v || !nsReady) return;
+  const reply = nsCommand(v); askEl.value = '';
+  agChat(true, true); agAdd('me', v); agAdd('ai', reply);
+}
+askEl.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); nsSubmit(); } });
+document.querySelector('.composer .send').addEventListener('click', nsSubmit);
+
+/* mock-bar switch */
+const nsSeg = $('noteSeg');
+function nsSetVar(v) {
+  nsVar = v; nsSeg.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.n === v));
+  const u = new URL(location.href); u.searchParams.set('note', v); history.replaceState(null, '', u);
+  nsSched();
+}
+nsSeg.querySelectorAll('button').forEach(b => b.onclick = () => nsSetVar(b.dataset.n));
+nsSeg.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.n === nsVar));
+
+/* repaginate on resize, content change (formulas load, accept, edit) and mode change */
+new ResizeObserver(nsSched).observe(nsArea);
+new ResizeObserver(() => { if (!NE.on) nsSched(); }).observe(nsTrack);   // while editing, the hidden source note changes with every commit; the commit already re-paginates
+new MutationObserver(() => { const s = nsEff() + body.classList.contains('nopages'); if (s !== NS.sig) { NS.sig = s; nsSched(); } }).observe(body, { attributes: true, attributeFilter: ['class'] });
+doc.addEventListener('input', () => nsSched());
+requestAnimationFrame(() => { nsReady = true; NS.sig = nsEff() + body.classList.contains('nopages'); nsRefresh(); });
+addEventListener('load', () => { nsSched(); document.fonts && document.fonts.ready.then(nsSched); });
+
 /* ---------- orb states: normal | listening | thinking | speaking ---------- */
 const orb = document.getElementById('orb'), line = document.getElementById('stateLine'), mic = document.getElementById('bMic');
 const LINES = { normal: 'Ready', listening: 'Listening', thinking: 'Reading pages 49 to 54', speaking: '' };
 const SAY = 'Three questions from page 50 are ready.';
 const MIC_SVG = mic.innerHTML, STOP_SVG = '<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2.5" fill="currentColor" stroke="none"/></svg>';
+let char = null, charOn = false;   /* assistant character module (null = Orb) */
 let state = 'normal', flowOn = false, flowTimer = 0, wordTimer = 0, mouthKick = -1e9, mouthAmp = 0;
 function setState(s){
   clearTimeout(flowTimer); clearInterval(wordTimer);
   state = s; orb.dataset.state = s; document.documentElement.dataset.ostate = s;
+  if (char) char.setState(s);
   document.querySelectorAll('#stateSeg button').forEach(b => b.setAttribute('aria-pressed', b.dataset.s === s));
   const active = s !== 'normal' && !(s === 'thinking' && FL.writing);   /* while the notes are written the Talk button stays as it is */
   mic.innerHTML = active ? STOP_SVG : MIC_SVG; mic.setAttribute('aria-label', active ? 'Stop' : 'Speak instead of typing'); mic.classList.toggle('on', active);
   { const tb = $('ovTalk'); $('ovTalkL').textContent = active ? 'Stop' : 'Talk'; tb.setAttribute('aria-label', active ? 'Stop' : 'Start talking'); tb.classList.toggle('on', active);
     tb.querySelector('svg').innerHTML = active ? '<rect x="6" y="6" width="12" height="12" rx="2.5" fill="currentColor" stroke="none"/>' : '<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>';
     $('ovLine').textContent = active ? 'Tap Stop when you are done' : flowSub(); }
+  if (flowOn && !body.classList.contains('opening') && !body.classList.contains('morphing') && nsReady) { if (s === 'thinking' && !FL.writing) agVoice('me'); else if (s === 'speaking') agVoice('ai'); }
   if (s === 'speaking') speak(); else line.textContent = lineFor(s);
   if (flowOn && s === 'listening') flowTimer = setTimeout(() => setState('thinking'), 3500);
   if (flowOn && s === 'thinking') flowTimer = setTimeout(() => setState('speaking'), 2500);
@@ -1523,7 +2708,8 @@ function openChapter(k){
   const dur = 1150;   /* Kakashi: slower move (user: "too fast") */
   const aA = ap.animate([{ transform: 'translate(' + (F.left - L.left) + 'px,' + (F.top - L.top) + 'px)', width: F.width + 'px', height: F.height + 'px' }, { transform: 'translate(0,0)', width: L.width + 'px', height: L.height + 'px' }], { duration: dur, easing: EASE, fill: 'backwards' });
   const ty = (oF.top + oF.height / 2 - F.top) - (oL.top + oL.height / 2 - L.top);
-  osc.animate([{ transform: 'translateY(' + ty + 'px) scale(' + (oF.width / oL.width) + ')' }, { transform: 'none' }], { duration: dur, easing: EASE, fill: 'backwards' });
+  const cst = getComputedStyle(osc).transform, sc = cst && cst !== 'none' ? parseFloat(cst.slice(cst.indexOf('(') + 1)) : 1;   // (r25: the orb keeps its size in chat state)
+  osc.animate([{ transform: 'translateY(' + ty + 'px) scale(' + (oF.width / oL.width * sc) + ')' }, { transform: sc === 1 ? 'none' : 'scale(' + sc + ')' }], { duration: dur, easing: EASE, fill: 'backwards' });
   const dr = dp.getBoundingClientRect();
   sd.animate([{ transform: 'translateX(-110%)' }, { transform: 'none' }], { duration: dur - 150, easing: EASE, fill: 'backwards' });
   dp.animate([{ transform: 'translateX(' + (-(dr.right + 24)) + 'px)' }, { transform: 'none' }], { duration: dur - 150, delay: 150, easing: EASE, fill: 'backwards' });
@@ -1870,6 +3056,7 @@ function showNotes(on){
   nowOn = !!on; body.classList.toggle('mynotes', nowOn);
   [$('navNotes'), $('railNotes')].forEach(b => nowOn ? b.setAttribute('aria-current', 'page') : b.removeAttribute('aria-current'));
   markCurrent();
+  if (window.__ne && window.__ne.on) { neTbUpdate(); neBarPlace(); }   // the text toolbar must not float over the My notes cards
 }
 function openNotes(k){
   if (body.classList.contains('opening') || body.classList.contains('morphing')) return;
@@ -1907,19 +3094,23 @@ function markSaving(){
 }
 setInterval(() => { if (savedEl.dataset.s === 'saved') savedTxt.textContent = agoText(); }, 20000);
 doc.addEventListener('input', markSaving);
-/* Kakashi: edit mode toggle (pencil <-> Done) */
+/* edit mode toggle (pencil <-> Done). On the A4 view the sheets themselves become editable (see CANVA-STYLE EDITING above);
+   the old live-note editing stays only for the ?note=pages test variant. */
 (function(){
-  const btn = document.getElementById('bEditMode'), bar = document.getElementById('fmtBar'), d = document.getElementById('doc');
+  const btn = document.getElementById('bEditMode'), d = document.getElementById('doc');
   const pen = '<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/>', tick = '<path d="M20 6 9 17l-5-5"/>';
   function setEdit(on){
+    const a4 = nsReady && nsVar === 'a4';
+    if (a4 && on === NE.on) return;
     document.body.classList.toggle('editing', on);
-    d.contentEditable = on ? 'true' : 'false'; bar.inert = !on;
+    d.contentEditable = (on && !a4) ? 'true' : 'false';
     btn.setAttribute('aria-pressed', on); btn.setAttribute('aria-label', on ? 'Done editing' : 'Edit this note'); btn.dataset.tip = on ? 'Done editing (Esc)' : 'Edit this note';
     btn.querySelector('svg').innerHTML = on ? tick : pen; btn.querySelector('.eb-l').textContent = on ? 'Done' : 'Edit';
-    if (on) d.focus({ preventScroll: true }); else if (typeof markSaving === 'function') markSaving();
+    if (a4) { if (on) neStart(); else neStop(); }
+    else if (on) d.focus({ preventScroll: true }); else if (typeof markSaving === 'function') markSaving();
   }
   btn.addEventListener('click', () => setEdit(!document.body.classList.contains('editing')));
-  d.addEventListener('keydown', e => { if (e.key === 'Escape' && document.body.classList.contains('editing')) { e.stopPropagation(); setEdit(false); btn.focus(); } });
+  d.addEventListener('keydown', e => { if (e.key === 'Escape' && document.body.classList.contains('editing') && !(nsReady && nsVar === 'a4')) { e.stopPropagation(); setEdit(false); btn.focus(); } });
   window.__setEdit = setEdit;
 })();
 
@@ -2039,7 +3230,7 @@ function goOpening(){
   if (typeof showNotes === 'function') showNotes(false);
   flowOn = false; FL.live = true; setState('normal'); openSearch(false);
   const ap = document.querySelector('.agent'), sd = document.querySelector('.side'), dp = document.querySelector('.doc-pane');
-  const enter = () => { body.classList.add('opening'); flowReset(); $('ovType').setAttribute('aria-pressed', 'false'); $('ovTypeBox').hidden = true; };
+  const enter = () => { body.classList.add('opening'); agReset(); flowReset(); $('ovType').setAttribute('aria-pressed', 'false'); $('ovTypeBox').hidden = true; };
   if (CALM) { enter(); moving = false; $('ovTalk').focus({ preventScroll: true }); return; }   /* Calm: instant */
   const outs = [sd, dp, ap].map(el => el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 260, easing: 'ease-in', fill: 'forwards' }));
   Promise.all(outs.map(a => a.finished)).then(() => {
@@ -2326,16 +3517,17 @@ function loop(now){
   floatAmp += ((anim && state === 'listening' ? 1 : 0) - floatAmp) * ea; wobbleAmp += ((anim && state === 'thinking' ? 1 : 0) - wobbleAmp) * ea;
   const fy = Math.sin(now / 6000 * 6.283) * 5.5 * floatAmp, br = 1 + Math.sin(now / 2600 * 6.283) * .018 * floatAmp;
   const wr = Math.sin(now / 170) * 2.6 * wobbleAmp, wx = Math.sin(now / 230) * 1.6 * wobbleAmp;
-  floatEl.style.transform = (floatAmp + wobbleAmp) > .002 ? `translate(${wx.toFixed(2)}px,${fy.toFixed(2)}px) rotate(${wr.toFixed(2)}deg) scale(${br.toFixed(4)})` : '';
+  floatEl.style.transform = !charOn && (floatAmp + wobbleAmp) > .002 ? `translate(${wx.toFixed(2)}px,${fy.toFixed(2)}px) rotate(${wr.toFixed(2)}deg) scale(${br.toFixed(4)})` : '';
   /* glow pulse: a fake voice level while listening, the word envelope while speaking */
   let lvl = 0;
   if (anim && state === 'listening') lvl = Math.max(0, Math.sin(now / 800)) * (.5 + .5 * Math.sin(now / 260 + Math.sin(now / 900) * 2)) * .9 + .1;
   if (anim && state === 'speaking') lvl = env;
   lvlS += (lvl - lvlS) * Math.min(1, dt * 12);
+  if (char) char.setLevel(lvl);
   orb.style.setProperty('--lvl', lvlS.toFixed(3));
   dotEls.forEach((d, n) => { if (state === 'thinking' && anim) { const s = Math.sin((now / 1100 - n * .16) * 6.283); d.style.transform = `translateY(${(-2 - 2 * s).toFixed(2)}px)`; d.style.opacity = (.75 + .25 * s).toFixed(2); } else { d.style.transform = ''; d.style.opacity = ''; } });
   /* orb shader: the ring only turns in Full motion; in Normal it holds still */
-  if (glOK) {
+  if (glOK && !charOn) {
     const tg = stateTarget[state];
     const ease = STILL ? 1 : 1 - Math.pow(.02, dt);
     const sp = anim ? tg.speed : 0, hv = anim ? tg.hover : 0;
@@ -2356,6 +3548,49 @@ if (STILL) {
   addEventListener('resize', redraw);
 }
 window.__fps = (ms = 3000) => new Promise(res => { const s = window.__fc||0, t = performance.now(); setTimeout(() => res((((window.__fc||0) - s) / ((performance.now() - t) / 1000)).toFixed(1)), ms); });
+
+/* ---------- Assistant characters: Orb (default), Pebble, Lumo, Floaty, Nemu. Chosen in Settings, not saved. ---------- */
+const CH_NAMES = ['orb', 'pebble', 'lumo', 'floaty', 'nemu'];
+const chHost = $('charHost'), chBtns = [...document.querySelectorAll('#charBtns button')];
+const CH_FB = {   /* still silhouettes, used only when a module or WebGL is not available */
+  pebble: '<path d="M44 14c24-8 50 6 50 34 0 12-5 16-3 24 3 12-9 28-32 28-24 2-42-12-42-36 0-20 8-42 27-50z" fill="#F7F3ED"/><circle cx="62" cy="50" r="14" fill="#FF9A3C"/><circle cx="104" cy="76" r="7" fill="#FF9A3C"/>',
+  lumo: '<ellipse cx="46" cy="26" rx="9" ry="22" fill="#FFB347"/><ellipse cx="74" cy="26" rx="9" ry="22" fill="#FFB347"/><circle cx="60" cy="68" r="34" fill="#FFD666"/><circle cx="60" cy="68" r="14" fill="#FFF3C4"/>',
+  floaty: '<g fill="#B7D4FF"><circle cx="60" cy="64" r="26"/><circle cx="36" cy="68" r="19"/><circle cx="84" cy="68" r="20"/><circle cx="48" cy="46" r="19"/><circle cx="72" cy="46" r="17"/></g><circle cx="14" cy="76" r="7" fill="#7AA5FF"/><circle cx="108" cy="30" r="6" fill="#7AA5FF"/>',
+  nemu: '<path d="M16 88c0-24 18-42 44-42s44 18 44 42c0 8-8 12-16 12H32c-8 0-16-4-16-12z" fill="#C7B4FF"/><path d="M24 56 22 24l20 16zM96 56l2-32-20 16z" fill="#A78BFA"/><path d="M42 72q6 4 12 0M66 72q6 4 12 0" stroke="#5b4a9e" stroke-width="3.500" fill="none" stroke-linecap="round"/>',
+};
+let chToken = 0;
+async function setChar(name){
+  if (!CH_NAMES.includes(name)) name = 'orb';
+  const tok = ++chToken, H = document.documentElement;
+  chBtns.forEach(b => b.setAttribute('aria-pressed', b.dataset.char === name));
+  if (char) { try { char.destroy(); } catch (e) { /* ignore */ } char = null; }
+  chHost.textContent = '';
+  if (name === 'orb') { charOn = false; delete H.dataset.char; if (STILL && window.__redraw) window.__redraw(); return; }
+  charOn = true; H.dataset.char = name;
+  let c = null, failed = null;
+  try { const m = await import('./characters/' + name + '.js'); c = await m.create(chHost, { calm: CALM, still: STILL, t0: T0 }); }
+  catch (err) { failed = err; }
+  if (tok !== chToken) { if (c && c.destroy) c.destroy(); return; }   /* the user picked another one meanwhile */
+  if (failed || !c) {
+    console.warn('Character "' + name + '" is not available, showing a still silhouette.', failed);
+    chHost.innerHTML = '<div class="char-fb"><svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">' + CH_FB[name] + '</svg></div>';
+    return;
+  }
+  char = c; c.setState(state); c.setCalm(CALM); c.start();
+}
+chBtns.forEach(b => b.onclick = () => setChar(b.dataset.char));
+calmHooks.push(() => { if (char) char.setCalm(CALM); });
+addEventListener('pointermove', e => {   /* look-lean: the pointer direction, -1..1, same distance falloff as the eyes */
+  if (!char) return;
+  const r = orb.getBoundingClientRect(), dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
+  const d = Math.hypot(dx, dy) || 1, k = Math.min(1, d / 320);
+  char.setLook(dx / d * k, dy / d * k);
+});
+document.addEventListener('pointerleave', () => { if (char) char.setLook(0, 0); });
+window.__setChar = setChar; window.__char = () => char;
+if (q.get('char')) await setChar(q.get('char'));
+if (q.has('look')) { const [lx, ly] = q.get('look').split(',').map(Number); if (char) char.setLook(Math.max(-1, Math.min(1, lx / 13)), Math.max(-1, Math.min(1, ly / 13))); }
+
 window.__ready = true;
 </script>
 </body>

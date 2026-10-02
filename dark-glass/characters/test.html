@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Character test</title>
+<style>
+  :root{color-scheme:dark}
+  body{margin:0;min-height:100vh;background:radial-gradient(120% 90% at 30% 10%,#2a2f6e 0%,#161a45 55%,#0e1030 100%);color:#e8ecff;font:14px/1.4 system-ui,Segoe UI,sans-serif;display:grid;place-items:center;gap:14px;padding:18px;box-sizing:border-box}
+  #stage{position:relative;width:320px;height:320px;border-radius:18px;background:rgba(255,255,255,.04);outline:1px solid rgba(255,255,255,.12)}
+  #host{position:absolute;inset:0}
+  .row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center}
+  button{font:inherit;color:inherit;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.28);border-radius:10px;padding:8px 14px;min-height:40px;cursor:pointer}
+  button[aria-pressed="true"]{background:#fff;color:#161a45}
+  button:focus-visible,input:focus-visible{outline:2px solid #fff;outline-offset:2px}
+  label{display:flex;gap:8px;align-items:center}
+  #msg{min-height:1.4em;color:#ffd6a3}
+</style>
+</head>
+<body>
+  <h1 style="margin:0;font-size:18px" id="title">Character</h1>
+  <div id="stage"><div id="host"></div></div>
+  <div class="row" role="group" aria-label="State">
+    <button data-s="normal" aria-pressed="true">Ready</button>
+    <button data-s="listening" aria-pressed="false">Listening</button>
+    <button data-s="thinking" aria-pressed="false">Thinking</button>
+    <button data-s="speaking" aria-pressed="false">Speaking</button>
+  </div>
+  <div class="row">
+    <label>Level <input id="lvl" type="range" min="0" max="1" step="0.01" value="0" aria-label="Audio level"></label>
+    <button id="calm" aria-pressed="false">Calm</button>
+    <button id="auto" aria-pressed="false">Fake voice</button>
+  </div>
+  <div id="msg" role="status"></div>
+<script type="module">
+const q = new URLSearchParams(location.search);
+const name = (q.get('c') || 'pebble').replace(/[^a-z]/g, '');
+document.getElementById('title').textContent = name[0].toUpperCase() + name.slice(1);
+const host = document.getElementById('host'), msg = document.getElementById('msg');
+let ch = null;
+try {
+  const mod = await import('./' + name + '.js');
+  ch = await mod.create(host, { calm: q.has('calm'), still: q.has('still'), t0: parseFloat(q.get('t') || '0') });
+  ch.start();
+} catch (e) {
+  msg.textContent = 'Could not load ' + name + '.js (' + (e && e.message || e) + ')';
+  console.warn('character load failed', e);
+}
+window.__char = ch;
+const lvl = document.getElementById('lvl');
+window.__setLevel = v => { lvl.value = v; if (ch) ch.setLevel(+v); };
+lvl.oninput = () => ch && ch.setLevel(+lvl.value);
+document.querySelectorAll('button[data-s]').forEach(b => b.onclick = () => {
+  document.querySelectorAll('button[data-s]').forEach(x => x.setAttribute('aria-pressed', x === b));
+  ch && ch.setState(b.dataset.s);
+});
+const calm = document.getElementById('calm');
+calm.onclick = () => { const on = calm.getAttribute('aria-pressed') !== 'true'; calm.setAttribute('aria-pressed', on); ch && ch.setCalm(on); };
+let auto = 0; const autoB = document.getElementById('auto');
+autoB.onclick = () => {
+  const on = autoB.getAttribute('aria-pressed') !== 'true'; autoB.setAttribute('aria-pressed', on);
+  clearInterval(auto);
+  if (on) auto = setInterval(() => { const v = Math.max(0, Math.sin(performance.now() / 300)) * (.5 + .5 * Math.sin(performance.now() / 97)); window.__setLevel(v.toFixed(2)); }, 50);
+};
+addEventListener('pointermove', e => {
+  if (!ch) return; const r = host.getBoundingClientRect();
+  const dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2), d = Math.hypot(dx, dy) || 1, k = Math.min(1, d / 320);
+  ch.setLook(dx / d * k, dy / d * k);
+});
+let fc = 0; (function f(){ fc++; requestAnimationFrame(f); })();
+window.__fps = (ms = 3000) => new Promise(res => { const s = fc, t = performance.now(); setTimeout(() => res(((fc - s) / ((performance.now() - t) / 1000)).toFixed(1)), ms); });
+window.__ready = true;
+</script>
+</body>
+</html>

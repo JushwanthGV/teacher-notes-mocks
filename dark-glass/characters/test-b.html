@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Character test B</title>
+<style>
+  body{margin:0;background:#1A1C2E;color:#d8dcf0;font:14px system-ui,sans-serif;display:grid;grid-template-columns:auto 1fr;gap:24px;padding:20px;min-height:100vh;box-sizing:border-box}
+  #host{width:420px;height:420px;position:relative;background:#14162a;border-radius:16px}
+  .col{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+  button{background:#2a2d4a;color:#e8ebff;border:1px solid #444a7a;border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer}
+  button[aria-pressed=true]{background:#5b4fd0;border-color:#8b7bff}
+  label{display:flex;gap:8px;align-items:center}
+  #log{font:12px ui-monospace,monospace;white-space:pre-wrap;color:#9aa3d0}
+</style>
+</head>
+<body>
+<div id="host"></div>
+<div class="col">
+  <h1 id="title" style="margin:0;font-size:18px"></h1>
+  <div id="states">
+    <button data-s="normal" aria-pressed="true">Ready</button>
+    <button data-s="listening" aria-pressed="false">Listening</button>
+    <button data-s="thinking" aria-pressed="false">Thinking</button>
+    <button data-s="speaking" aria-pressed="false">Speaking</button>
+  </div>
+  <label>Level <input id="level" type="range" min="0" max="1" step="0.01" value="0.6"> <output id="lv">0.60</output></label>
+  <label><input id="auto" type="checkbox"> auto level (fake voice)</label>
+  <label><input id="calm" type="checkbox"> calm</label>
+  <label>Look x <input id="lookx" type="range" min="-1" max="1" step="0.1" value="0"></label>
+  <div id="log"></div>
+</div>
+<script type="module">
+  const q = new URLSearchParams(location.search);
+  const name = q.get('c') || 'lumo';
+  window.__errs = [];
+  addEventListener('error', e => window.__errs.push(String(e.message || e.error)));
+  addEventListener('unhandledrejection', e => window.__errs.push('rej: ' + (e.reason && e.reason.message || e.reason)));
+  document.getElementById('title').textContent = name;
+  const host = document.getElementById('host');
+  const log = document.getElementById('log');
+  window.__ready = false;
+  try {
+    const mod = await import('./' + name + '.js');
+    const c = await mod.create(host, { calm: q.has('calm'), still: q.has('still'), t0: +(q.get('t0') || 0) });
+    window.api = c;
+    window.__fallback = !!host.querySelector('[data-fallback]');
+    const btns = [...document.querySelectorAll('#states button')];
+    btns.forEach(b => b.addEventListener('click', () => {
+      btns.forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+      c.setState(b.dataset.s);
+    }));
+    const lvl = document.getElementById('level');
+    lvl.addEventListener('input', () => { c.setLevel(+lvl.value); document.getElementById('lv').textContent = (+lvl.value).toFixed(2); });
+    c.setLevel(+lvl.value);
+    document.getElementById('calm').addEventListener('change', e => c.setCalm(e.target.checked));
+    document.getElementById('lookx').addEventListener('input', e => c.setLook(+e.target.value, 0));
+    let raf = 0;
+    document.getElementById('auto').addEventListener('change', e => {
+      cancelAnimationFrame(raf);
+      if (!e.target.checked) return;
+      const loop = t => { const v = Math.max(0, Math.sin(t / 130) * 0.5 + Math.sin(t / 310) * 0.4 + 0.1); c.setLevel(Math.min(1, v)); raf = requestAnimationFrame(loop); };
+      raf = requestAnimationFrame(loop);
+    });
+    host.addEventListener('pointermove', e => { const r = host.getBoundingClientRect(); c.setLook(((e.clientX - r.left) / r.width - 0.5) * 2, -((e.clientY - r.top) / r.height - 0.5) * 2); });
+    window.__ready = true;
+  } catch (e) {
+    window.__errs.push('load: ' + e.message);
+    log.textContent = 'FAILED: ' + e.message;
+  }
+  window.__done = true;
+</script>
+</body>
+</html>
