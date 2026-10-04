@@ -380,15 +380,8 @@ body[data-vstate="speaking"] .v-live{background:#0B6E7F;box-shadow:0 0 0 4px rgb
 .v-foot{font-size:12.5px;line-height:1.4;color:var(--ink-3);text-align:center;padding:4px 18px 14px}
 @media (max-height:800px){.v-stage{min-height:180px}.orb-scale{transform:scale(1.05)}.v-cap{min-height:110px}.v-text{font-size:16.5px}}
 
-/* mock controls (not product UI) */
-.mockbar{position:fixed;left:50%;bottom:8px;transform:translateX(-50%);z-index:20;display:flex;align-items:center;gap:8px;padding:5px 6px 5px 12px;border-radius:999px;
-  background:rgba(24,33,44,.9);color:#fff;font-size:12.5px;box-shadow:0 10px 30px -10px rgba(0,0,0,.5)}
-.mockbar .lbl{font-weight:600}
-.mockbar .seg{background:rgba(255,255,255,.12)}
-.mockbar .seg button{color:rgba(255,255,255,.9);height:26px;font-size:12.5px}
-.mockbar .seg button[aria-pressed="true"]{background:#fff;color:var(--ink)}
-.mockbar :focus-visible{outline-color:#fff}
-body.clean .mockbar{display:none}
+/* mock controls (removed) */
+.mockbar{display:none!important}
 
 /* ============ 7. PRINT PREVIEW: exact A4 sheets, same CSS as the page ============ */
 .pp{position:fixed;inset:0;z-index:40;display:flex;flex-direction:column;background:#D5DBE2}

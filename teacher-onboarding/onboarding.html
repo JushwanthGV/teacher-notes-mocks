@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Teachers Notes — Teacher Onboarding & Workspace Setup">
+  <title>Teacher Onboarding — Teachers Notes</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="onboarding.css">
+</head>
+<body>
+
+  <!-- Shared SVG Definitions -->
+  <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
+    <defs>
+      <linearGradient id="logoLeftGrad" x1="0%" y1="100%" x2="50%" y2="0%">
+        <stop offset="0%" stop-color="#a855f7" />
+        <stop offset="50%" stop-color="#6366f1" />
+        <stop offset="100%" stop-color="#38bdf8" />
+      </linearGradient>
+      <linearGradient id="logoRightGrad" x1="50%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#38bdf8" />
+        <stop offset="40%" stop-color="#818cf8" />
+        <stop offset="100%" stop-color="#7c3aed" />
+      </linearGradient>
+      <linearGradient id="logoBarGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#a855f7" />
+        <stop offset="100%" stop-color="#6366f1" />
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <main class="onboard-viewport">
+    <!-- Ambient Depth Lighting Overlays -->
+    <div class="ambient-glow ambient-left-blue"></div>
+    <div class="ambient-glow ambient-right-sunset"></div>
+
+    <!-- Top Header Bar (Branding & Account Link) -->
+    <header class="onboard-top-bar">
+      <a href="index.html" class="onboard-brand" aria-label="Go to login page">
+        <div class="onboard-brand-logo">
+          <svg viewBox="0 0 64 64" width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M32 7 C34.5 7 36.5 8.5 37.8 11 L55.5 48 C57.2 51.5 54.5 55 50.8 55 L43 55 C40.8 55 38.8 53.6 37.8 51.5 L32 39 L26.2 51.5 C25.2 53.6 23.2 55 21 55 L13.2 55 C9.5 55 6.8 51.5 8.5 48 L26.2 11 C27.5 8.5 29.5 7 32 7 Z" fill="url(#logoLeftGrad)" />
+            <path d="M32 7 C34.5 7 36.5 8.5 37.8 11 L55.5 48 C57.2 51.5 54.5 55 50.8 55 L43 55 C40.8 55 38.8 53.6 37.8 51.5 L32 39 Z" fill="url(#logoRightGrad)" />
+            <polygon points="32,23 24,38 40,38" fill="#070913" />
+            <rect x="22" y="44" width="20" height="6.5" rx="3.25" fill="url(#logoBarGrad)" />
+          </svg>
+        </div>
+        <span class="onboard-brand-text">Teachers Notes</span>
+      </a>
+
+      <div class="top-account-link">
+        <span>Already have an account?</span>
+        <a href="index.html" id="topLoginLink">Log in</a>
+      </div>
+    </header>
+
+    <!-- Main Glass Onboarding Container -->
+    <div class="onboard-main-container">
+      
+      <!-- ========================================== -->
+      <!-- LEFT SIDEBAR (25-27%)                      -->
+      <!-- ========================================== -->
+      <aside class="onboard-sidebar">
+        
+        <div class="sidebar-steps-wrapper">
+          <div class="steps-connector-line"></div>
+
+          <!-- Step 1 Navigation -->
+          <div class="step-nav-item is-active" id="stepNavItem1" data-step="1">
+            <div class="step-nav-circle">1</div>
+            <div class="step-nav-text">
+              <span class="step-nav-title">Create Workspace</span>
+              <span class="step-nav-desc">Set up your teaching space</span>
+            </div>
+          </div>
+
+          <!-- Step 2 Navigation -->
+          <div class="step-nav-item" id="stepNavItem2" data-step="2">
+            <div class="step-nav-circle">2</div>
+            <div class="step-nav-text">
+              <span class="step-nav-title">Your Details</span>
+              <span class="step-nav-desc">Tell us about yourself</span>
+            </div>
+          </div>
+
+          <!-- Step 3 Navigation (AI Onboarding Continuation) -->
+          <div class="step-nav-item" id="stepNavItem3" data-step="3" style="cursor: default; opacity: 0.7;">
+            <div class="step-nav-circle">3</div>
+            <div class="step-nav-text">
+              <span class="step-nav-title">AI Curriculum Setup</span>
+              <span class="step-nav-desc">Which board & curriculum</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar Bottom Educator Card -->
+        <div class="sidebar-bottom-card">
+          <div class="educator-icon-box" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <div class="educator-card-content">
+            <span class="educator-card-title">Built for educators</span>
+            <span class="educator-card-desc">Create, teach and inspire with AI-powered tools.</span>
+          </div>
+        </div>
+
+      </aside>
+
+      <!-- ========================================== -->
+      <!-- RIGHT CONTENT AREA (FORM & FLOW)           -->
+      <!-- ========================================== -->
+      <section class="onboard-content-area">
+        
+        <!-- Step 1 Pane: Create Workspace (Specification Focus) -->
+        <div class="step-pane active" id="stepPane1">
+          
+          <div class="onboard-step-indicator">
+            <span class="step-label-text">STEP 1 OF 2 — WORKSPACE SETUP</span>
+            <div class="step-progress-bars">
+              <div class="progress-bar-seg is-active"></div>
+              <div class="progress-bar-seg"></div>
+            </div>
+          </div>
+
+          <div class="onboard-heading-block">
+            <h1 class="onboard-main-heading">
+              Create your <span class="heading-gradient-word">workspace.</span>
+            </h1>
+            <p class="onboard-sub-description">
+              Set up your teaching space. You can always make changes later.
+            </p>
+          </div>
+
+          <form id="step1Form" class="onboard-form" novalidate>
+            
+            <!-- Row 1: Workspace Name & Right Helper Card -->
+            <div class="form-field-row">
+              <div class="form-col-flex" id="colWorkspaceName">
+                <label for="workspaceNameInput" class="form-label">Workspace name</label>
+                <div class="onboard-input-box">
+                  <span class="input-icon-decor" aria-hidden="true">
+                    <!-- School / Building Icon -->
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                      <polyline points="9 22 9 12 15 12 15 22"/>
+                    </svg>
+                  </span>
+                  <input 
+                    type="text" 
+                    id="workspaceNameInput" 
+                    class="onboard-glass-input" 
+                    placeholder="e.g. Frank Public School" 
+                    value="Frank Public School"
+                    required
+                  >
+                </div>
+                <span class="field-help-text">This is the name of your school or institution.</span>
+                <span class="field-error-msg">Please enter your workspace name.</span>
+              </div>
+
+              <!-- Right-Side Decorative Helper Card -->
+              <div class="form-col-fixed">
+                <div class="decorative-helper-card">
+                  <svg class="helper-sparkle-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C12 7.5 7.5 12 2 12C7.5 12 12 16.5 12 22C12 16.5 16.5 12 22 12C16.5 12 12 7.5 12 2Z"/>
+                  </svg>
+                  <span class="helper-card-text">
+                    Your workspace is your personal teaching hub.
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Row 2: Full Name & Role -->
+            <div class="form-field-row">
+              <div class="form-col-flex" id="colFullName">
+                <label for="fullNameInput" class="form-label">Your full name</label>
+                <div class="onboard-input-box">
+                  <span class="input-icon-decor" aria-hidden="true">
+                    <!-- User Icon -->
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                      <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                  </span>
+                  <input 
+                    type="text" 
+                    id="fullNameInput" 
+                    class="onboard-glass-input" 
+                    placeholder="Your full name" 
+                    required
+                  >
+                </div>
+                <span class="field-error-msg">Please enter your full name.</span>
+              </div>
+
+              <div class="form-col-flex" id="colRole">
+                <label class="form-label">Your role</label>
+                <div class="custom-select-wrapper" id="roleSelectWrapper">
+                  <div class="custom-select-trigger" id="roleSelectTrigger" tabindex="0">
+                    <span class="input-icon-decor" aria-hidden="true" style="left: 16px;">
+                      <!-- Graduation Cap Icon -->
+                      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                        <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                      </svg>
+                    </span>
+                    <span id="selectedRoleText" style="margin-left: 30px;">Teacher</span>
+                    <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="6 9 12 15 18 9"/>
+                    </svg>
+                  </div>
+                  <div class="custom-select-options">
+                    <div class="custom-option selected" data-value="Teacher">Teacher</div>
+                    <div class="custom-option" data-value="School Administrator">School Administrator</div>
+                    <div class="custom-option" data-value="Tutor">Tutor</div>
+                    <div class="custom-option" data-value="Other">Other</div>
+                  </div>
+                </div>
+                <input type="hidden" id="roleInput" name="role" value="Teacher">
+              </div>
+            </div>
+
+            <!-- Row 3: Phone Number (Optional) -->
+            <div class="form-field-row">
+              <div class="form-col-flex" style="max-width: 480px;">
+                <label for="phoneInput" class="form-label">
+                  Phone number <span class="label-optional">(optional)</span>
+                </label>
+                <div class="onboard-input-box">
+                  <span class="input-icon-decor" aria-hidden="true">
+                    <!-- Phone Icon -->
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                    </svg>
+                  </span>
+                  <input 
+                    type="tel" 
+                    id="phoneInput" 
+                    class="onboard-glass-input" 
+                    placeholder="+91 98765 43210" 
+                  >
+                </div>
+              </div>
+            </div>
+
+          </form>
+
+        </div>
+
+        <!-- Step 2 Pane: Your Details -->
+        <div class="step-pane" id="stepPane2">
+          <div class="onboard-step-indicator">
+            <span class="step-label-text">STEP 2 OF 2 — TEACHER DETAILS</span>
+            <div class="step-progress-bars">
+              <div class="progress-bar-seg is-completed"></div>
+              <div class="progress-bar-seg is-active"></div>
+            </div>
+          </div>
+
+          <div class="onboard-heading-block">
+            <h1 class="onboard-main-heading">
+              Tell us about <span class="heading-gradient-word">yourself.</span>
+            </h1>
+            <p class="onboard-sub-description">
+              Help your students and colleagues learn more about your teaching background.
+            </p>
+          </div>
+
+          <form id="step2Form" class="onboard-form">
+            <div class="form-field-row">
+              <div class="form-col-flex">
+                <label class="form-label">Years of teaching experience</label>
+                <input type="number" id="expInput" class="onboard-glass-input" placeholder="e.g. 5" value="5" min="0">
+              </div>
+              <div class="form-col-flex">
+                <label class="form-label">Primary Department</label>
+                <input type="text" id="deptInput" class="onboard-glass-input" placeholder="e.g. STEM / Science" value="STEM & Robotics">
+              </div>
+            </div>
+            <div class="form-col-flex">
+              <label class="form-label">Bio / Teaching Philosophy</label>
+              <textarea id="bioInput" class="onboard-glass-input" style="height: 72px; padding: 10px 14px; resize: none;" placeholder="Share a few words on how you like to empower students...">Passionate about decoding complex AI and computing concepts into engaging interactive lessons for students.</textarea>
+            </div>
+          </form>
+        </div>
+
+
+        <!-- Bottom Action Bar (Continue Button) -->
+        <div class="onboard-action-bar">
+          <button type="button" class="back-step-btn" id="prevStepBtn">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="15 18 9 12 15 6"/>
+            </svg>
+            <span>Back</span>
+          </button>
+
+          <button type="button" class="continue-step-btn" id="nextStepBtn">
+            <span id="btnActionText">Continue</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+              <polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </button>
+        </div>
+
+      </section>
+
+    </div>
+
+    <!-- Cinematic AI Onboarding Transition Overlay -->
+    <div class="ai-transition-overlay" id="aiTransitionOverlay" aria-live="polite" aria-hidden="true">
+      <div class="trans-nebula" aria-hidden="true"></div>
+      <div class="trans-glow-center" aria-hidden="true"></div>
+
+      <div class="trans-content">
+        <!-- AI Orb matching the dark-glass visual language -->
+        <div class="trans-orb-wrap" id="transOrbWrap">
+          <div class="trans-float">
+            <div class="trans-orb" data-state="normal">
+              <div class="trans-orb-gl"></div>
+              <div class="trans-sphere">
+                <div class="trans-swirl"></div>
+              </div>
+              <div class="trans-face">
+                <div class="trans-eye l" id="transEyeL"></div>
+                <div class="trans-eye r" id="transEyeR"></div>
+                <div class="trans-mouth"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sequential Message Sequence -->
+        <div class="trans-message-box" id="transMessageBox">
+          <div class="trans-msg" id="transMsg"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="onboarding.js"></script>
+</body>
+</html>

@@ -665,12 +665,8 @@ body:not(.calm) .tr-all.open .tr-all-box{animation:trAllIn .26s cubic-bezier(.22
 .tpo-confirm h3{margin:0;font-size:22px;font-weight:700;letter-spacing:-.01em;max-width:30ch}
 .tpo-confirm p{margin:0 0 16px;font-size:15.5px;line-height:1.45;color:var(--ink-2)}
 
-/* ---------- mock controls ---------- */
-.mockbar{position:fixed;left:50%;bottom:6px;transform:translateX(-50%);z-index:20;display:flex;align-items:center;gap:8px;padding:5px 6px 5px 12px;border-radius:999px;
-  background:rgba(20,14,60,.86);border:1px solid rgba(255,255,255,.22);font-size:12.5px;box-shadow:0 10px 30px -10px rgba(0,0,0,.6)}
-.mockbar .lbl{color:var(--ink-2);font-weight:600}
-.mockbar .seg button{height:24px;font-size:12px;padding:0 9px}
-body.clean .mockbar{display:none}
+/* ---------- mock controls (removed) ---------- */
+.mockbar{display:none!important}
 
 /* ---------- print preview ---------- */
 .pp{position:fixed;inset:0;z-index:30;display:none;place-items:center;background:rgba(18,12,54,.72)}
@@ -920,9 +916,30 @@ body:not(.opening) .agent.agchat .chatbox{-webkit-mask-image:linear-gradient(tra
 </style>
 </head>
 <body>
-<script>/* opening screen is the default; legacy deep links and ?start=panes go straight to the 3 panes */
-(function(){var q=new URLSearchParams(location.search),s=q.get('start');
-if(s==='opening'||(s!=='panes'&&!q.has('view')&&!q.has('print')&&!q.has('scroll')&&!q.has('accepted')))document.body.classList.add('opening');})();</script>
+<script>/* Onboarding guard & view mode resolver */
+(function(){
+  var q = new URLSearchParams(location.search), s = q.get('start');
+  var isCompleted = localStorage.getItem('aida_onboarding_completed') === 'true';
+  var step = localStorage.getItem('aida_onboarding_step');
+  var profile = localStorage.getItem('aida_teacher_profile');
+
+  // Guard: if incomplete user navigates here without completing Step 1 and 2
+  if (!isCompleted && step !== '3' && !profile && s !== 'opening') {
+    window.location.replace('../onboarding.html');
+    return;
+  }
+
+  // Returning completed user: goes straight to dashboard panes (no opening screen) unless start=opening requested
+  if (isCompleted && s !== 'opening') {
+    // Body will NOT have 'opening' class; 3 panes will show directly
+    return;
+  }
+
+  // Incomplete user continuing AI onboarding, or explicit start=opening:
+  if (s === 'opening' || (!isCompleted && s !== 'panes' && !q.has('view') && !q.has('print') && !q.has('scroll') && !q.has('accepted'))) {
+    document.body.classList.add('opening');
+  }
+})();</script>
 <div class="nebula" aria-hidden="true">
   <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="blob b4"></div><div class="blob b5"></div>
   <div id="aurora"></div>
@@ -1245,7 +1262,7 @@ if(s==='opening'||(s!=='panes'&&!q.has('view')&&!q.has('print')&&!q.has('scroll'
   </aside>
 </main>
 
-<aside class="mockbar" aria-label="Mock controls">
+<aside class="mockbar" aria-label="Mock controls" hidden style="display:none!important">
   <span class="lbl">Mock: orb</span>
   <div class="seg" id="stateSeg"><button data-s="normal" aria-pressed="true">Normal</button><button data-s="listening" aria-pressed="false">Listening</button><button data-s="thinking" aria-pressed="false">Thinking</button><button data-s="speaking" aria-pressed="false">Speaking</button></div>
   <span class="lbl">Chapter</span>
@@ -2630,13 +2647,15 @@ document.querySelector('.composer .send').addEventListener('click', nsSubmit);
 
 /* mock-bar switch */
 const nsSeg = $('noteSeg');
-function nsSetVar(v) {
-  nsVar = v; nsSeg.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.n === v));
-  const u = new URL(location.href); u.searchParams.set('note', v); history.replaceState(null, '', u);
-  nsSched();
+if (nsSeg) {
+  function nsSetVar(v) {
+    nsVar = v; nsSeg.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.n === v));
+    const u = new URL(location.href); u.searchParams.set('note', v); history.replaceState(null, '', u);
+    nsSched();
+  }
+  nsSeg.querySelectorAll('button').forEach(b => b.onclick = () => nsSetVar(b.dataset.n));
+  nsSeg.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.n === nsVar));
 }
-nsSeg.querySelectorAll('button').forEach(b => b.onclick = () => nsSetVar(b.dataset.n));
-nsSeg.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.n === nsVar));
 
 /* repaginate on resize, content change (formulas load, accept, edit) and mode change */
 new ResizeObserver(nsSched).observe(nsArea);
@@ -2953,18 +2972,31 @@ function renderFlow(animate){
   if (animate && !CALM) flArea.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: 260, easing: EASE });
   refreshLines();
 }
+function saveFlowState(){
+  try {
+    localStorage.setItem('aida_ai_flow_state', JSON.stringify({
+      step: FL.step,
+      board: FL.board,
+      cls: FL.cls,
+      subj: FL.subj,
+      chap: FL.chap,
+      fresh: FL.fresh
+    }));
+  } catch(e) {}
+}
 function flowGo(st){
   FL.step = st; renderFlow(true);
   if (ORDER.indexOf(st) >= 3 || st === 'continue' || st === 'template') body.classList.add('ready');
   const f = st === 'template' ? $('trStage') : flArea.querySelector('button');
   if (f) f.focus({ preventScroll: true });
+  saveFlowState();
 }
 function flowBack(s){
   const i = ORDER.indexOf(s);
   if (i <= 0) FL.board = null; if (i <= 1) FL.cls = null; if (i <= 2) FL.subj = null; if (i <= 3) FL.chap = null;
   FL.fresh = false; flowGo(s);
 }
-function flowReset(){ FL.board = FL.cls = FL.subj = FL.chap = null; FL.fresh = false; FL.step = 'board'; FL.writing = false; FL.live = true; body.classList.remove('busy'); renderFlow(false); }
+function flowReset(){ FL.board = FL.cls = FL.subj = FL.chap = null; FL.fresh = false; FL.step = 'board'; FL.writing = false; FL.live = true; body.classList.remove('busy'); renderFlow(false); saveFlowState(); }
 flArea.addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b || b.closest('#tr')) return;
   const d = b.dataset;
@@ -2998,18 +3030,53 @@ function finishFlow(i){
   const id = 'n' + (++sessN);
   SESS.unshift({ id, t: CH[k].title + (fresh ? ', fresh copy' : ', new notes'), ch: k, day: 'Now' });
   curSess = id; renderSess(); sessList.scrollTop = 0; renderLib();
+
+  // === Mark Onboarding Completed ===
+  try {
+    localStorage.setItem('aida_onboarding_completed', 'true');
+    localStorage.setItem('aida_onboarding_step', 'completed');
+    localStorage.removeItem('aida_ai_flow_state');
+    const existing = JSON.parse(localStorage.getItem('aida_teacher_profile') || '{}');
+    existing.board = FL.board;
+    existing.class = FL.cls;
+    existing.subject = FL.subj;
+    existing.chapter = FL.chap;
+    existing.template = t ? t.name : '';
+    existing.onboardingCompleted = true;
+    existing.completedAt = new Date().toISOString();
+    localStorage.setItem('aida_teacher_profile', JSON.stringify(existing));
+    if (typeof applyTeacherProfile === 'function') applyTeacherProfile();
+  } catch(e) {
+    console.error('Error saving completion state:', e);
+  }
+
   openChapter(k);
 }
-/* ?step=board|class|subject|chapter|continue|template|empty opens the flow at that step (for shots) */
+/* restore saved flow state on refresh if present and not overridden by query param */
 (function(){
-  const s = q.get('step'); if (!s || !body.classList.contains('opening')) return;
-  if (s !== 'board') FL.board = 'CBSE';
-  if (['subject', 'chapter', 'continue', 'template'].includes(s)) FL.cls = 6;
-  if (['chapter', 'continue', 'template'].includes(s)) FL.subj = 'sci';
-  if (['continue', 'template'].includes(s)) FL.chap = 'dig';
-  if (s === 'template') FL.fresh = true;
-  if (s === 'empty') FL.cls = 7;
-  if (['class', 'subject', 'chapter', 'continue', 'template', 'empty'].includes(s)) FL.step = s;
+  if (!body.classList.contains('opening')) return;
+  const s = q.get('step');
+  if (s) {
+    if (s !== 'board') FL.board = 'CBSE';
+    if (['subject', 'chapter', 'continue', 'template'].includes(s)) FL.cls = 6;
+    if (['chapter', 'continue', 'template'].includes(s)) FL.subj = 'sci';
+    if (['continue', 'template'].includes(s)) FL.chap = 'dig';
+    if (s === 'template') FL.fresh = true;
+    if (s === 'empty') FL.cls = 7;
+    if (['class', 'subject', 'chapter', 'continue', 'template', 'empty'].includes(s)) FL.step = s;
+  } else {
+    try {
+      const saved = JSON.parse(localStorage.getItem('aida_ai_flow_state') || 'null');
+      if (saved && saved.step && ['board', 'class', 'subject', 'chapter', 'continue', 'template', 'empty'].includes(saved.step)) {
+        FL.step = saved.step;
+        FL.board = saved.board || null;
+        FL.cls = saved.cls || null;
+        FL.subj = saved.subj || null;
+        FL.chap = saved.chap || null;
+        FL.fresh = !!saved.fresh;
+      }
+    } catch(e) {}
+  }
 })();
 renderFlow(false);
 if (FL.step === 'chapter' || FL.step === 'continue' || FL.step === 'template') body.classList.add('ready');
@@ -3379,8 +3446,48 @@ $('profMenu').addEventListener('click', e => {
   const it = e.target.closest('[role=menuitem]'); if (!it) return;
   const o = menuOpener; closeMenu(false);
   if (it.dataset.act === 'settings') openSettings(o);
+  else if (it.dataset.act === 'signout') {
+    toast('Signing out...');
+    setTimeout(() => { window.location.href = '../index.html'; }, 600);
+  }
   else { toast(it.dataset.act === 'profile' ? 'Profile is a mock in this preview.' : 'Sign out is a mock in this preview.'); o.focus({ preventScroll: true }); }
 });
+
+/* Apply teacher profile name & avatar to UI */
+function applyTeacherProfile() {
+  try {
+    const raw = localStorage.getItem('aida_teacher_profile');
+    if (!raw) return;
+    const p = JSON.parse(raw);
+    const name = p.fullName || (p.workspaceName ? p.workspaceName + ' Teacher' : 'Teacher');
+    const parts = name.trim().split(/\s+/);
+    let initials = 'MS';
+    if (parts.length >= 2) {
+      initials = (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    } else if (parts.length === 1 && parts[0].length >= 1) {
+      initials = parts[0].substring(0, 2).toUpperCase();
+    }
+    const profBtn = $('profBtn');
+    const profRail = $('profRail');
+    if (profBtn) {
+      profBtn.setAttribute('aria-label', 'Account menu, ' + name);
+      const av = profBtn.querySelector('.av');
+      const pn = profBtn.querySelector('.pn');
+      if (av) av.textContent = initials;
+      if (pn) pn.textContent = name;
+    }
+    if (profRail) {
+      profRail.setAttribute('aria-label', 'Account menu, ' + name);
+      profRail.setAttribute('data-tip', name);
+      const av = profRail.querySelector('.av');
+      if (av) av.textContent = initials;
+    }
+    window.TEACHER_PROFILE = p;
+  } catch(e) {
+    console.warn('Failed to apply teacher profile:', e);
+  }
+}
+applyTeacherProfile();
 document.addEventListener('pointerdown', e => { if (!card.hidden && !card.contains(e.target) && !(setOpener && setOpener.contains(e.target))) closeSettings(false); });
 card.addEventListener('focusout', e => { if (!card.hidden && e.relatedTarget && !card.contains(e.relatedTarget) && !(setOpener && setOpener.contains(e.relatedTarget))) closeSettings(false); });
 addEventListener('keydown', e => { if (e.key === 'Escape' && !card.hidden) { e.preventDefault(); e.stopImmediatePropagation(); closeSettings(); } }, true);

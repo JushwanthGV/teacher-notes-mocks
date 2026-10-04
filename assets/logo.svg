@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="36" height="36" fill="none">
+  <defs>
+    <!-- Left leg gradient: Purple to Cyan -->
+    <linearGradient id="legLeftGrad" x1="0%" y1="100%" x2="50%" y2="0%">
+      <stop offset="0%" stop-color="#a855f7" />
+      <stop offset="50%" stop-color="#6366f1" />
+      <stop offset="100%" stop-color="#38bdf8" />
+    </linearGradient>
+    <!-- Right leg gradient: Cyan to Purple -->
+    <linearGradient id="legRightGrad" x1="50%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="40%" stop-color="#818cf8" />
+      <stop offset="100%" stop-color="#7c3aed" />
+    </linearGradient>
+    <!-- Bar gradient -->
+    <linearGradient id="barGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#a855f7" />
+      <stop offset="100%" stop-color="#6366f1" />
+    </linearGradient>
+    <filter id="logoGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <g filter="url(#logoGlow)">
+    <!-- Main Apex triangle frame -->
+    <!-- Outer path -->
+    <path d="M32 7 C34.5 7 36.5 8.5 37.8 11 L55.5 48 C57.2 51.5 54.5 55 50.8 55 L43 55 C40.8 55 38.8 53.6 37.8 51.5 L32 39 L26.2 51.5 C25.2 53.6 23.2 55 21 55 L13.2 55 C9.5 55 6.8 51.5 8.5 48 L26.2 11 C27.5 8.5 29.5 7 32 7 Z"
+          fill="url(#legLeftGrad)" opacity="0.95" />
+    
+    <!-- Right highlight overlay -->
+    <path d="M32 7 C34.5 7 36.5 8.5 37.8 11 L55.5 48 C57.2 51.5 54.5 55 50.8 55 L43 55 C40.8 55 38.8 53.6 37.8 51.5 L32 39 Z"
+          fill="url(#legRightGrad)" />
+
+    <!-- Center inner delta cutout -->
+    <polygon points="32,23 24,38 40,38" fill="#070913" />
+
+    <!-- Horizontal floating lower connector pill -->
+    <rect x="22" y="44" width="20" height="6.5" rx="3.25" fill="url(#barGrad)" />
+  </g>
+</svg>
