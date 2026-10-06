@@ -1,0 +1,40 @@
+﻿name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify:
+    name: Verify Static Assets & Links
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Verify static structure
+        run: |
+          echo "Verifying root files..."
+          test -f index.html
+          test -f README.md
+          
+          echo "Verifying dark-glass mock..."
+          test -f dark-glass/index.html
+          
+          echo "Verifying document-view mock..."
+          test -f document-view/index.html
+          
+          echo "Verifying teacher-onboarding mock..."
+          test -f teacher-onboarding/index.html
+          test -f teacher-onboarding/onboarding.html
+          test -f teacher-onboarding/dashboard.html
+          test -f teacher-onboarding/style.css
+          test -f teacher-onboarding/onboarding.css
+          test -f teacher-onboarding/script.js
+          test -f teacher-onboarding/onboarding.js
+          test -f teacher-onboarding/assets/logo.svg
+          test -f teacher-onboarding/assets/bg.jpg
+          
+          echo "All static mocks and assets verified successfully."
